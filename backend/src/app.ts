@@ -1,4 +1,6 @@
 import express, { Application, Request, Response } from 'express';
+import path from 'path';
+import fs from 'fs';
 import cors from 'cors';
 import helmet from 'helmet';
 import { config } from './config/env';
@@ -58,11 +60,32 @@ export const createApp = (): Application => {
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-  // Root platform status check & API gateway dashboard
+  // Locate compiled React frontend bundle
+  const candidatePaths = [
+    path.resolve(__dirname, '../public'),
+    path.resolve(process.cwd(), 'public'),
+    path.resolve(process.cwd(), 'backend/public'),
+    path.resolve(__dirname, '../../frontend/dist'),
+    path.resolve(__dirname, '../frontend/dist'),
+    path.resolve(process.cwd(), '../frontend/dist'),
+    path.resolve(process.cwd(), 'frontend/dist'),
+    path.resolve(process.cwd(), 'dist'),
+  ];
+  const frontendDistPath = candidatePaths.find((p) => fs.existsSync(path.join(p, 'index.html')));
+
+  if (frontendDistPath) {
+    app.use(express.static(frontendDistPath));
+  }
+
+  // Root platform status check & API gateway dashboard (or serve live React SPA)
   app.get('/', (req: Request, res: Response) => {
+    if (frontendDistPath) {
+      return res.sendFile(path.join(frontendDistPath, 'index.html'));
+    }
+
     const frontendUrl = (process.env.CLIENT_ORIGIN && process.env.CLIENT_ORIGIN !== '*')
       ? process.env.CLIENT_ORIGIN
-      : 'http://localhost:3000';
+      : '/';
     const acceptsHtml = req.accepts('html');
 
     if (acceptsHtml) {
@@ -382,6 +405,16 @@ export const createApp = (): Application => {
   app.use('/api/v1/appointments', appointmentsRouter);
   app.use('/api/v1/counsellor', counsellorRouter);
   app.use('/api/v1/admin', adminRouter);
+
+  // SPA fallback for frontend client-side routing
+  if (frontendDistPath) {
+    app.get('*', (req: Request, res: Response, next) => {
+      if (req.path.startsWith('/api')) {
+        return next();
+      }
+      res.sendFile(path.join(frontendDistPath, 'index.html'));
+    });
+  }
 
   // Catch-all handlers
   app.use(notFoundHandler);
