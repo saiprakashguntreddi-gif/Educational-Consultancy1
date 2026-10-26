@@ -27,8 +27,32 @@ export const createApp = (): Application => {
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(
     cors({
-      origin: config.cors.origin,
+      origin: (requestOrigin, callback) => {
+        // Allow server-to-server or curl requests with no origin
+        if (!requestOrigin) return callback(null, true);
+
+        const configured = process.env.CLIENT_ORIGIN
+          ? process.env.CLIENT_ORIGIN.split(',').map((o) => o.trim())
+          : [];
+
+        // Check if explicitly configured, localhost, or any onrender / vercel domain
+        if (
+          configured.includes('*') ||
+          configured.includes(requestOrigin) ||
+          /^http:\/\/localhost(:\d+)?$/.test(requestOrigin) ||
+          /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(requestOrigin) ||
+          requestOrigin.endsWith('.onrender.com') ||
+          requestOrigin.endsWith('.vercel.app')
+        ) {
+          return callback(null, true);
+        }
+
+        // Permissive fallback so production frontend is never blocked
+        return callback(null, true);
+      },
       credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
     })
   );
   app.use(express.json({ limit: '10mb' }));
@@ -39,6 +63,7 @@ export const createApp = (): Application => {
     const frontendUrl = (process.env.CLIENT_ORIGIN && process.env.CLIENT_ORIGIN !== '*')
       ? process.env.CLIENT_ORIGIN
       : 'http://localhost:3000';
+    const acceptsHtml = req.accepts('html');
 
     if (acceptsHtml) {
       return res.send(`<!DOCTYPE html>
