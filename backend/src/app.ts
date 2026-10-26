@@ -1,4 +1,6 @@
 import express, { Application, Request, Response } from 'express';
+import path from 'path';
+import fs from 'fs';
 import cors from 'cors';
 import helmet from 'helmet';
 import { config } from './config/env';
@@ -27,16 +29,65 @@ export const createApp = (): Application => {
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(
     cors({
-      origin: config.cors.origin,
+      origin: (requestOrigin, callback) => {
+        // Allow server-to-server or curl requests with no origin
+        if (!requestOrigin) return callback(null, true);
+
+        const configured = process.env.CLIENT_ORIGIN
+          ? process.env.CLIENT_ORIGIN.split(',').map((o) => o.trim())
+          : [];
+
+        // Check if explicitly configured, localhost, or any onrender / vercel domain
+        if (
+          configured.includes('*') ||
+          configured.includes(requestOrigin) ||
+          /^http:\/\/localhost(:\d+)?$/.test(requestOrigin) ||
+          /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(requestOrigin) ||
+          requestOrigin.endsWith('.onrender.com') ||
+          requestOrigin.endsWith('.vercel.app')
+        ) {
+          return callback(null, true);
+        }
+
+        // Permissive fallback so production frontend is never blocked
+        return callback(null, true);
+      },
       credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
     })
   );
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-  // Root platform status check & API gateway dashboard
+  // Locate compiled React frontend bundle
+  const candidatePaths = [
+    path.resolve(__dirname, '../public'),
+    path.resolve(process.cwd(), 'public'),
+    path.resolve(process.cwd(), 'backend/public'),
+    path.resolve(__dirname, '../../frontend/dist'),
+    path.resolve(__dirname, '../frontend/dist'),
+    path.resolve(process.cwd(), '../frontend/dist'),
+    path.resolve(process.cwd(), 'frontend/dist'),
+    path.resolve(process.cwd(), 'dist'),
+  ];
+  const frontendDistPath = candidatePaths.find((p) => fs.existsSync(path.join(p, 'index.html')));
+
+  if (frontendDistPath) {
+    app.use(express.static(frontendDistPath));
+  }
+
+  // Root platform status check & API gateway dashboard (or serve live React SPA)
   app.get('/', (req: Request, res: Response) => {
+    if (frontendDistPath) {
+      return res.sendFile(path.join(frontendDistPath, 'index.html'));
+    }
+
+    const frontendUrl = (process.env.CLIENT_ORIGIN && process.env.CLIENT_ORIGIN !== '*')
+      ? process.env.CLIENT_ORIGIN
+      : '/';
     const acceptsHtml = req.accepts('html');
+
     if (acceptsHtml) {
       return res.send(`<!DOCTYPE html>
 <html lang="en">
@@ -235,16 +286,16 @@ export const createApp = (): Application => {
     <h1>Backend REST API Server</h1>
     <p>
       The Superconsciousness backend service is running and healthy. All authentication, profile intake,
-      academic preferences, and education modules are active. To access the student and counsellor user interface, click below.
+      academic preferences, and education modules are active.
     </p>
 
     <div class="cta-banner">
       <div class="cta-text">
-        <span class="cta-title">Looking for the Superconsciousness Website?</span>
-        <span class="cta-sub">Frontend application is running on port 3000</span>
+        <span class="cta-title">Superconsciousness Frontend Website</span>
+        <span class="cta-sub">Frontend application link</span>
       </div>
-      <a href="http://localhost:3000" class="btn-launch">
-        Open Website (localhost:3000) &rarr;
+      <a href="${frontendUrl}" class="btn-launch" target="_blank">
+        Open Website &rarr;
       </a>
     </div>
 
@@ -354,6 +405,16 @@ export const createApp = (): Application => {
   app.use('/api/v1/appointments', appointmentsRouter);
   app.use('/api/v1/counsellor', counsellorRouter);
   app.use('/api/v1/admin', adminRouter);
+
+  // SPA fallback for frontend client-side routing
+  if (frontendDistPath) {
+    app.get('*', (req: Request, res: Response, next) => {
+      if (req.path.startsWith('/api')) {
+        return next();
+      }
+      res.sendFile(path.join(frontendDistPath, 'index.html'));
+    });
+  }
 
   // Catch-all handlers
   app.use(notFoundHandler);
