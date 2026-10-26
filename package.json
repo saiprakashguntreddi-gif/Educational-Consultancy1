@@ -13,6 +13,9 @@
     "build:backend": "npm --prefix backend run build",
     "build:frontend": "npm --prefix frontend run build"
   },
+  "prisma": {
+    "schema": "backend/prisma/schema.prisma"
+  },
   "keywords": [
     "education",
     "consultancy",
