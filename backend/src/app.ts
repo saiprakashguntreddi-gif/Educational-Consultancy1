@@ -36,7 +36,10 @@ export const createApp = (): Application => {
 
   // Root platform status check & API gateway dashboard
   app.get('/', (req: Request, res: Response) => {
-    const acceptsHtml = req.accepts('html');
+    const frontendUrl = (process.env.CLIENT_ORIGIN && process.env.CLIENT_ORIGIN !== '*')
+      ? process.env.CLIENT_ORIGIN
+      : 'http://localhost:3000';
+
     if (acceptsHtml) {
       return res.send(`<!DOCTYPE html>
 <html lang="en">
@@ -235,16 +238,16 @@ export const createApp = (): Application => {
     <h1>Backend REST API Server</h1>
     <p>
       The Superconsciousness backend service is running and healthy. All authentication, profile intake,
-      academic preferences, and education modules are active. To access the student and counsellor user interface, click below.
+      academic preferences, and education modules are active.
     </p>
 
     <div class="cta-banner">
       <div class="cta-text">
-        <span class="cta-title">Looking for the Superconsciousness Website?</span>
-        <span class="cta-sub">Frontend application is running on port 3000</span>
+        <span class="cta-title">Superconsciousness Frontend Website</span>
+        <span class="cta-sub">Frontend application link</span>
       </div>
-      <a href="http://localhost:3000" class="btn-launch">
-        Open Website (localhost:3000) &rarr;
+      <a href="${frontendUrl}" class="btn-launch" target="_blank">
+        Open Website &rarr;
       </a>
     </div>
 
