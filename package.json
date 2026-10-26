@@ -1,8 +1,12 @@
+
 {
   "name": "superconsciousness",
   "version": "1.0.0",
   "private": true,
   "description": "Superconsciousness - Integrated Educational Consultancy and Student Guidance Platform",
+  "engines": {
+    "node": "22.x"
+  },
   "workspaces": [
     "backend",
     "frontend"
@@ -25,3 +29,4 @@
   "author": "Superconsciousness Engineering Team",
   "license": "UNLICENSED"
 }
+
