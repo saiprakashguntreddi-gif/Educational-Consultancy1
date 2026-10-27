@@ -369,30 +369,32 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  border: 1px solid var(--cmd-border);
+  height: 36px;
+  padding: 0 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #CBD5E1;
   background: #FFFFFF;
-  color: var(--cmd-text-main);
-  font-size: 0.78rem;
+  color: #334155;
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .cmd-header-website-btn:hover {
-  background: var(--cmd-bg);
-  border-color: #CBD5E1;
+  background: #F8FAFC;
+  border-color: #94A3B8;
+  color: #0F172A;
 }
 
 .cmd-notification-btn {
   position: relative;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid var(--cmd-border);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #CBD5E1;
   background: #FFFFFF;
-  color: var(--cmd-text-muted);
+  color: #64748B;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -401,8 +403,9 @@
 }
 
 .cmd-notification-btn:hover {
-  color: var(--cmd-text-main);
-  background: var(--cmd-bg);
+  color: #0F172A;
+  background: #F8FAFC;
+  border-color: #94A3B8;
 }
 
 .cmd-notification-badge {
@@ -411,39 +414,39 @@
   right: 7px;
   width: 7px;
   height: 7px;
-  background-color: var(--cmd-accent);
+  background-color: #4338CA;
   border-radius: 50%;
 }
 
 .cmd-user-dropdown-btn {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  padding: 0.35rem 0.5rem 0.35rem 0.35rem;
-  border-radius: 24px;
-  border: 1px solid var(--cmd-border);
+  gap: 0.6rem;
+  height: 36px;
+  padding: 0 0.65rem 0 0.35rem;
+  border-radius: 8px;
+  border: 1px solid #CBD5E1;
   background: #FFFFFF;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .cmd-user-dropdown-btn:hover {
-  border-color: #CBD5E1;
-  background: var(--cmd-card-hover);
+  border-color: #94A3B8;
+  background: #F8FAFC;
 }
 
 .cmd-user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #111C31 0%, #1E2D4A 100%);
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #4338CA;
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  border: 1px solid rgba(8, 20, 38, 0.15);
 }
 
 .cmd-user-info-text {
@@ -453,21 +456,23 @@
 }
 
 .cmd-user-name {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: var(--cmd-text-main);
+  color: #0F172A;
   max-width: 140px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 .cmd-user-role-badge {
-  font-size: 0.65rem;
-  color: var(--cmd-accent);
+  font-size: 0.62rem;
+  color: #4338CA;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  line-height: 1.1;
 }
 
 /* ==========================================================================
@@ -1595,3 +1600,34 @@
     margin-bottom: 0;
   }
 }
+
+/* ==========================================================================
+   ENTRANCE EXAMS 5 METRIC CARDS RESPONSIVE GRID
+   ========================================================================== */
+.entrance-overview-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1180px) {
+  .entrance-overview-cards-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .entrance-overview-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .entrance-overview-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

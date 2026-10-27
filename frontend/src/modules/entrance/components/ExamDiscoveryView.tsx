@@ -170,32 +170,33 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
     <div id="exam-discovery-container">
       {/* Search and Filters Toolbar */}
       <div
+        id="exam-discovery-toolbar"
         style={{
           background: '#FFFFFF',
           border: '1px solid #E2E8F0',
-          borderRadius: '12px',
-          padding: '1.25rem',
+          borderRadius: '10px',
+          padding: '1.15rem',
           marginBottom: '1.5rem',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+          boxShadow: '0 1px 2px rgba(15, 23, 42, 0.03)',
         }}
       >
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '1rem',
+            gap: '0.85rem',
           }}
         >
-          {/* Top row: Search input & Destination dropdown */}
+          {/* Main Search Toolbar (Desktop: single row; Mobile: stacked) */}
           <div
             style={{
               display: 'flex',
-              gap: '1rem',
+              gap: '0.75rem',
               flexWrap: 'wrap',
             }}
           >
             {/* Search Input */}
-            <div style={{ flex: '1 1 280px', position: 'relative' }}>
+            <div style={{ flex: '1 1 300px', position: 'relative' }}>
               <div
                 style={{
                   position: 'absolute',
@@ -205,26 +206,37 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   color: '#94A3B8',
                   display: 'flex',
                   alignItems: 'center',
+                  pointerEvents: 'none',
                 }}
               >
-                <Search size={18} />
+                <Search size={16} />
               </div>
               <input
                 id="exam-search-input"
                 type="text"
-                placeholder="Search exams by name, code, format (e.g. SAT, IELTS, GRE)..."
+                placeholder="Search exams by name, code, or format..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
                   width: '100%',
                   boxSizing: 'border-box',
-                  padding: '0.65rem 1rem 0.65rem 2.4rem',
+                  height: '40px',
+                  padding: '0 1rem 0 2.3rem',
                   borderRadius: '8px',
                   border: '1px solid #CBD5E1',
-                  fontSize: '0.9rem',
+                  fontSize: '0.88rem',
                   color: '#0F172A',
                   outline: 'none',
-                  transition: 'border-color 0.2s',
+                  backgroundColor: '#FFFFFF',
+                  transition: 'border-color 0.2s, box-shadow 0.2s',
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#4338CA';
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67, 56, 202, 0.1)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = '#CBD5E1';
+                  e.currentTarget.style.boxShadow = 'none';
                 }}
               />
             </div>
@@ -237,14 +249,25 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                 onChange={(e) => setSelectedDestination(e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.65rem 0.85rem',
+                  boxSizing: 'border-box',
+                  height: '40px',
+                  padding: '0 0.85rem',
                   borderRadius: '8px',
                   border: '1px solid #CBD5E1',
-                  fontSize: '0.9rem',
+                  fontSize: '0.88rem',
                   color: '#0F172A',
                   backgroundColor: '#FFFFFF',
                   outline: 'none',
                   cursor: 'pointer',
+                  transition: 'border-color 0.2s, box-shadow 0.2s',
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#4338CA';
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67, 56, 202, 0.1)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = '#CBD5E1';
+                  e.currentTarget.style.boxShadow = 'none';
                 }}
               >
                 <option value="ALL">All Study Destinations</option>
@@ -257,50 +280,75 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
             </div>
           </div>
 
-          {/* Bottom row: Category Filter Pills */}
+          {/* Category Filter Chips (Single row on desktop with horizontal scroll) */}
           <div
+            id="category-filter-chips-container"
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem',
-              flexWrap: 'wrap',
+              gap: '0.45rem',
+              overflowX: 'auto',
+              scrollbarWidth: 'none',
+              paddingBottom: '2px',
+              whiteSpace: 'nowrap',
             }}
           >
-            <span
-              style={{
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                color: '#64748B',
-                marginRight: '0.35rem',
-              }}
-            >
-              Category:
-            </span>
-
-            {CATEGORY_OPTIONS.map((cat) => (
-              <button
-                key={cat.value}
-                id={`filter-cat-${cat.value.toLowerCase()}`}
-                onClick={() => setSelectedCategory(cat.value)}
-                style={{
-                  background: selectedCategory === cat.value ? '#4338CA' : '#F1F5F9',
-                  color: selectedCategory === cat.value ? '#FFFFFF' : '#475569',
-                  border: 'none',
-                  borderRadius: '9999px',
-                  padding: '0.35rem 0.85rem',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {cat.label}
-              </button>
-            ))}
+            {CATEGORY_OPTIONS.map((cat) => {
+              const isSelected = selectedCategory === cat.value;
+              return (
+                <button
+                  key={cat.value}
+                  id={`filter-cat-${cat.value.toLowerCase()}`}
+                  onClick={() => {
+                    setSelectedCategory(cat.value);
+                    setTimeout(() => {
+                      if (cat.value === 'ALL') {
+                        const section = document.getElementById('exam-categories-dropdown-section');
+                        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      } else {
+                        const catId = cat.value.toLowerCase();
+                        const el = document.getElementById(`category-wrapper-${catId}`) ||
+                                   document.getElementById(`exam-card-${catId}`) ||
+                                   document.getElementById('exams-catalog-grid');
+                        if (el) {
+                          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                      }
+                    }, 120);
+                  }}
+                  style={{
+                    background: isSelected ? '#4338CA' : '#F1F5F9',
+                    color: isSelected ? '#FFFFFF' : '#475569',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0.38rem 0.8rem',
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.backgroundColor = '#E2E8F0';
+                      e.currentTarget.style.color = '#0F172A';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.backgroundColor = '#F1F5F9';
+                      e.currentTarget.style.color = '#475569';
+                    }
+                  }}
+                >
+                  {cat.label}
+                </button>
+              );
+            })}
           </div>
 
-          {/* View Mode Toggle: Dropdown Accordion vs Cards Grid vs Both */}
+          {/* Display-Layout Selector Row */}
           <div
             style={{
               display: 'flex',
@@ -309,10 +357,10 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
               paddingTop: '0.75rem',
               borderTop: '1px solid #F1F5F9',
               flexWrap: 'wrap',
-              gap: '0.75rem',
+              gap: '0.65rem',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem', color: '#64748B' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: '#64748B' }}>
               <span style={{ fontWeight: 600 }}>Display Layout:</span>
             </div>
 
@@ -333,7 +381,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.35rem',
-                  padding: '0.35rem 0.75rem',
+                  padding: '0.32rem 0.75rem',
                   borderRadius: '6px',
                   border: 'none',
                   fontSize: '0.78rem',
@@ -341,7 +389,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   cursor: 'pointer',
                   background: viewMode === 'both' ? '#FFFFFF' : 'transparent',
                   color: viewMode === 'both' ? '#4338CA' : '#64748B',
-                  boxShadow: viewMode === 'both' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                  boxShadow: viewMode === 'both' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
                   transition: 'all 0.15s ease',
                 }}
               >
@@ -357,7 +405,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.35rem',
-                  padding: '0.35rem 0.75rem',
+                  padding: '0.32rem 0.75rem',
                   borderRadius: '6px',
                   border: 'none',
                   fontSize: '0.78rem',
@@ -365,7 +413,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   cursor: 'pointer',
                   background: viewMode === 'dropdowns' ? '#FFFFFF' : 'transparent',
                   color: viewMode === 'dropdowns' ? '#4338CA' : '#64748B',
-                  boxShadow: viewMode === 'dropdowns' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                  boxShadow: viewMode === 'dropdowns' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
                   transition: 'all 0.15s ease',
                 }}
               >
@@ -381,7 +429,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.35rem',
-                  padding: '0.35rem 0.75rem',
+                  padding: '0.32rem 0.75rem',
                   borderRadius: '6px',
                   border: 'none',
                   fontSize: '0.78rem',
@@ -389,7 +437,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   cursor: 'pointer',
                   background: viewMode === 'grid' ? '#FFFFFF' : 'transparent',
                   color: viewMode === 'grid' ? '#4338CA' : '#64748B',
-                  boxShadow: viewMode === 'grid' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                  boxShadow: viewMode === 'grid' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
                   transition: 'all 0.15s ease',
                 }}
               >
@@ -582,6 +630,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
             <div
               key={exam.id}
               id={`exam-card-${exam.code.toLowerCase()}`}
+              onClick={() => onSelectExam(exam)}
               style={{
                 background: '#FFFFFF',
                 border: exam.isRecommendedForStudent ? '1.5px solid #818CF8' : '1px solid #E2E8F0',
@@ -594,7 +643,20 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   ? '0 4px 12px rgba(91, 79, 233, 0.08)'
                   : '0 1px 3px rgba(0,0,0,0.02)',
                 position: 'relative',
-                transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                transition: 'transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-3px)';
+                e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.1)';
+                e.currentTarget.style.borderColor = '#A5B4FC';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = exam.isRecommendedForStudent
+                  ? '0 4px 12px rgba(91, 79, 233, 0.08)'
+                  : '0 1px 3px rgba(0,0,0,0.02)';
+                e.currentTarget.style.borderColor = exam.isRecommendedForStudent ? '#818CF8' : '#E2E8F0';
               }}
             >
               <div>
@@ -759,7 +821,10 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                 <div style={{ display: 'flex', gap: '0.45rem' }}>
                   <button
                     id={`view-details-${exam.code.toLowerCase()}`}
-                    onClick={() => onSelectExam(exam)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectExam(exam);
+                    }}
                     style={{
                       background: '#FFFFFF',
                       border: '1px solid #CBD5E1',
@@ -778,6 +843,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                     href={exam.officialWebsiteUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
                     title="Official registration portal"
                     style={{
                       display: 'inline-flex',
@@ -802,7 +868,10 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   {exam.hasMockTest && (
                     <button
                       id={`take-mock-${exam.code.toLowerCase()}`}
-                      onClick={() => onTakeMockTest(exam)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onTakeMockTest(exam);
+                      }}
                       title="Take diagnostic timed practice test"
                       style={{
                         display: 'inline-flex',
@@ -825,12 +894,15 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
 
                   <button
                     id={`add-plan-btn-${exam.code.toLowerCase()}`}
-                    onClick={() => onAddToPlan(exam)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onAddToPlan(exam);
+                    }}
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '0.3rem',
-                      background: exam.studentPlanStatus ? '#DCFCE7' : '#0F172A',
+                      background: exam.studentPlanStatus ? '#DCFCE7' : '#4338CA',
                       border: 'none',
                       color: exam.studentPlanStatus ? '#166534' : '#FFFFFF',
                       padding: '0.45rem 0.85rem',

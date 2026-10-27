@@ -911,17 +911,15 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
           </div>
 
           <div className="cmd-header-right">
-            {/* Direct Link to Homepage if requested */}
-            {onNavigateHome && (
-              <button
-                className="cmd-header-website-btn"
-                onClick={onNavigateHome}
-                title="View consultancy public portal"
-              >
-                <span>Website</span>
-                <ExternalLink size={13} />
-              </button>
-            )}
+            {/* Direct Link to Homepage */}
+            <button
+              className="cmd-header-website-btn"
+              onClick={onNavigateHome ? onNavigateHome : () => window.open('/', '_blank')}
+              title="View consultancy public portal"
+            >
+              <span>Website</span>
+              <ExternalLink size={13} />
+            </button>
 
             {/* Notification Bell Icon */}
             <button
@@ -2005,28 +2003,6 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
               />
             ) : (
               <div>
-                <div style={{ marginBottom: '1.25rem' }}>
-                  <button
-                    id="entrance-back-to-dash-btn"
-                    onClick={() => setActiveMenu('dashboard')}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.4rem',
-                      background: 'none',
-                      border: 'none',
-                      color: '#5B4FE9',
-                      fontSize: '0.88rem',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      padding: 0,
-                    }}
-                  >
-                    <ArrowLeft size={16} />
-                    <span>Back to Dashboard</span>
-                  </button>
-                </div>
-
                 <EntranceExamsView onBackToDashboard={() => setActiveMenu('dashboard')} />
               </div>
             )

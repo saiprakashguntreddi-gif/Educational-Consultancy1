@@ -309,15 +309,27 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
     }
   }, [filterQuery, filteredCategoryList]);
 
-  // If activeCategoryFilter changes from parent, ensure that category is expanded
+  // If activeCategoryFilter changes from parent, isolate and auto-expand that category, and smoothly scroll to it
   useEffect(() => {
     if (activeCategoryFilter && activeCategoryFilter !== 'ALL') {
       const match = resolvedCategories.find(
         (c) => c.id.toLowerCase() === activeCategoryFilter.toLowerCase()
       );
       if (match) {
-        setExpandedIds((prev) => new Set([...prev, match.id]));
+        // Expand ONLY the selected category to focus user attention
+        setExpandedIds(new Set([match.id]));
+
+        // Smoothly scroll down directly to this category so it appears right in view
+        setTimeout(() => {
+          const el = document.getElementById(`category-wrapper-${match.id}`);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 120);
       }
+    } else if (activeCategoryFilter === 'ALL') {
+      // Default to expanding the first 2 for high discovery
+      setExpandedIds(new Set(['undergraduate', 'engineering_technology']));
     }
   }, [activeCategoryFilter, resolvedCategories]);
 
@@ -369,122 +381,170 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
     <div
       id="exam-categories-dropdown-section"
       style={{
-        background: '#FFFFFF',
-        border: '1px solid #E2E8F0',
-        borderRadius: '16px',
-        padding: '1.5rem',
         marginBottom: '2rem',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05)',
       }}
     >
-      {/* Header Bar */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          gap: '1rem',
-          flexWrap: 'wrap',
-          marginBottom: '1.25rem',
-          paddingBottom: '1rem',
-          borderBottom: '1px solid #F1F5F9',
-        }}
-      >
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.35rem' }}>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '8px',
-                background: 'linear-gradient(135deg, #4338CA 0%, #6366F1 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#FFFFFF',
-              }}
-            >
-              <Layers size={18} />
-            </div>
-            <h2
-              style={{
-                margin: 0,
-                fontSize: '1.25rem',
-                fontWeight: 700,
-                color: '#0F172A',
-                letterSpacing: '-0.01em',
-              }}
-            >
-              Main Exam Categories & Subcategories
-            </h2>
-          </div>
+      {/* Main Category Section Header */}
+      <div style={{ marginBottom: '1.25rem' }}>
+        <h2
+          id="categories-section-heading"
+          style={{
+            margin: '0 0 0.35rem 0',
+            fontSize: '1.45rem',
+            fontWeight: 800,
+            color: '#0F172A',
+            letterSpacing: '-0.02em',
+          }}
+        >
+          Explore Exam Categories
+        </h2>
+        <p
+          id="categories-section-subtitle"
+          style={{
+            margin: '0 0 0.75rem 0',
+            fontSize: '0.9rem',
+            color: '#64748B',
+            lineHeight: 1.5,
+          }}
+        >
+          Discover entrance exams, eligibility requirements, and study opportunities.
+        </p>
 
-          <p
-            style={{
-              margin: '0 0 0.5rem 0',
-              fontSize: '0.88rem',
-              color: '#64748B',
-              lineHeight: 1.4,
-            }}
-          >
-            Explore all 7 main entrance exam categories with dropdown subcategories. Shared exams reference a single canonical record across applicable categories.
-          </p>
-
-          {/* Accurate Counts Display Badges */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <span
-              id="badge-main-categories-count"
-              style={{
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                backgroundColor: '#EEF2FF',
-                color: '#4338CA',
-                padding: '0.15rem 0.6rem',
-                borderRadius: '12px',
-                border: '1px solid #C7D2FE',
-              }}
-            >
-              7 Main Categories
-            </span>
-            <span
-              id="badge-unique-exams-count"
-              style={{
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                backgroundColor: '#F0FDF4',
-                color: '#166534',
-                padding: '0.15rem 0.6rem',
-                borderRadius: '12px',
-                border: '1px solid #BBF7D0',
-              }}
-            >
-              {uniqueExamCount} Unique Exam Records
-            </span>
-            <span
-              id="badge-total-listings-count"
-              style={{
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                backgroundColor: '#F8FAFC',
-                color: '#475569',
-                padding: '0.15rem 0.6rem',
-                borderRadius: '12px',
-                border: '1px solid #E2E8F0',
-              }}
-            >
-              {totalListingsCount} Total Category Listings
-            </span>
-          </div>
-        </div>
-
-        {/* Global Expand / Collapse All Controls */}
+        {/* Compact Statistics Row */}
         <div
+          id="category-statistics-row"
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
+            flexWrap: 'wrap',
           }}
         >
+          <span
+            id="badge-main-categories-count"
+            style={{
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              backgroundColor: '#F8FAFC',
+              color: '#334155',
+              padding: '0.2rem 0.65rem',
+              borderRadius: '6px',
+              border: '1px solid #E2E8F0',
+            }}
+          >
+            {resolvedCategories.length} Main Categories
+          </span>
+          <span
+            id="badge-unique-exam-records"
+            style={{
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              backgroundColor: '#F8FAFC',
+              color: '#334155',
+              padding: '0.2rem 0.65rem',
+              borderRadius: '6px',
+              border: '1px solid #E2E8F0',
+            }}
+          >
+            {uniqueExamCount} Unique Exam Records
+          </span>
+          <span
+            id="badge-total-category-listings"
+            style={{
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              backgroundColor: '#F8FAFC',
+              color: '#334155',
+              padding: '0.2rem 0.65rem',
+              borderRadius: '6px',
+              border: '1px solid #E2E8F0',
+            }}
+          >
+            {totalListingsCount} Total Category Listings
+          </span>
+        </div>
+      </div>
+
+      {/* Category Toolbar: Search + Expand/Collapse Actions */}
+      <div
+        id="category-toolbar-row"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '0.75rem',
+          flexWrap: 'wrap',
+          marginBottom: '1rem',
+        }}
+      >
+        {/* Search Field */}
+        <div style={{ flex: '1 1 260px', position: 'relative' }}>
+          <div
+            style={{
+              position: 'absolute',
+              left: '0.75rem',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: '#94A3B8',
+              display: 'flex',
+              alignItems: 'center',
+              pointerEvents: 'none',
+            }}
+          >
+            <Search size={15} />
+          </div>
+          <input
+            id="category-search-filter-input"
+            type="text"
+            placeholder="Filter categories or find an exam..."
+            value={filterQuery}
+            onChange={(e) => setFilterQuery(e.target.value)}
+            style={{
+              width: '100%',
+              boxSizing: 'border-box',
+              height: '38px',
+              padding: '0 0.75rem 0 2.2rem',
+              borderRadius: '8px',
+              border: '1px solid #CBD5E1',
+              fontSize: '0.86rem',
+              color: '#0F172A',
+              backgroundColor: '#FFFFFF',
+              outline: 'none',
+              transition: 'border-color 0.2s, box-shadow 0.2s',
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = '#4338CA';
+              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67, 56, 202, 0.1)';
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = '#CBD5E1';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          />
+          {filterQuery && (
+            <button
+              type="button"
+              onClick={() => setFilterQuery('')}
+              style={{
+                position: 'absolute',
+                right: '0.75rem',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'none',
+                border: 'none',
+                color: '#94A3B8',
+                cursor: 'pointer',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+              }}
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        {/* Expand / Collapse Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <button
             type="button"
             id="categories-expand-all-btn"
@@ -493,17 +553,26 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.35rem',
-              padding: '0.45rem 0.85rem',
+              height: '38px',
+              padding: '0 0.85rem',
               fontSize: '0.8rem',
               fontWeight: 600,
               color: '#4338CA',
-              backgroundColor: '#EEF2FF',
-              border: '1px solid #C7D2FE',
+              backgroundColor: '#FFFFFF',
+              border: '1px solid #CBD5E1',
               borderRadius: '8px',
               cursor: 'pointer',
-              transition: 'all 0.2s ease',
+              transition: 'all 0.15s ease',
             }}
-            title="Expand all 7 categories"
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#EEF2FF';
+              e.currentTarget.style.borderColor = '#C7D2FE';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#FFFFFF';
+              e.currentTarget.style.borderColor = '#CBD5E1';
+            }}
+            title="Expand all categories"
           >
             <ChevronDown size={14} />
             <span>Expand All</span>
@@ -517,15 +586,24 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.35rem',
-              padding: '0.45rem 0.85rem',
+              height: '38px',
+              padding: '0 0.85rem',
               fontSize: '0.8rem',
               fontWeight: 600,
               color: '#64748B',
-              backgroundColor: '#F8FAFC',
-              border: '1px solid #E2E8F0',
+              backgroundColor: '#FFFFFF',
+              border: '1px solid #CBD5E1',
               borderRadius: '8px',
               cursor: 'pointer',
-              transition: 'all 0.2s ease',
+              transition: 'all 0.15s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#F8FAFC';
+              e.currentTarget.style.color = '#0F172A';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#FFFFFF';
+              e.currentTarget.style.color = '#64748B';
             }}
             title="Collapse all categories"
           >
@@ -535,72 +613,7 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
         </div>
       </div>
 
-      {/* Accordion Quick Search / Filter Input */}
-      <div style={{ marginBottom: '1.25rem', position: 'relative' }}>
-        <div
-          style={{
-            position: 'absolute',
-            left: '0.85rem',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            color: '#94A3B8',
-            display: 'flex',
-            alignItems: 'center',
-            pointerEvents: 'none',
-          }}
-        >
-          <Search size={16} />
-        </div>
-        <input
-          id="category-search-filter-input"
-          type="text"
-          placeholder="Filter categories or find an exam (e.g. JEE Main, SAT, GATE, IELTS, GMAT)..."
-          value={filterQuery}
-          onChange={(e) => setFilterQuery(e.target.value)}
-          style={{
-            width: '100%',
-            boxSizing: 'border-box',
-            padding: '0.6rem 1rem 0.6rem 2.4rem',
-            borderRadius: '10px',
-            border: '1px solid #CBD5E1',
-            fontSize: '0.88rem',
-            color: '#0F172A',
-            backgroundColor: '#F8FAFC',
-            outline: 'none',
-            transition: 'border-color 0.2s, background-color 0.2s',
-          }}
-          onFocus={(e) => {
-            e.currentTarget.style.borderColor = '#4338CA';
-            e.currentTarget.style.backgroundColor = '#FFFFFF';
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.borderColor = '#CBD5E1';
-            e.currentTarget.style.backgroundColor = '#F8FAFC';
-          }}
-        />
-        {filterQuery && (
-          <button
-            type="button"
-            onClick={() => setFilterQuery('')}
-            style={{
-              position: 'absolute',
-              right: '0.85rem',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              background: 'none',
-              border: 'none',
-              color: '#94A3B8',
-              cursor: 'pointer',
-              fontSize: '0.8rem',
-              fontWeight: 600,
-            }}
-          >
-            Clear
-          </button>
-        )}
-      </div>
-
-      {/* Accordion Container for All 10 Categories */}
+      {/* Accordion Container for Exam Categories */}
       <div
         id="exam-categories-accordion"
         role="region"
@@ -622,15 +635,19 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
               key={category.id}
               id={`category-wrapper-${category.id}`}
               style={{
-                border: isExpanded
-                  ? '1px solid #C7D2FE'
-                  : isCurrentActiveFilter
-                  ? '1px solid #A5B4FC'
+                border: isCurrentActiveFilter
+                  ? '2px solid #4338CA'
+                  : isExpanded
+                  ? '1.5px solid #C7D2FE'
                   : '1px solid #E2E8F0',
                 borderRadius: '12px',
                 overflow: 'hidden',
-                transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-                boxShadow: isExpanded ? '0 4px 12px -2px rgba(67, 56, 202, 0.08)' : 'none',
+                transition: 'border-color 0.25s ease, box-shadow 0.25s ease',
+                boxShadow: isCurrentActiveFilter
+                  ? '0 0 0 3px rgba(67, 56, 202, 0.15), 0 8px 24px -4px rgba(67, 56, 202, 0.15)'
+                  : isExpanded
+                  ? '0 4px 12px -2px rgba(67, 56, 202, 0.08)'
+                  : 'none',
                 backgroundColor: '#FFFFFF',
               }}
             >
@@ -654,7 +671,9 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                   justifyContent: 'space-between',
                   gap: '1rem',
                   padding: '1rem 1.25rem',
-                  background: isExpanded
+                  background: isCurrentActiveFilter
+                    ? 'linear-gradient(90deg, #EEF2FF 0%, #FFFFFF 100%)'
+                    : isExpanded
                     ? 'linear-gradient(90deg, #F5F7FF 0%, #FFFFFF 100%)'
                     : '#FFFFFF',
                   border: 'none',
@@ -664,10 +683,10 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                   transition: 'background-color 0.2s ease',
                 }}
                 onMouseEnter={(e) => {
-                  if (!isExpanded) e.currentTarget.style.backgroundColor = '#F8FAFC';
+                  if (!isExpanded && !isCurrentActiveFilter) e.currentTarget.style.backgroundColor = '#F8FAFC';
                 }}
                 onMouseLeave={(e) => {
-                  if (!isExpanded) e.currentTarget.style.backgroundColor = '#FFFFFF';
+                  if (!isExpanded && !isCurrentActiveFilter) e.currentTarget.style.backgroundColor = '#FFFFFF';
                 }}
               >
                 {/* Left: Category Index, Icon & Title */}
@@ -677,8 +696,8 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                       width: '26px',
                       height: '26px',
                       borderRadius: '50%',
-                      background: isExpanded ? '#4338CA' : '#F1F5F9',
-                      color: isExpanded ? '#FFFFFF' : '#475569',
+                      background: isCurrentActiveFilter ? '#4338CA' : isExpanded ? '#6366F1' : '#F1F5F9',
+                      color: isCurrentActiveFilter || isExpanded ? '#FFFFFF' : '#475569',
                       fontSize: '0.8rem',
                       fontWeight: 700,
                       display: 'flex',
@@ -697,7 +716,7 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                         style={{
                           fontSize: '1rem',
                           fontWeight: 700,
-                          color: isExpanded ? '#312E81' : '#0F172A',
+                          color: isCurrentActiveFilter ? '#312E81' : isExpanded ? '#312E81' : '#0F172A',
                           letterSpacing: '-0.01em',
                         }}
                       >
@@ -711,13 +730,29 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                           fontWeight: 600,
                           padding: '0.15rem 0.55rem',
                           borderRadius: '12px',
-                          backgroundColor: isExpanded ? '#E0E7FF' : '#F1F5F9',
-                          color: isExpanded ? '#3730A3' : '#64748B',
+                          backgroundColor: isCurrentActiveFilter ? '#E0E7FF' : isExpanded ? '#E0E7FF' : '#F1F5F9',
+                          color: isCurrentActiveFilter ? '#3730A3' : isExpanded ? '#3730A3' : '#64748B',
                           transition: 'all 0.2s ease',
                         }}
                       >
                         {examCount} {examCount === 1 ? 'Exam' : 'Exams'}
                       </span>
+
+                      {isCurrentActiveFilter && (
+                        <span
+                          style={{
+                            fontSize: '0.72rem',
+                            fontWeight: 700,
+                            padding: '0.15rem 0.55rem',
+                            borderRadius: '12px',
+                            backgroundColor: '#4338CA',
+                            color: '#FFFFFF',
+                            letterSpacing: '0.02em',
+                          }}
+                        >
+                          Active Category
+                        </span>
+                      )}
                     </div>
 
                     <p
@@ -770,7 +805,7 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                   <div
                     style={{
                       display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
                       gap: '0.75rem',
                       marginTop: '0.5rem',
                     }}
@@ -911,28 +946,61 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                               marginTop: '0.25rem',
                             }}
                           >
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onSelectExam(exam);
-                              }}
-                              style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '0.3rem',
-                                background: 'none',
-                                border: 'none',
-                                color: '#4338CA',
-                                fontSize: '0.78rem',
-                                fontWeight: 600,
-                                cursor: 'pointer',
-                                padding: 0,
-                              }}
-                            >
-                              <BookOpen size={13} />
-                              <span>View Details</span>
-                            </button>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onSelectExam(exam);
+                                }}
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '0.3rem',
+                                  background: 'none',
+                                  border: 'none',
+                                  color: '#4338CA',
+                                  fontSize: '0.78rem',
+                                  fontWeight: 600,
+                                  cursor: 'pointer',
+                                  padding: 0,
+                                }}
+                              >
+                                <BookOpen size={13} />
+                                <span>View Details</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                title="Jump to full card in grid below"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  const el = document.getElementById(`exam-card-${exam.code.toLowerCase()}`);
+                                  if (el) {
+                                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                    el.style.borderColor = '#4338CA';
+                                    el.style.boxShadow = '0 0 0 4px rgba(67, 56, 202, 0.25), 0 10px 25px -5px rgba(0, 0, 0, 0.1)';
+                                    setTimeout(() => {
+                                      el.style.borderColor = '';
+                                      el.style.boxShadow = '';
+                                    }, 2200);
+                                  }
+                                }}
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '0.2rem',
+                                  background: 'none',
+                                  border: 'none',
+                                  color: '#64748B',
+                                  fontSize: '0.74rem',
+                                  fontWeight: 500,
+                                  cursor: 'pointer',
+                                  padding: '0.15rem 0.35rem',
+                                  borderRadius: '4px',
+                                }}
+                              >
+                                <span>Card ↓</span>
+                              </button>
 
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                               {exam.officialWebsiteUrl && (

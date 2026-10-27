@@ -46,10 +46,21 @@ class ApiClient {
       }
 
       if (!response.ok) {
-        throw new Error(
-          (typeof data.error === 'string' ? data.error : data.message) ||
-          `Request failed with status ${response.status}`
-        );
+        let errorMsg = '';
+        if (typeof data.error === 'string') {
+          errorMsg = data.error;
+        } else if (data.error && typeof data.error === 'object') {
+          const vErrors = (data.error as any).validationErrors;
+          if (Array.isArray(vErrors) && vErrors.length > 0) {
+            errorMsg = vErrors.map((ve: any) => ve.message).join('. ');
+          } else if ((data.error as any).message) {
+            errorMsg = (data.error as any).message;
+          }
+        }
+        if (!errorMsg) {
+          errorMsg = data.message || `Request failed with status ${response.status}`;
+        }
+        throw new Error(errorMsg);
       }
 
       return data;

@@ -23,7 +23,8 @@ export const validateRequest = (schema: ZodSchema) => {
           field: err.path.slice(1).join('.'),
           message: err.message,
         }));
-        ApiResponse.error(res, { validationErrors: formattedErrors }, 422, 'Validation failed');
+        const combinedMessage = formattedErrors.map((e) => e.message).join('. ') || 'Validation failed';
+        ApiResponse.error(res, { validationErrors: formattedErrors }, 422, combinedMessage);
         return;
       }
       ApiResponse.error(res, 'Internal validation error', 500, 'Server Error');

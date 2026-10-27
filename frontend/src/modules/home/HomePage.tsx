@@ -279,54 +279,67 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </section>
 
       {/* =====================================================================
-          5. HOW IT WORKS SECTION
+          5. HOW IT WORKS SECTION — 4 CONNECTED STEPS
           ===================================================================== */}
       <section className="how-it-works-section" id="how-it-works">
         <div className="landing-container">
           <div className="section-header-center">
-            <span className="section-badge">Structured 4-Step Process</span>
-            <h2 className="section-heading-lg">Your journey starts here</h2>
+            <span className="section-badge">Structured Advisory Process</span>
+            <h2 className="section-heading-lg">Your journey, one step at a time</h2>
             <p className="section-subtext">
-              We guide students step-by-step from initial intake to personalized future
-              planning with transparent, verified milestones.
+              Four connected stages designed to take you from initial academic discovery to confident, verified university admissions.
             </p>
           </div>
 
-          <div className="steps-grid">
-            {/* Step 01 */}
-            <div className="step-card">
-              <div className="step-number-badge">01</div>
-              <h3 className="step-title">Create Your Profile</h3>
-              <p className="step-desc">
-                Build your personalised student profile with comprehensive academic, board, and location intake.
-              </p>
-            </div>
+          <div className="steps-container-wrapper">
+            <div className="steps-grid">
+              {/* Step 01: Discover */}
+              <div className="step-card" id="step-discover">
+                <div className="step-header-row">
+                  <div className="step-number-badge">01</div>
+                  <span className="step-tag">Step One</span>
+                </div>
+                <h3 className="step-title">Discover</h3>
+                <p className="step-desc">
+                  Build your verified student profile and discover matched academic pathways, curriculum boards, and global institutions.
+                </p>
+              </div>
 
-            {/* Step 02 */}
-            <div className="step-card">
-              <div className="step-number-badge">02</div>
-              <h3 className="step-title">Understand Yourself</h3>
-              <p className="step-desc">
-                Explore your strengths, interests and academic direction through structured preference frameworks.
-              </p>
-            </div>
+              {/* Step 02: Understand */}
+              <div className="step-card" id="step-understand">
+                <div className="step-header-row">
+                  <div className="step-number-badge">02</div>
+                  <span className="step-tag">Step Two</span>
+                </div>
+                <h3 className="step-title">Understand</h3>
+                <p className="step-desc">
+                  Analyze your strengths, academic inclinations, and study preferences through structured diagnostic evaluations.
+                </p>
+              </div>
 
-            {/* Step 03 */}
-            <div className="step-card">
-              <div className="step-number-badge">03</div>
-              <h3 className="step-title">Get Guidance</h3>
-              <p className="step-desc">
-                Receive structured guidance based on your profile from qualified educational counsellors.
-              </p>
-            </div>
+              {/* Step 03: Plan */}
+              <div className="step-card" id="step-plan">
+                <div className="step-header-row">
+                  <div className="step-number-badge">03</div>
+                  <span className="step-tag">Step Three</span>
+                </div>
+                <h3 className="step-title">Plan</h3>
+                <p className="step-desc">
+                  Create a personalised exam preparation roadmap with clear milestone schedules, target scores, and prerequisites.
+                </p>
+              </div>
 
-            {/* Step 04 */}
-            <div className="step-card">
-              <div className="step-number-badge">04</div>
-              <h3 className="step-title">Plan Your Future</h3>
-              <p className="step-desc">
-                Make confident decisions about your next step with clear timelines, requirements, and milestones.
-              </p>
+              {/* Step 04: Move Forward */}
+              <div className="step-card" id="step-move-forward">
+                <div className="step-header-row">
+                  <div className="step-number-badge">04</div>
+                  <span className="step-tag">Step Four</span>
+                </div>
+                <h3 className="step-title">Move Forward</h3>
+                <p className="step-desc">
+                  Engage directly with expert educational counsellors to finalize admissions, verify documents, and secure your offer.
+                </p>
+              </div>
             </div>
           </div>
         </div>

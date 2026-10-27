@@ -6,12 +6,14 @@ interface ExamOverviewCardsProps {
   planItems: StudentExamPlanRecord[];
   mockAttempts: StudentMockAttemptRecord[];
   catalogCount: number;
+  onSelectTab?: (tab: 'catalog' | 'plan' | 'mocks') => void;
 }
 
 export const ExamOverviewCards: React.FC<ExamOverviewCardsProps> = ({
   planItems,
   mockAttempts,
   catalogCount,
+  onSelectTab,
 }) => {
   const safePlans = Array.isArray(planItems) ? planItems : [];
   const safeAttempts = Array.isArray(mockAttempts) ? mockAttempts : [];
@@ -28,170 +30,179 @@ export const ExamOverviewCards: React.FC<ExamOverviewCardsProps> = ({
         )
       : null;
 
+  const cards = [
+    {
+      id: 'my-exam-plan',
+      label: 'MY EXAM PLAN',
+      value: safePlans.length,
+      description: `of ${catalogCount} verified exams`,
+      icon: Bookmark,
+      color: '#4338CA',
+      bgColor: '#EEF2FF',
+      targetTab: 'plan' as const,
+    },
+    {
+      id: 'active-prep',
+      label: 'ACTIVE PREP',
+      value: preparingCount,
+      description: `in preparation (${plannedCount} planned)`,
+      icon: Clock,
+      color: '#EA580C',
+      bgColor: '#FFF7ED',
+      targetTab: 'plan' as const,
+    },
+    {
+      id: 'registered',
+      label: 'REGISTERED',
+      value: registeredCount,
+      description: 'official test date booked',
+      icon: CalendarCheck,
+      color: '#0284C7',
+      bgColor: '#F0F9FF',
+      targetTab: 'plan' as const,
+    },
+    {
+      id: 'completed',
+      label: 'COMPLETED',
+      value: completedCount,
+      description: 'achieved exam scores',
+      icon: CheckCircle2,
+      color: '#16A34A',
+      bgColor: '#F0FDF4',
+      targetTab: 'plan' as const,
+    },
+    {
+      id: 'diagnostic-mocks',
+      label: 'DIAGNOSTIC MOCKS',
+      value: safeAttempts.length,
+      description: avgScore !== null ? `Avg. ${avgScore}% accuracy` : 'No mock tests taken yet',
+      icon: Award,
+      color: '#7C3AED',
+      bgColor: '#F5F3FF',
+      targetTab: 'mocks' as const,
+    },
+  ];
+
   return (
     <div
       id="entrance-overview-cards"
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
-        gap: '1rem',
-        marginBottom: '1.75rem',
-      }}
+      className="entrance-overview-cards-grid"
     >
-      {/* 1. Saved in Plan */}
-      <div
-        style={{
-          background: '#FFFFFF',
-          border: '1px solid #E2E8F0',
-          borderRadius: '12px',
-          padding: '1.15rem 1.25rem',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
-          <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-            My Exam Plan
-          </span>
-          <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(91, 79, 233, 0.1)', color: '#5B4FE9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Bookmark size={17} />
-          </div>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
-          <span style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>
-            {planItems.length}
-          </span>
-          <span style={{ fontSize: '0.82rem', color: '#64748B' }}>
-            of {catalogCount} verified exams
-          </span>
-        </div>
-      </div>
+      {cards.map((card) => {
+        const IconComponent = card.icon;
+        const isClickable = Boolean(onSelectTab);
 
-      {/* 2. Preparing */}
-      <div
-        style={{
-          background: '#FFFFFF',
-          border: '1px solid #E2E8F0',
-          borderRadius: '12px',
-          padding: '1.15rem 1.25rem',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
-          <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-            Active Prep
-          </span>
-          <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(234, 88, 12, 0.1)', color: '#EA580C', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Clock size={17} />
-          </div>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
-          <span style={{ fontSize: '1.75rem', fontWeight: 800, color: '#EA580C', lineHeight: 1 }}>
-            {preparingCount}
-          </span>
-          <span style={{ fontSize: '0.82rem', color: '#64748B' }}>
-            in preparation ({plannedCount} planned)
-          </span>
-        </div>
-      </div>
+        return (
+          <div
+            key={card.id}
+            id={`overview-card-${card.id}`}
+            onClick={() => {
+              if (onSelectTab) {
+                onSelectTab(card.targetTab);
+              }
+            }}
+            role={isClickable ? 'button' : undefined}
+            tabIndex={isClickable ? 0 : undefined}
+            onKeyDown={(e) => {
+              if (isClickable && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                onSelectTab?.(card.targetTab);
+              }
+            }}
+            style={{
+              background: '#FFFFFF',
+              border: '1px solid #E2E8F0',
+              borderRadius: '10px',
+              padding: '1rem 1.15rem',
+              boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              minHeight: '102px',
+              cursor: isClickable ? 'pointer' : 'default',
+              transition: 'all 0.18s ease',
+              position: 'relative',
+              outline: 'none',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = '#CBD5E1';
+              e.currentTarget.style.boxShadow = '0 4px 10px -2px rgba(15, 23, 42, 0.07)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = '#E2E8F0';
+              e.currentTarget.style.boxShadow = '0 1px 3px rgba(15, 23, 42, 0.03)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            {/* Top row: Label and Icon */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: '0.5rem',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '0.72rem',
+                  fontWeight: 700,
+                  color: '#64748B',
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {card.label}
+              </span>
+              <div
+                style={{
+                  width: '30px',
+                  height: '30px',
+                  borderRadius: '7px',
+                  background: card.bgColor,
+                  color: card.color,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <IconComponent size={16} strokeWidth={2.2} />
+              </div>
+            </div>
 
-      {/* 3. Registered */}
-      <div
-        style={{
-          background: '#FFFFFF',
-          border: '1px solid #E2E8F0',
-          borderRadius: '12px',
-          padding: '1.15rem 1.25rem',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
-          <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-            Registered
-          </span>
-          <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(14, 165, 233, 0.1)', color: '#0EA5E9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <CalendarCheck size={17} />
+            {/* Bottom block: Prominent Value & Description */}
+            <div>
+              <div
+                style={{
+                  fontSize: '1.75rem',
+                  fontWeight: 800,
+                  color: '#0F172A',
+                  lineHeight: 1.1,
+                  letterSpacing: '-0.02em',
+                }}
+              >
+                {card.value}
+              </div>
+              <div
+                style={{
+                  fontSize: '0.78rem',
+                  color: '#64748B',
+                  marginTop: '0.25rem',
+                  lineHeight: 1.35,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+                title={card.description}
+              >
+                {card.description}
+              </div>
+            </div>
           </div>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
-          <span style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0284C7', lineHeight: 1 }}>
-            {registeredCount}
-          </span>
-          <span style={{ fontSize: '0.82rem', color: '#64748B' }}>
-            official test date booked
-          </span>
-        </div>
-      </div>
-
-      {/* 4. Completed */}
-      <div
-        style={{
-          background: '#FFFFFF',
-          border: '1px solid #E2E8F0',
-          borderRadius: '12px',
-          padding: '1.15rem 1.25rem',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
-          <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-            Completed
-          </span>
-          <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(22, 163, 74, 0.1)', color: '#16A34A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <CheckCircle2 size={17} />
-          </div>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
-          <span style={{ fontSize: '1.75rem', fontWeight: 800, color: '#16A34A', lineHeight: 1 }}>
-            {completedCount}
-          </span>
-          <span style={{ fontSize: '0.82rem', color: '#64748B' }}>
-            achieved exam scores
-          </span>
-        </div>
-      </div>
-
-      {/* 5. Diagnostic Mocks Taken */}
-      <div
-        style={{
-          background: '#FFFFFF',
-          border: '1px solid #E2E8F0',
-          borderRadius: '12px',
-          padding: '1.15rem 1.25rem',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
-          <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-            Diagnostic Mocks
-          </span>
-          <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(109, 40, 217, 0.1)', color: '#6D28D9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Award size={17} />
-          </div>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
-          <span style={{ fontSize: '1.75rem', fontWeight: 800, color: '#6D28D9', lineHeight: 1 }}>
-            {mockAttempts.length}
-          </span>
-          <span style={{ fontSize: '0.82rem', color: '#64748B' }}>
-            {avgScore !== null ? `Avg. ${avgScore}% accuracy` : 'No mock tests taken yet'}
-          </span>
-        </div>
-      </div>
+        );
+      })}
     </div>
   );
 };

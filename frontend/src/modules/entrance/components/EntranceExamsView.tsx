@@ -8,6 +8,7 @@ import {
   AlertCircle,
   Clock,
   TrendingUp,
+  ArrowLeft,
 } from 'lucide-react';
 import { EntranceService } from '../services/entrance.service';
 import {
@@ -28,7 +29,7 @@ interface EntranceExamsViewProps {
   onBackToDashboard?: () => void;
 }
 
-const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDashboard: _onBackToDashboard }) => {
+const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDashboard }) => {
   // Navigation Tabs: 'catalog' | 'plan' | 'mocks'
   const [activeTab, setActiveTab] = useState<'catalog' | 'plan' | 'mocks'>('catalog');
 
@@ -252,16 +253,44 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
 
   return (
     <div id="entrance-exams-module-view" style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-      {/* Page Header */}
-      <div style={{ marginBottom: '1.75rem' }}>
+      {/* Page Introduction */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        {onBackToDashboard && (
+          <div style={{ marginBottom: '0.6rem' }}>
+            <button
+              id="entrance-back-to-dash-btn"
+              onClick={onBackToDashboard}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                background: 'none',
+                border: 'none',
+                color: '#4338CA',
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                padding: '0.2rem 0',
+                transition: 'color 0.15s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#312E81')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#4338CA')}
+            >
+              <ArrowLeft size={15} />
+              <span>Back to Dashboard</span>
+            </button>
+          </div>
+        )}
+
         <h1
           id="entrance-module-title"
           style={{
-            fontSize: '1.75rem',
+            fontSize: '1.95rem',
             fontWeight: 800,
             color: '#0F172A',
-            letterSpacing: '-0.02em',
+            letterSpacing: '-0.025em',
             margin: '0 0 0.35rem',
+            lineHeight: 1.2,
           }}
         >
           Entrance Exams
@@ -269,7 +298,7 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
         <p
           id="entrance-module-subtitle"
           style={{
-            fontSize: '0.95rem',
+            fontSize: '0.94rem',
             color: '#64748B',
             margin: 0,
             lineHeight: 1.5,
@@ -287,18 +316,18 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
             background: feedback.type === 'success' ? '#F0FDF4' : '#FEF2F2',
             border: feedback.type === 'success' ? '1px solid #BBF7D0' : '1px solid #FECACA',
             color: feedback.type === 'success' ? '#166534' : '#991B1B',
-            borderRadius: '10px',
-            padding: '0.85rem 1.15rem',
-            marginBottom: '1.5rem',
+            borderRadius: '8px',
+            padding: '0.75rem 1rem',
+            marginBottom: '1.25rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            fontSize: '0.88rem',
+            fontSize: '0.86rem',
             fontWeight: 500,
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            {feedback.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
+            {feedback.type === 'success' ? <CheckCircle2 size={17} /> : <AlertCircle size={17} />}
             <span>{feedback.message}</span>
           </div>
           <button
@@ -323,6 +352,7 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
         planItems={planItems}
         mockAttempts={mockAttempts}
         catalogCount={exams.length}
+        onSelectTab={setActiveTab}
       />
 
       {/* Navigation Tabs Bar */}
@@ -333,8 +363,9 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
           alignItems: 'center',
           gap: '0.5rem',
           borderBottom: '1px solid #E2E8F0',
-          marginBottom: '1.75rem',
+          marginBottom: '1.5rem',
           overflowX: 'auto',
+          scrollbarWidth: 'none',
         }}
       >
         <button
@@ -343,11 +374,11 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
           style={{
             background: 'none',
             border: 'none',
-            borderBottom: activeTab === 'catalog' ? '2.5px solid #5B4FE9' : '2.5px solid transparent',
-            color: activeTab === 'catalog' ? '#5B4FE9' : '#64748B',
+            borderBottom: activeTab === 'catalog' ? '2.5px solid #4338CA' : '2.5px solid transparent',
+            color: activeTab === 'catalog' ? '#4338CA' : '#64748B',
             fontWeight: activeTab === 'catalog' ? 700 : 500,
-            fontSize: '0.92rem',
-            padding: '0.65rem 1rem',
+            fontSize: '0.9rem',
+            padding: '0.65rem 0.9rem',
             cursor: 'pointer',
             display: 'inline-flex',
             alignItems: 'center',
@@ -356,13 +387,14 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
             whiteSpace: 'nowrap',
           }}
         >
-          <Search size={16} />
+          <Search size={15} />
           <span>Exam Discovery</span>
           <span
             style={{
               background: activeTab === 'catalog' ? '#EEF2FF' : '#F1F5F9',
-              color: activeTab === 'catalog' ? '#5B4FE9' : '#64748B',
-              fontSize: '0.74rem',
+              color: activeTab === 'catalog' ? '#4338CA' : '#64748B',
+              border: activeTab === 'catalog' ? '1px solid #C7D2FE' : '1px solid transparent',
+              fontSize: '0.72rem',
               fontWeight: 700,
               padding: '0.1rem 0.45rem',
               borderRadius: '9999px',
@@ -378,11 +410,11 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
           style={{
             background: 'none',
             border: 'none',
-            borderBottom: activeTab === 'plan' ? '2.5px solid #5B4FE9' : '2.5px solid transparent',
-            color: activeTab === 'plan' ? '#5B4FE9' : '#64748B',
+            borderBottom: activeTab === 'plan' ? '2.5px solid #4338CA' : '2.5px solid transparent',
+            color: activeTab === 'plan' ? '#4338CA' : '#64748B',
             fontWeight: activeTab === 'plan' ? 700 : 500,
-            fontSize: '0.92rem',
-            padding: '0.65rem 1rem',
+            fontSize: '0.9rem',
+            padding: '0.65rem 0.9rem',
             cursor: 'pointer',
             display: 'inline-flex',
             alignItems: 'center',
@@ -391,14 +423,15 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
             whiteSpace: 'nowrap',
           }}
         >
-          <Bookmark size={16} />
+          <Bookmark size={15} />
           <span>My Exam Plan</span>
           {planItems.length > 0 && (
             <span
               style={{
                 background: activeTab === 'plan' ? '#EEF2FF' : '#F1F5F9',
-                color: activeTab === 'plan' ? '#5B4FE9' : '#64748B',
-                fontSize: '0.74rem',
+                color: activeTab === 'plan' ? '#4338CA' : '#64748B',
+                border: activeTab === 'plan' ? '1px solid #C7D2FE' : '1px solid transparent',
+                fontSize: '0.72rem',
                 fontWeight: 700,
                 padding: '0.1rem 0.45rem',
                 borderRadius: '9999px',
@@ -415,11 +448,11 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
           style={{
             background: 'none',
             border: 'none',
-            borderBottom: activeTab === 'mocks' ? '2.5px solid #5B4FE9' : '2.5px solid transparent',
-            color: activeTab === 'mocks' ? '#5B4FE9' : '#64748B',
+            borderBottom: activeTab === 'mocks' ? '2.5px solid #4338CA' : '2.5px solid transparent',
+            color: activeTab === 'mocks' ? '#4338CA' : '#64748B',
             fontWeight: activeTab === 'mocks' ? 700 : 500,
-            fontSize: '0.92rem',
-            padding: '0.65rem 1rem',
+            fontSize: '0.9rem',
+            padding: '0.65rem 0.9rem',
             cursor: 'pointer',
             display: 'inline-flex',
             alignItems: 'center',
@@ -428,14 +461,15 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
             whiteSpace: 'nowrap',
           }}
         >
-          <Award size={16} />
+          <Award size={15} />
           <span>Mock Tests & Diagnostic Results</span>
           {mockAttempts.length > 0 && (
             <span
               style={{
                 background: activeTab === 'mocks' ? '#EEF2FF' : '#F1F5F9',
-                color: activeTab === 'mocks' ? '#5B4FE9' : '#64748B',
-                fontSize: '0.74rem',
+                color: activeTab === 'mocks' ? '#4338CA' : '#64748B',
+                border: activeTab === 'mocks' ? '1px solid #C7D2FE' : '1px solid transparent',
+                fontSize: '0.72rem',
                 fontWeight: 700,
                 padding: '0.1rem 0.45rem',
                 borderRadius: '9999px',
