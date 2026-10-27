@@ -1,4 +1,6 @@
 import { PrismaClient } from '@prisma/client';
+import '../../config/env';
+import { getOrCreateNeonTunnel } from './neon-tunnel.service';
 
 /**
  * Singleton Prisma Service Client
@@ -9,8 +11,10 @@ class PrismaService {
 
   public static getInstance(): PrismaClient {
     if (!PrismaService.instance) {
+      const dbUrl = getOrCreateNeonTunnel();
       PrismaService.instance = new PrismaClient({
-        log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+        datasources: dbUrl ? { db: { url: dbUrl } } : undefined,
+        log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
       });
     }
     return PrismaService.instance;
@@ -18,3 +22,4 @@ class PrismaService {
 }
 
 export const prisma = PrismaService.getInstance();
+

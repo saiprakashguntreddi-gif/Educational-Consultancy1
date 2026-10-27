@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search, Bell, ExternalLink, LogOut, ChevronDown } from 'lucide-react';
 import { useAuth } from '../../../../shared/context/AuthContext';
 
@@ -16,6 +16,33 @@ export const SaaSTopBar: React.FC<SaaSTopBarProps> = ({
   const { user, logout } = useAuth();
   const [searchVal, setSearchVal] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!dropdownOpen) return;
+
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      if (dropdownContainerRef.current && !dropdownContainerRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [dropdownOpen]);
 
   // Formatted current date
   const todayFormatted = new Intl.DateTimeFormat('en-US', {
@@ -67,7 +94,7 @@ export const SaaSTopBar: React.FC<SaaSTopBarProps> = ({
           <span className="saas-badge-dot" />
         </button>
 
-        <div style={{ position: 'relative' }}>
+        <div ref={dropdownContainerRef} style={{ position: 'relative' }}>
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
             style={{

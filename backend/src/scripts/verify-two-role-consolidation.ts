@@ -1,3 +1,5 @@
+export {};
+
 const API_BASE = 'http://localhost:5000/api/v1';
 
 async function postJson(url: string, data: any, headers: Record<string, string> = {}) {

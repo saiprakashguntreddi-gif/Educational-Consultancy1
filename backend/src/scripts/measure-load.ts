@@ -1,3 +1,5 @@
+export {};
+
 async function main() {
   console.log('--- STARTING TIMED TRACE ---');
   let t0 = Date.now();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../../shared/context/AuthContext';
 import { ProfileService } from '../services/profile.service';
 import { PreferencesService } from '../../preferences/services/preferences.service';
@@ -389,6 +389,42 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [userDropdownOpen, setUserDropdownOpen] = useState<boolean>(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const userDropdownRef = useRef<HTMLDivElement>(null);
+  const userDropdownTriggerRef = useRef<HTMLDivElement>(null);
+
+  // Close user dropdown when clicking anywhere outside or pressing Escape
+  useEffect(() => {
+    if (!userDropdownOpen) return;
+
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node;
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(target) &&
+        userDropdownTriggerRef.current &&
+        !userDropdownTriggerRef.current.contains(target)
+      ) {
+        setUserDropdownOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setUserDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [userDropdownOpen]);
 
   const loadData = async () => {
     setFeedback(null);
@@ -933,6 +969,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
 
             {/* Student Profile / Avatar & Name */}
             <div
+              ref={userDropdownTriggerRef}
               className="cmd-user-dropdown-btn"
               onClick={() => setUserDropdownOpen(!userDropdownOpen)}
               title={`Signed in as ${user?.email}`}
@@ -952,6 +989,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
         {/* User Profile Quick Menu Dropdown */}
         {userDropdownOpen && (
           <div
+            ref={userDropdownRef}
             style={{
               position: 'absolute',
               top: '68px',
@@ -986,24 +1024,6 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
                 style={{ width: '100%', textAlign: 'left', padding: '0.5rem 0.65rem', background: 'none', border: 'none', fontSize: '0.84rem', color: '#172033', cursor: 'pointer', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
               >
                 <User size={15} color="#129DB9" /> My Profile
-              </button>
-              <button
-                onClick={() => {
-                  setUserDropdownOpen(false);
-                  handleNavSelection('preferences');
-                }}
-                style={{ width: '100%', textAlign: 'left', padding: '0.5rem 0.65rem', background: 'none', border: 'none', fontSize: '0.84rem', color: '#172033', cursor: 'pointer', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-              >
-                <Sliders size={15} color="#129DB9" /> Preferences
-              </button>
-              <button
-                onClick={() => {
-                  setUserDropdownOpen(false);
-                  handleNavSelection('education');
-                }}
-                style={{ width: '100%', textAlign: 'left', padding: '0.5rem 0.65rem', background: 'none', border: 'none', fontSize: '0.84rem', color: '#172033', cursor: 'pointer', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-              >
-                <GraduationCap size={15} color="#129DB9" /> Education Details
               </button>
             </div>
 
