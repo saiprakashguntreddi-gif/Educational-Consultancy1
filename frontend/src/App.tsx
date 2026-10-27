@@ -17,6 +17,7 @@ import { ScholarshipManagementPage } from './modules/scholarships/pages/Scholars
 import { FeeCalculatorPage } from './modules/fees/pages/FeeCalculatorPage';
 import { ExamIntelligencePage } from './modules/exam-intelligence/pages/ExamIntelligencePage';
 import { EightPathwayAssessmentSuite } from './modules/assessments/components/EightPathwayAssessmentSuite';
+import { EntranceExamsView } from './modules/entrance/components/EntranceExamsView';
 
 const AppContent: React.FC = () => {
   const [currentView, setCurrentView] = useState<string>('home');
@@ -45,7 +46,7 @@ const AppContent: React.FC = () => {
 
   // When user logs out (user becomes null), automatically route directly to home (main page)
   useEffect(() => {
-    const publicAuthViews = ['login', 'register', 'forgot-password', 'reset-password'];
+    const publicAuthViews = ['login', 'register', 'forgot-password', 'reset-password', 'entrance', 'entrance-exams', 'colleges'];
     if (!user && !publicAuthViews.includes(currentView)) {
       setCurrentView('home');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -130,11 +131,19 @@ const AppContent: React.FC = () => {
           />
         );
       case 'entrance':
+      case 'entrance-exams':
+        if (user?.role === 'STUDENT') {
+          return (
+            <StudentDashboardPage
+              initialSection="entrance"
+              onNavigateHome={() => handleNavigate('home')}
+            />
+          );
+        }
         return (
-          <StudentDashboardPage
-            initialSection="entrance"
-            onNavigateHome={() => handleNavigate('home')}
-          />
+          <div style={{ maxWidth: 1400, margin: '0 auto', padding: '2rem 1.5rem', minHeight: '80vh' }}>
+            <EntranceExamsView onBackToDashboard={() => handleNavigate('home')} />
+          </div>
         );
       case 'personal':
         return (

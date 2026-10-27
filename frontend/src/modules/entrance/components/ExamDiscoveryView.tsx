@@ -231,8 +231,8 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   transition: 'border-color 0.2s, box-shadow 0.2s',
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#4338CA';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67, 56, 202, 0.1)';
+                  e.currentTarget.style.borderColor = '#129DB9';
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(18, 157, 185, 0.15)';
                 }}
                 onBlur={(e) => {
                   e.currentTarget.style.borderColor = '#CBD5E1';
@@ -255,15 +255,15 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   borderRadius: '8px',
                   border: '1px solid #CBD5E1',
                   fontSize: '0.88rem',
-                  color: '#0F172A',
+                  color: '#102A43',
                   backgroundColor: '#FFFFFF',
                   outline: 'none',
                   cursor: 'pointer',
                   transition: 'border-color 0.2s, box-shadow 0.2s',
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#4338CA';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67, 56, 202, 0.1)';
+                  e.currentTarget.style.borderColor = '#129DB9';
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(18, 157, 185, 0.15)';
                 }}
                 onBlur={(e) => {
                   e.currentTarget.style.borderColor = '#CBD5E1';
@@ -317,8 +317,8 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                     }, 120);
                   }}
                   style={{
-                    background: isSelected ? '#4338CA' : '#F1F5F9',
-                    color: isSelected ? '#FFFFFF' : '#475569',
+                    background: isSelected ? '#129DB9' : '#EDF2F7',
+                    color: isSelected ? '#FFFFFF' : '#334E68',
                     border: 'none',
                     borderRadius: '8px',
                     padding: '0.38rem 0.8rem',
@@ -331,14 +331,14 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   }}
                   onMouseEnter={(e) => {
                     if (!isSelected) {
-                      e.currentTarget.style.backgroundColor = '#E2E8F0';
-                      e.currentTarget.style.color = '#0F172A';
+                      e.currentTarget.style.backgroundColor = '#D9E2EC';
+                      e.currentTarget.style.color = '#102A43';
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isSelected) {
-                      e.currentTarget.style.backgroundColor = '#F1F5F9';
-                      e.currentTarget.style.color = '#475569';
+                      e.currentTarget.style.backgroundColor = '#EDF2F7';
+                      e.currentTarget.style.color = '#334E68';
                     }
                   }}
                 >
@@ -355,19 +355,19 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
               alignItems: 'center',
               justifyContent: 'space-between',
               paddingTop: '0.75rem',
-              borderTop: '1px solid #F1F5F9',
+              borderTop: '1px solid #EDF2F7',
               flexWrap: 'wrap',
               gap: '0.65rem',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: '#64748B' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: '#627D98' }}>
               <span style={{ fontWeight: 600 }}>Display Layout:</span>
             </div>
 
             <div
               style={{
                 display: 'inline-flex',
-                background: '#F1F5F9',
+                background: '#EDF2F7',
                 borderRadius: '8px',
                 padding: '3px',
                 gap: '2px',
@@ -388,8 +388,8 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   fontWeight: 600,
                   cursor: 'pointer',
                   background: viewMode === 'both' ? '#FFFFFF' : 'transparent',
-                  color: viewMode === 'both' ? '#4338CA' : '#64748B',
-                  boxShadow: viewMode === 'both' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                  color: viewMode === 'both' ? '#129DB9' : '#627D98',
+                  boxShadow: viewMode === 'both' ? '0 1px 3px rgba(16, 42, 67, 0.08)' : 'none',
                   transition: 'all 0.15s ease',
                 }}
               >
@@ -412,8 +412,8 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   fontWeight: 600,
                   cursor: 'pointer',
                   background: viewMode === 'dropdowns' ? '#FFFFFF' : 'transparent',
-                  color: viewMode === 'dropdowns' ? '#4338CA' : '#64748B',
-                  boxShadow: viewMode === 'dropdowns' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                  color: viewMode === 'dropdowns' ? '#129DB9' : '#627D98',
+                  boxShadow: viewMode === 'dropdowns' ? '0 1px 3px rgba(16, 42, 67, 0.08)' : 'none',
                   transition: 'all 0.15s ease',
                 }}
               >
@@ -436,8 +436,8 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   fontWeight: 600,
                   cursor: 'pointer',
                   background: viewMode === 'grid' ? '#FFFFFF' : 'transparent',
-                  color: viewMode === 'grid' ? '#4338CA' : '#64748B',
-                  boxShadow: viewMode === 'grid' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                  color: viewMode === 'grid' ? '#129DB9' : '#627D98',
+                  boxShadow: viewMode === 'grid' ? '0 1px 3px rgba(16, 42, 67, 0.08)' : 'none',
                   transition: 'all 0.15s ease',
                 }}
               >
@@ -482,7 +482,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
               style={{
                 fontSize: '1.1rem',
                 fontWeight: 700,
-                color: '#0F172A',
+                color: '#102A43',
                 margin: 0,
                 display: 'flex',
                 alignItems: 'center',
@@ -497,11 +497,11 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                 style={{
                   fontSize: '0.75rem',
                   fontWeight: 600,
-                  backgroundColor: '#EEF2FF',
-                  color: '#4338CA',
+                  backgroundColor: 'rgba(18, 157, 185, 0.12)',
+                  color: '#084F5E',
                   padding: '0.15rem 0.55rem',
                   borderRadius: '12px',
-                  border: '1px solid #C7D2FE',
+                  border: '1px solid rgba(18, 157, 185, 0.3)',
                 }}
               >
                 {filteredExams.length} {filteredExams.length === 1 ? 'Unique Exam' : 'Unique Exams'}
@@ -512,11 +512,11 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   style={{
                     fontSize: '0.75rem',
                     fontWeight: 600,
-                    backgroundColor: '#F8FAFC',
-                    color: '#64748B',
+                    backgroundColor: '#F5F8FC',
+                    color: '#627D98',
                     padding: '0.15rem 0.55rem',
                     borderRadius: '12px',
-                    border: '1px solid #E2E8F0',
+                    border: '1px solid #D9E2EC',
                   }}
                 >
                   65 Category Listings across 7 Categories
@@ -530,7 +530,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
               id="exams-loading-state"
               style={{
                 background: '#FFFFFF',
-                border: '1px solid #E2E8F0',
+                border: '1px solid #D9E2EC',
             borderRadius: '12px',
             padding: '4rem 1.5rem',
             textAlign: 'center',
@@ -540,17 +540,17 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
             style={{
               width: '36px',
               height: '36px',
-              border: '3px solid #E2E8F0',
-              borderTopColor: '#5B4FE9',
+              border: '3px solid #D9E2EC',
+              borderTopColor: '#129DB9',
               borderRadius: '50%',
               margin: '0 auto 1rem',
               animation: 'spin 0.8s linear infinite',
             }}
           />
-          <div style={{ fontSize: '1rem', fontWeight: 700, color: '#0F172A' }}>
+          <div style={{ fontSize: '1rem', fontWeight: 700, color: '#102A43' }}>
             Loading Entrance Exams Catalogue...
           </div>
-          <p style={{ fontSize: '0.85rem', color: '#64748B', marginTop: '0.3rem' }}>
+          <p style={{ fontSize: '0.85rem', color: '#627D98', marginTop: '0.3rem' }}>
             Retrieving official test formats, scoring criteria, and recommendations.
           </p>
         </div>
@@ -560,7 +560,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
           id="exams-empty-state"
           style={{
             background: '#FFFFFF',
-            border: '1px solid #E2E8F0',
+            border: '1px solid #D9E2EC',
             borderRadius: '12px',
             padding: '3.5rem 1.5rem',
             textAlign: 'center',
@@ -571,8 +571,8 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
               width: '52px',
               height: '52px',
               borderRadius: '50%',
-              background: '#F1F5F9',
-              color: '#64748B',
+              background: '#F5F8FC',
+              color: '#627D98',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -581,13 +581,13 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
           >
             <Info size={24} />
           </div>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0F172A', margin: 0 }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#102A43', margin: 0 }}>
             No entrance exams match your current filters
           </h3>
           <p
             style={{
               fontSize: '0.88rem',
-              color: '#64748B',
+              color: '#627D98',
               maxWidth: '460px',
               margin: '0.5rem auto 1.25rem',
               lineHeight: 1.5,
@@ -603,7 +603,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
               setSelectedDestination('ALL');
             }}
             style={{
-              background: '#5B4FE9',
+              background: '#129DB9',
               color: '#FFFFFF',
               border: 'none',
               padding: '0.55rem 1.25rem',
@@ -611,7 +611,10 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
               fontSize: '0.86rem',
               fontWeight: 600,
               cursor: 'pointer',
+              transition: 'background 0.15s ease',
             }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = '#084F5E')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = '#129DB9')}
           >
             Reset Filters
           </button>
@@ -633,30 +636,30 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
               onClick={() => onSelectExam(exam)}
               style={{
                 background: '#FFFFFF',
-                border: exam.isRecommendedForStudent ? '1.5px solid #818CF8' : '1px solid #E2E8F0',
+                border: exam.isRecommendedForStudent ? '1.5px solid #129DB9' : '1px solid #D9E2EC',
                 borderRadius: '12px',
                 padding: '1.35rem',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 boxShadow: exam.isRecommendedForStudent
-                  ? '0 4px 12px rgba(91, 79, 233, 0.08)'
-                  : '0 1px 3px rgba(0,0,0,0.02)',
+                  ? '0 4px 12px rgba(18, 157, 185, 0.12)'
+                  : '0 1px 3px rgba(16, 42, 67, 0.04)',
                 position: 'relative',
                 transition: 'transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease',
                 cursor: 'pointer',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-3px)';
-                e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.1)';
-                e.currentTarget.style.borderColor = '#A5B4FC';
+                e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(16, 42, 67, 0.12)';
+                e.currentTarget.style.borderColor = '#40C7E5';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
                 e.currentTarget.style.boxShadow = exam.isRecommendedForStudent
-                  ? '0 4px 12px rgba(91, 79, 233, 0.08)'
-                  : '0 1px 3px rgba(0,0,0,0.02)';
-                e.currentTarget.style.borderColor = exam.isRecommendedForStudent ? '#818CF8' : '#E2E8F0';
+                  ? '0 4px 12px rgba(18, 157, 185, 0.12)'
+                  : '0 1px 3px rgba(16, 42, 67, 0.04)';
+                e.currentTarget.style.borderColor = exam.isRecommendedForStudent ? '#129DB9' : '#D9E2EC';
               }}
             >
               <div>
@@ -673,8 +676,8 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
                     <span
                       style={{
-                        background: '#EEF2FF',
-                        color: '#4338CA',
+                        background: 'rgba(18, 157, 185, 0.12)',
+                        color: '#084F5E',
                         fontSize: '0.75rem',
                         fontWeight: 800,
                         padding: '0.2rem 0.55rem',
@@ -686,8 +689,8 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                     </span>
                     <span
                       style={{
-                        background: '#F1F5F9',
-                        color: '#475569',
+                        background: '#EDF2F7',
+                        color: '#334E68',
                         fontSize: '0.72rem',
                         fontWeight: 600,
                         padding: '0.2rem 0.5rem',
@@ -704,16 +707,16 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '0.25rem',
-                        background: '#ECFDF5',
-                        color: '#059669',
+                        background: 'rgba(255, 181, 71, 0.16)',
+                        color: '#B7791F',
                         fontSize: '0.72rem',
                         fontWeight: 700,
                         padding: '0.2rem 0.5rem',
                         borderRadius: '6px',
-                        border: '1px solid #A7F3D0',
+                        border: '1px solid rgba(255, 181, 71, 0.35)',
                       }}
                     >
-                      <Sparkles size={12} />
+                      <Sparkles size={12} color="#FFB547" />
                       Recommended
                     </span>
                   )}
@@ -724,7 +727,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   style={{
                     fontSize: '1.08rem',
                     fontWeight: 800,
-                    color: '#0F172A',
+                    color: '#102A43',
                     margin: '0 0 0.45rem',
                     lineHeight: 1.35,
                   }}
@@ -736,7 +739,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                 <p
                   style={{
                     fontSize: '0.84rem',
-                    color: '#475569',
+                    color: '#486581',
                     lineHeight: 1.5,
                     margin: '0 0 1rem',
                     display: '-webkit-box',
@@ -755,25 +758,25 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                     flexWrap: 'wrap',
                     gap: '0.75rem',
                     padding: '0.75rem',
-                    background: '#F8FAFC',
+                    background: '#F5F8FC',
                     borderRadius: '8px',
                     marginBottom: '1rem',
-                    border: '1px solid #F1F5F9',
+                    border: '1px solid #EDF2F7',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.78rem', color: '#334155' }}>
-                    <Clock size={13} color="#64748B" />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.78rem', color: '#102A43' }}>
+                    <Clock size={13} color="#129DB9" />
                     <span>{exam.totalDurationMinutes} mins</span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.78rem', color: '#334155' }}>
-                    <Award size={13} color="#64748B" />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.78rem', color: '#102A43' }}>
+                    <Award size={13} color="#40C7E5" />
                     <span>Score: {exam.scoreRange}</span>
                   </div>
                 </div>
 
                 {/* Study Destinations */}
                 <div style={{ marginBottom: '1.15rem' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 600, color: '#64748B', textTransform: 'uppercase', marginBottom: '0.35rem', letterSpacing: '0.03em' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, color: '#627D98', textTransform: 'uppercase', marginBottom: '0.35rem', letterSpacing: '0.03em' }}>
                     Key Study Destinations:
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
@@ -782,8 +785,8 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                         key={idx}
                         style={{
                           fontSize: '0.74rem',
-                          background: '#F1F5F9',
-                          color: '#334155',
+                          background: '#EDF2F7',
+                          color: '#102A43',
                           padding: '0.15rem 0.5rem',
                           borderRadius: '4px',
                         }}
@@ -795,7 +798,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                       <span
                         style={{
                           fontSize: '0.74rem',
-                          color: '#64748B',
+                          color: '#627D98',
                           padding: '0.15rem 0.35rem',
                         }}
                       >
@@ -809,7 +812,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
               {/* Bottom Actions */}
               <div
                 style={{
-                  borderTop: '1px solid #F1F5F9',
+                  borderTop: '1px solid #EDF2F7',
                   paddingTop: '0.9rem',
                   display: 'flex',
                   alignItems: 'center',
@@ -827,14 +830,17 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                     }}
                     style={{
                       background: '#FFFFFF',
-                      border: '1px solid #CBD5E1',
-                      color: '#0F172A',
+                      border: '1px solid #D9E2EC',
+                      color: '#102A43',
                       padding: '0.45rem 0.85rem',
                       borderRadius: '6px',
                       fontSize: '0.82rem',
                       fontWeight: 600,
                       cursor: 'pointer',
+                      transition: 'border-color 0.15s ease',
                     }}
+                    onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#129DB9')}
+                    onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#D9E2EC')}
                   >
                     View Details
                   </button>
@@ -849,9 +855,9 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '0.25rem',
-                      background: '#F8FAFC',
-                      border: '1px solid #E2E8F0',
-                      color: '#475569',
+                      background: '#F5F8FC',
+                      border: '1px solid #D9E2EC',
+                      color: '#486581',
                       padding: '0.45rem 0.65rem',
                       borderRadius: '6px',
                       fontSize: '0.82rem',
@@ -877,7 +883,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '0.3rem',
-                        background: '#6D28D9',
+                        background: '#084F5E',
                         border: 'none',
                         color: '#FFFFFF',
                         padding: '0.45rem 0.75rem',
@@ -885,9 +891,12 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                         fontSize: '0.82rem',
                         fontWeight: 600,
                         cursor: 'pointer',
+                        transition: 'background 0.15s ease',
                       }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = '#102A43')}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = '#084F5E')}
                     >
-                      <PlayCircle size={14} />
+                      <PlayCircle size={14} color="#40C7E5" />
                       <span>Mock</span>
                     </button>
                   )}
@@ -902,19 +911,30 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '0.3rem',
-                      background: exam.studentPlanStatus ? '#DCFCE7' : '#4338CA',
+                      background: exam.studentPlanStatus ? 'rgba(18, 157, 185, 0.12)' : '#129DB9',
                       border: 'none',
-                      color: exam.studentPlanStatus ? '#166534' : '#FFFFFF',
+                      color: exam.studentPlanStatus ? '#084F5E' : '#FFFFFF',
                       padding: '0.45rem 0.85rem',
                       borderRadius: '6px',
                       fontSize: '0.82rem',
                       fontWeight: 600,
                       cursor: 'pointer',
+                      transition: 'background 0.15s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!exam.studentPlanStatus) {
+                        e.currentTarget.style.background = '#084F5E';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!exam.studentPlanStatus) {
+                        e.currentTarget.style.background = '#129DB9';
+                      }
                     }}
                   >
                     {exam.studentPlanStatus ? (
                       <>
-                        <Check size={14} />
+                        <Check size={14} color="#084F5E" />
                         <span>{exam.studentPlanStatus}</span>
                       </>
                     ) : (

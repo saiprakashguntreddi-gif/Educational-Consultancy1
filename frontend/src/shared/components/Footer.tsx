@@ -32,12 +32,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   width: '38px',
                   height: '38px',
                   borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #4338CA 0%, #6D28D9 100%)',
+                  background: 'linear-gradient(135deg, #129DB9 0%, #40C7E5 100%)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#FFFFFF',
-                  boxShadow: '0 4px 12px rgba(109, 40, 217, 0.35)',
+                  boxShadow: '0 4px 12px rgba(18, 157, 185, 0.35)',
                 }}
               >
                 <Compass size={22} />
@@ -51,7 +51,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     letterSpacing: '-0.02em',
                   }}
                 >
-                  SUPER<span style={{ color: '#C7D2FE' }}>CONSCIOUSNESS</span>
+                  SUPER<span style={{ color: '#40C7E5' }}>CONSCIOUSNESS</span>
                 </span>
               </div>
             </div>
@@ -67,15 +67,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 gap: '0.5rem',
                 padding: '0.35rem 0.75rem',
                 borderRadius: '6px',
-                background: 'rgba(109, 40, 217, 0.15)',
-                border: '1px solid rgba(199, 210, 254, 0.25)',
-                color: '#C7D2FE',
+                background: 'rgba(18, 157, 185, 0.12)',
+                border: '1px solid rgba(64, 199, 229, 0.3)',
+                color: '#40C7E5',
                 fontSize: '0.775rem',
                 fontWeight: 600,
                 width: 'fit-content',
               }}
             >
-              <ShieldCheck size={14} color="#A78BFA" /> Verified Student Guidance System
+              <ShieldCheck size={14} color="#FFB547" /> Verified Student Guidance System
             </div>
           </div>
 
@@ -84,6 +84,21 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <h4 className="footer-col-header">Platform</h4>
             <ul className="footer-links-vertical">
               <li>
+                <span className="footer-link-action" onClick={() => scrollTo('home')}>
+                  Home
+                </span>
+              </li>
+              <li>
+                <span className="footer-link-action" onClick={() => handleAccountClick('entrance')} id="footer-entrance-exams-link">
+                  Entrance Exams
+                </span>
+              </li>
+              <li>
+                <span className="footer-link-action" onClick={() => scrollTo('services')}>
+                  Services
+                </span>
+              </li>
+              <li>
                 <span className="footer-link-action" onClick={() => scrollTo('about')}>
                   About
                 </span>
@@ -91,11 +106,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <span className="footer-link-action" onClick={() => scrollTo('how-it-works')}>
                   How It Works
-                </span>
-              </li>
-              <li>
-                <span className="footer-link-action" onClick={() => scrollTo('student-guidance')}>
-                  Student Guidance
                 </span>
               </li>
               <li>
@@ -141,13 +151,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <h4 className="footer-col-header">Contact & Advisory</h4>
             <ul className="footer-links-vertical" style={{ gap: '0.95rem' }}>
               <li style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.875rem', color: '#CBD5E1' }}>
-                <Mail size={16} color="#A78BFA" />
+                <Mail size={16} color="#40C7E5" />
                 <a href="mailto:guidance@superconsciousness.edu" style={{ color: 'inherit', textDecoration: 'none', whiteSpace: 'nowrap' }}>
                   guidance@superconsciousness.edu
                 </a>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.85rem', color: '#94A3B8' }}>
-                <Clock size={16} color="#818CF8" />
+                <Clock size={16} color="#40C7E5" />
                 <span>Advisory Hours: Mon – Fri, 9:00 AM – 6:00 PM</span>
               </li>
               <li style={{ fontSize: '0.825rem', color: '#94A3B8', lineHeight: 1.5 }}>

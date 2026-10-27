@@ -78,13 +78,13 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
   const getStatusBadgeStyle = (status: ExamPlanStatus) => {
     switch (status) {
       case 'PLANNED':
-        return { bg: '#F1F5F9', color: '#475569', border: '#CBD5E1' };
+        return { bg: 'rgba(18, 157, 185, 0.1)', color: '#129DB9', border: 'rgba(18, 157, 185, 0.25)' };
       case 'PREPARING':
-        return { bg: '#FFF7ED', color: '#C2410C', border: '#FED7AA' };
+        return { bg: 'rgba(8, 79, 94, 0.1)', color: '#084F5E', border: 'rgba(8, 79, 94, 0.25)' };
       case 'REGISTERED':
-        return { bg: '#F0F9FF', color: '#0369A1', border: '#BAE6FD' };
+        return { bg: 'rgba(16, 42, 67, 0.1)', color: '#102A43', border: 'rgba(16, 42, 67, 0.25)' };
       case 'COMPLETED':
-        return { bg: '#F0FDF4', color: '#15803D', border: '#BBF7D0' };
+        return { bg: 'rgba(255, 181, 71, 0.15)', color: '#B7791F', border: '#FFB547' };
     }
   };
 
@@ -109,8 +109,8 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
             width: '56px',
             height: '56px',
             borderRadius: '50%',
-            background: 'rgba(91, 79, 233, 0.1)',
-            color: '#5B4FE9',
+            background: 'rgba(18, 157, 185, 0.1)',
+            color: '#129DB9',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -119,7 +119,7 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
         >
           <BookOpen size={26} />
         </div>
-        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', margin: '0 0 0.4rem' }}>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#102A43', margin: '0 0 0.4rem' }}>
           No Entrance Exams in Your Plan Yet
         </h3>
         <p
@@ -137,7 +137,7 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
           id="empty-plan-explore-btn"
           onClick={onExploreCatalog}
           style={{
-            background: '#5B4FE9',
+            background: '#129DB9',
             color: '#FFFFFF',
             border: 'none',
             padding: '0.65rem 1.5rem',
@@ -210,8 +210,8 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
                   <span
                     style={{
-                      background: '#EEF2FF',
-                      color: '#4338CA',
+                      background: 'rgba(18, 157, 185, 0.1)',
+                      color: '#129DB9',
                       fontSize: '0.75rem',
                       fontWeight: 800,
                       padding: '0.15rem 0.5rem',
@@ -238,7 +238,7 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
                   </span>
                 </div>
 
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#102A43', margin: 0 }}>
                   {exam?.name || 'Entrance Exam'}
                 </h3>
               </div>
@@ -255,7 +255,7 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '0.25rem',
-                      background: '#F8FAFC',
+                      background: '#F5F8FC',
                       border: '1px solid #E2E8F0',
                       color: '#475569',
                       padding: '0.4rem 0.65rem',
@@ -278,7 +278,7 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '0.3rem',
-                      background: '#6D28D9',
+                      background: '#084F5E',
                       color: '#FFFFFF',
                       border: 'none',
                       padding: '0.4rem 0.75rem',
@@ -303,7 +303,7 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
                       gap: '0.3rem',
                       background: '#FFFFFF',
                       border: '1px solid #CBD5E1',
-                      color: '#0F172A',
+                      color: '#102A43',
                       padding: '0.4rem 0.75rem',
                       borderRadius: '6px',
                       fontSize: '0.8rem',
@@ -493,7 +493,7 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
                     disabled={isSubmitting}
                     onClick={() => handleSave(item.id)}
                     style={{
-                      background: '#5B4FE9',
+                      background: '#129DB9',
                       color: '#FFFFFF',
                       border: 'none',
                       padding: '0.5rem 1.25rem',
@@ -515,7 +515,7 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
                   gap: '0.85rem',
-                  background: '#F8FAFC',
+                  background: '#F5F8FC',
                   borderRadius: '8px',
                   padding: '1rem',
                   border: '1px solid #F1F5F9',
@@ -525,7 +525,7 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
                   <div style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                     <Calendar size={13} /> Target Date
                   </div>
-                  <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#0F172A', marginTop: '0.2rem' }}>
+                  <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#102A43', marginTop: '0.2rem' }}>
                     {item.targetDate || 'Not scheduled yet'}
                   </div>
                 </div>
@@ -534,7 +534,7 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
                   <div style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                     <Target size={13} /> Target Score
                   </div>
-                  <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#0F172A', marginTop: '0.2rem' }}>
+                  <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#102A43', marginTop: '0.2rem' }}>
                     {item.targetScore || 'Goal not set'}
                   </div>
                 </div>
@@ -543,7 +543,7 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
                   <div style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                     <Award size={13} /> Current / Achieved Score
                   </div>
-                  <div style={{ fontSize: '0.92rem', fontWeight: 700, color: item.currentScore ? '#15803D' : '#64748B', marginTop: '0.2rem' }}>
+                  <div style={{ fontSize: '0.92rem', fontWeight: 700, color: item.currentScore ? '#B7791F' : '#64748B', marginTop: '0.2rem' }}>
                     {item.currentScore || '--'}
                   </div>
                 </div>

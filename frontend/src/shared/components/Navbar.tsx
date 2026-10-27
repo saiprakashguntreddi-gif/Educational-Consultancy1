@@ -78,79 +78,121 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
   };
 
   return (
-    <header className={`premium-navbar ${isScrolled ? 'is-scrolled' : ''} ${isAdmin ? 'navbar-has-admin' : ''}`}>
-      <div className="navbar-inner">
-        {/* Brand Logo / Wordmark */}
-        <div
-          onClick={() => handleNavClick('home')}
-          className="nav-brand"
-          id="nav-brand-logo"
-        >
-          <div className="nav-brand-logo-icon">
-            <Compass size={22} />
+    <div className="premium-navbar-wrapper">
+      <header className={`premium-navbar ${isScrolled ? 'is-scrolled' : ''} ${isAdmin ? 'navbar-has-admin' : ''}`}>
+        <div className="navbar-inner">
+          {/* Brand Logo / Wordmark */}
+          <div
+            onClick={() => handleNavClick('home')}
+            className="nav-brand"
+            id="nav-brand-logo"
+          >
+            <div className="nav-brand-logo-icon">
+              <Compass size={22} />
+            </div>
+            <div className="nav-brand-text">
+              <span className="nav-brand-title">
+                SUPER<span>CONSCIOUSNESS</span>
+              </span>
+              <span className="nav-brand-sub">
+                Educational Consultancy & Guidance
+              </span>
+            </div>
           </div>
-          <div className="nav-brand-text">
-            <span className="nav-brand-title">
-              SUPER<span>CONSCIOUSNESS</span>
-            </span>
-            <span className="nav-brand-sub">
-              Educational Consultancy & Guidance
-            </span>
-          </div>
-        </div>
 
-        {/* Center Navigation Links (Desktop) */}
-        {!user ? (
-          <nav className="nav-menu-links">
-            <button
-              onClick={() => handleNavClick('home')}
-              className="nav-link-btn"
-              style={{
-                color: currentView === 'home' ? '#FFFFFF' : '#E2E8F0',
-                fontWeight: currentView === 'home' ? 700 : 500,
-              }}
-            >
-              Home
-            </button>
-            <button
-              onClick={() => handleNavClick('#about')}
-              className="nav-link-btn"
-            >
-              About
-            </button>
-            <button
-              onClick={() => handleNavClick('#how-it-works')}
-              className="nav-link-btn"
-            >
-              How It Works
-            </button>
-            <button
-              onClick={() => handleNavClick('#resources')}
-              className="nav-link-btn"
-            >
-              Resources
-            </button>
-            <button
-              onClick={() => handleNavClick('#contact')}
-              className="nav-link-btn"
-            >
-              Contact
-            </button>
-          </nav>
-        ) : (
-          <nav className="nav-menu-links nav-menu-links-authenticated">
-            <button
-              onClick={() => handleNavClick('home')}
-              className="nav-link-btn"
-              style={{
-                color: currentView === 'home' ? '#FFFFFF' : '#E2E8F0',
-                fontWeight: currentView === 'home' ? 700 : 500,
-              }}
-            >
-              Home
-            </button>
-          </nav>
-        )}
+          {/* Center Navigation Links (Desktop) */}
+          {!user ? (
+            <nav className="nav-menu-links">
+              <button
+                onClick={() => handleNavClick('home')}
+                className="nav-link-btn"
+                style={{
+                  color: currentView === 'home' ? '#FFFFFF' : '#E2E8F0',
+                  fontWeight: currentView === 'home' ? 700 : 500,
+                }}
+              >
+                Home
+              </button>
+              <button
+                onClick={() => handleNavClick('entrance')}
+                className="nav-link-btn"
+                id="nav-entrance-exams-btn"
+                style={{
+                  color: currentView === 'entrance' || currentView === 'entrance-exams' ? '#FFFFFF' : '#E2E8F0',
+                  fontWeight: currentView === 'entrance' || currentView === 'entrance-exams' ? 700 : 500,
+                }}
+              >
+                Entrance Exams
+              </button>
+              <button
+                onClick={() => handleNavClick('#services')}
+                className="nav-link-btn"
+              >
+                Services
+              </button>
+              <button
+                onClick={() => handleNavClick('#about')}
+                className="nav-link-btn"
+              >
+                About
+              </button>
+              <button
+                onClick={() => handleNavClick('#how-it-works')}
+                className="nav-link-btn"
+              >
+                How It Works
+              </button>
+              <button
+                onClick={() => handleNavClick('#contact')}
+                className="nav-link-btn"
+              >
+                Contact
+              </button>
+            </nav>
+          ) : (
+            <nav className="nav-menu-links nav-menu-links-authenticated">
+              <button
+                onClick={() => handleNavClick('home')}
+                className="nav-link-btn"
+                style={{
+                  color: currentView === 'home' ? '#FFFFFF' : '#E2E8F0',
+                  fontWeight: currentView === 'home' ? 700 : 500,
+                }}
+              >
+                Home
+              </button>
+              <button
+                onClick={() => handleNavClick('entrance')}
+                className="nav-link-btn"
+                style={{
+                  color: currentView === 'entrance' || currentView === 'entrance-exams' ? '#FFFFFF' : '#E2E8F0',
+                  fontWeight: currentView === 'entrance' || currentView === 'entrance-exams' ? 700 : 500,
+                }}
+              >
+                Entrance Exams
+              </button>
+              <button
+                onClick={() => handleNavClick('colleges')}
+                className="nav-link-btn"
+                style={{
+                  color: currentView === 'colleges' ? '#FFFFFF' : '#E2E8F0',
+                  fontWeight: currentView === 'colleges' ? 700 : 500,
+                }}
+              >
+                Colleges
+              </button>
+              <button
+                onClick={() => handleNavClick('scholarships')}
+                className="nav-link-btn"
+                style={{
+                  color: currentView === 'scholarships' ? '#FFFFFF' : '#E2E8F0',
+                  fontWeight: currentView === 'scholarships' ? 700 : 500,
+                }}
+              >
+                Scholarships
+              </button>
+            </nav>
+          )}
 
         {/* Right Actions (Desktop) */}
         <div className="nav-auth-actions">
@@ -164,7 +206,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
                   title="Student Dashboard"
                   id="nav-dashboard-btn"
                 >
-                  <LayoutDashboard size={15} color="#A78BFA" />
+                  <LayoutDashboard size={15} color="#40C7E5" />
                   <span>Student Dashboard</span>
                 </button>
               )}
@@ -177,7 +219,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
                   id="nav-suite-btn"
                   title="Platform Administration Console"
                 >
-                  <ShieldCheck size={15} color="#A78BFA" />
+                  <ShieldCheck size={15} color="#FFB547" />
                   <span>Admin Dashboard</span>
                 </button>
               )}
@@ -235,6 +277,20 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
             Home
           </button>
           <button
+            onClick={() => handleNavClick('entrance')}
+            className={`nav-mobile-link ${currentView === 'entrance' || currentView === 'entrance-exams' ? 'is-active' : ''}`}
+            id="mobile-nav-entrance-btn"
+          >
+            Entrance Exams
+          </button>
+          <button
+            onClick={() => handleNavClick('#services')}
+            className="nav-mobile-link"
+            id="mobile-nav-services-btn"
+          >
+            Services
+          </button>
+          <button
             onClick={() => handleNavClick('#about')}
             className="nav-mobile-link"
             id="mobile-nav-about-btn"
@@ -247,13 +303,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
             id="mobile-nav-how-it-works-btn"
           >
             How It Works
-          </button>
-          <button
-            onClick={() => handleNavClick('#resources')}
-            className="nav-mobile-link"
-            id="mobile-nav-resources-btn"
-          >
-            Resources
           </button>
           <button
             onClick={() => handleNavClick('#contact')}
@@ -324,5 +373,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
         </div>
       )}
     </header>
+    </div>
   );
 };

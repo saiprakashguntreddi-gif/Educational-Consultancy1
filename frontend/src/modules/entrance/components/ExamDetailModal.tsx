@@ -70,15 +70,15 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
             display: 'flex',
             alignItems: 'flex-start',
             justifyContent: 'space-between',
-            background: 'linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)',
+            background: 'linear-gradient(180deg, #F5F8FC 0%, #FFFFFF 100%)',
           }}
         >
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
               <span
                 style={{
-                  background: '#EEF2FF',
-                  color: '#4338CA',
+                  background: 'rgba(18, 157, 185, 0.1)',
+                  color: '#129DB9',
                   fontSize: '0.8rem',
                   fontWeight: 700,
                   padding: '0.2rem 0.6rem',
@@ -102,20 +102,20 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
               {exam.isRecommendedForStudent && (
                 <span
                   style={{
-                    background: '#ECFDF5',
-                    color: '#059669',
+                    background: 'rgba(255, 181, 71, 0.15)',
+                    color: '#B7791F',
                     fontSize: '0.78rem',
                     fontWeight: 700,
                     padding: '0.2rem 0.6rem',
                     borderRadius: '6px',
-                    border: '1px solid #A7F3D0',
+                    border: '1px solid #FFB547',
                   }}
                 >
                   ★ Recommended for your goal
                 </span>
               )}
             </div>
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#102A43', margin: 0 }}>
               {exam.name}
             </h2>
           </div>
@@ -154,7 +154,7 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
               gap: '0.85rem',
-              background: '#F8FAFC',
+              background: '#F5F8FC',
               border: '1px solid #E2E8F0',
               borderRadius: '12px',
               padding: '1rem',
@@ -164,7 +164,7 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
               <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                 <Clock size={14} /> Total Duration
               </div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#0F172A', marginTop: '0.2rem' }}>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#102A43', marginTop: '0.2rem' }}>
                 {exam.totalDurationMinutes} minutes ({Math.floor(exam.totalDurationMinutes / 60)}h {exam.totalDurationMinutes % 60}m)
               </div>
             </div>
@@ -173,7 +173,7 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
               <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                 <Award size={14} /> Scoring Range
               </div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#0F172A', marginTop: '0.2rem' }}>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#102A43', marginTop: '0.2rem' }}>
                 {exam.scoreRange}
               </div>
             </div>
@@ -182,7 +182,7 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
               <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                 <Calendar size={14} /> Score Validity
               </div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#0F172A', marginTop: '0.2rem' }}>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#102A43', marginTop: '0.2rem' }}>
                 {exam.validity}
               </div>
             </div>
@@ -190,8 +190,8 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
 
           {/* Format & Test Structure */}
           <div>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <FileText size={18} color="#5B4FE9" />
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#102A43', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <FileText size={18} color="#129DB9" />
               Test Format & Section Structure
             </h3>
             <p style={{ fontSize: '0.88rem', color: '#475569', marginBottom: '0.85rem' }}>
@@ -211,7 +211,7 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
-                      <span style={{ fontWeight: 700, fontSize: '0.92rem', color: '#1E293B' }}>
+                      <span style={{ fontWeight: 700, fontSize: '0.92rem', color: '#102A43' }}>
                         {section.name}
                       </span>
                       <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.8rem', color: '#64748B' }}>
@@ -237,8 +237,8 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
           </div>
 
           {/* Scoring Methodology */}
-          <div style={{ background: '#F8FAFC', borderRadius: '8px', padding: '0.9rem 1rem', border: '1px solid #E2E8F0' }}>
-            <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0F172A', margin: '0 0 0.35rem' }}>
+          <div style={{ background: '#F5F8FC', borderRadius: '8px', padding: '0.9rem 1rem', border: '1px solid #E2E8F0' }}>
+            <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#102A43', margin: '0 0 0.35rem' }}>
               Scoring Methodology
             </h4>
             <p style={{ fontSize: '0.85rem', color: '#475569', margin: 0, lineHeight: 1.5 }}>
@@ -249,8 +249,8 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
           {/* Important Verified Dates & Deadlines */}
           {exam.importantDates && exam.importantDates.length > 0 && (
             <div>
-              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Calendar size={18} color="#5B4FE9" />
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#102A43', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Calendar size={18} color="#129DB9" />
                 Verified Test Windows & Deadlines
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.75rem' }}>
@@ -262,7 +262,7 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
                       border: '1px solid #E2E8F0',
                       borderRadius: '8px',
                       padding: '0.85rem 1rem',
-                      borderLeft: '4px solid #5B4FE9',
+                      borderLeft: '4px solid #129DB9',
                     }}
                   >
                     <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.25rem' }}>
@@ -288,8 +288,8 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
           {/* Preparation Resources & Recommended Books */}
           {(exam.prepResources?.length > 0 || exam.recommendedBooks?.length > 0) && (
             <div>
-              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <BookOpen size={18} color="#5B4FE9" />
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#102A43', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <BookOpen size={18} color="#129DB9" />
                 Recommended Study Resources & Books
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.75rem' }}>
@@ -297,16 +297,16 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
                   <div
                     key={`res-${idx}`}
                     style={{
-                      background: '#F8FAFC',
+                      background: '#F5F8FC',
                       border: '1px solid #E2E8F0',
                       borderRadius: '8px',
                       padding: '0.85rem',
                     }}
                   >
-                    <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#5B4FE9', letterSpacing: '0.04em' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#129DB9', letterSpacing: '0.04em' }}>
                       {res.type}
                     </span>
-                    <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0F172A', marginTop: '0.15rem' }}>
+                    <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#102A43', marginTop: '0.15rem' }}>
                       {res.title}
                     </div>
                     {res.description && (
@@ -321,16 +321,16 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
                   <div
                     key={`book-${idx}`}
                     style={{
-                      background: '#F8FAFC',
+                      background: '#F5F8FC',
                       border: '1px solid #E2E8F0',
                       borderRadius: '8px',
                       padding: '0.85rem',
                     }}
                   >
-                    <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#059669', letterSpacing: '0.04em' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#084F5E', letterSpacing: '0.04em' }}>
                       Book Reference
                     </span>
-                    <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0F172A', marginTop: '0.15rem' }}>
+                    <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#102A43', marginTop: '0.15rem' }}>
                       {book.title}
                     </div>
                     {book.author && (
@@ -369,8 +369,8 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              background: '#EEF2FF',
-              border: '1px solid #C7D2FE',
+              background: '#F5F8FC',
+              border: '1px solid rgba(18, 157, 185, 0.25)',
               borderRadius: '10px',
               padding: '1rem 1.25rem',
               flexWrap: 'wrap',
@@ -378,10 +378,10 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
             }}
           >
             <div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#312E81' }}>
+              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#102A43' }}>
                 Official Registration Portal
               </div>
-              <div style={{ fontSize: '0.8rem', color: '#4338CA', marginTop: '0.15rem' }}>
+              <div style={{ fontSize: '0.8rem', color: '#084F5E', marginTop: '0.15rem' }}>
                 Verified provider: {exam.officialWebsiteUrl}
               </div>
             </div>
@@ -395,7 +395,7 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.4rem',
-                background: '#4338CA',
+                background: '#129DB9',
                 color: '#FFFFFF',
                 padding: '0.55rem 1rem',
                 borderRadius: '8px',
@@ -415,7 +415,7 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
           style={{
             padding: '1.25rem 1.75rem',
             borderTop: '1px solid #E2E8F0',
-            background: '#F8FAFC',
+            background: '#F5F8FC',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -425,7 +425,7 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
         >
           <div style={{ fontSize: '0.82rem', color: '#64748B' }}>
             {exam.studentPlanStatus ? (
-              <span style={{ color: '#059669', fontWeight: 600 }}>
+              <span style={{ color: '#084F5E', fontWeight: 600 }}>
                 ✓ Currently in your plan as <strong>{exam.studentPlanStatus}</strong>
               </span>
             ) : (
@@ -442,7 +442,7 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.4rem',
-                  background: '#6D28D9',
+                  background: '#084F5E',
                   color: '#FFFFFF',
                   border: 'none',
                   padding: '0.6rem 1.15rem',
@@ -464,8 +464,8 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.4rem',
-                background: exam.studentPlanStatus ? '#E2E8F0' : '#0F172A',
-                color: exam.studentPlanStatus ? '#475569' : '#FFFFFF',
+                background: exam.studentPlanStatus ? '#E2E8F0' : '#129DB9',
+                color: exam.studentPlanStatus ? '#102A43' : '#FFFFFF',
                 border: 'none',
                 padding: '0.6rem 1.25rem',
                 borderRadius: '8px',

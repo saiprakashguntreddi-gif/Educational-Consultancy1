@@ -341,13 +341,13 @@ export const PersonalInformationView: React.FC<PersonalInformationViewProps> = (
             width: '42px',
             height: '42px',
             border: '3px solid #E2E8F0',
-            borderTopColor: '#4F46E5',
+            borderTopColor: '#129DB9',
             borderRadius: '50%',
             margin: '0 auto 1.25rem',
             animation: 'spin 0.7s linear infinite',
           }}
         />
-        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0F172A', margin: '0 0 0.35rem' }}>
+        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#102A43', margin: '0 0 0.35rem' }}>
           Loading Personal Information...
         </h3>
         <p style={{ fontSize: '0.86rem', color: '#64748B' }}>
@@ -372,11 +372,11 @@ export const PersonalInformationView: React.FC<PersonalInformationViewProps> = (
       {/* PAGE HEADER */}
       <div
         style={{
-          background: 'linear-gradient(135deg, #0B1535 0%, #1E1B4B 100%)',
+          background: 'linear-gradient(135deg, #102A43 0%, #084F5E 100%)',
           borderRadius: '18px',
           padding: '2.25rem 2rem',
           color: '#FFFFFF',
-          boxShadow: '0 8px 24px rgba(11, 21, 53, 0.12)',
+          boxShadow: '0 8px 24px rgba(16, 42, 67, 0.15)',
           display: 'flex',
           flexDirection: 'column',
           gap: '1rem',
@@ -393,7 +393,7 @@ export const PersonalInformationView: React.FC<PersonalInformationViewProps> = (
             width: '240px',
             height: '240px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(109, 40, 217, 0.3) 0%, rgba(109, 40, 217, 0) 70%)',
+            background: 'radial-gradient(circle, rgba(64, 199, 229, 0.25) 0%, rgba(64, 199, 229, 0) 70%)',
             pointerEvents: 'none',
           }}
         />
@@ -405,11 +405,11 @@ export const PersonalInformationView: React.FC<PersonalInformationViewProps> = (
                 width: '46px',
                 height: '46px',
                 borderRadius: '12px',
-                background: 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%)',
+                background: 'linear-gradient(135deg, #129DB9 0%, #40C7E5 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 4px 12px rgba(79, 70, 229, 0.35)',
+                boxShadow: '0 4px 12px rgba(18, 157, 185, 0.35)',
               }}
             >
               <IdCard size={24} color="#FFFFFF" />

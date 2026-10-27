@@ -207,7 +207,7 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
                 style={{
                   fontSize: '1.15rem',
                   fontWeight: 700,
-                  color: '#0F172A',
+                  color: '#102A43',
                   margin: 0,
                 }}
               >
@@ -219,8 +219,8 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
                   fontWeight: 700,
                   padding: '0.15rem 0.55rem',
                   borderRadius: '999px',
-                  background: safeAchievements.length > 0 ? '#FEF3C7' : '#F1F5F9',
-                  color: safeAchievements.length > 0 ? '#B45309' : '#64748B',
+                  background: safeAchievements.length > 0 ? 'rgba(255, 181, 71, 0.15)' : '#F1F5F9',
+                  color: safeAchievements.length > 0 ? '#B7791F' : '#64748B',
                 }}
               >
                 {safeAchievements.length} {safeAchievements.length === 1 ? 'Award' : 'Awards'}
@@ -242,13 +242,13 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
               gap: '0.45rem',
               padding: '0.55rem 1rem',
               borderRadius: '8px',
-              background: 'linear-gradient(135deg, #4F46E5 0%, #6D28D9 100%)',
+              background: '#129DB9',
               border: 'none',
               color: '#FFFFFF',
               fontSize: '0.84rem',
               fontWeight: 600,
               cursor: 'pointer',
-              boxShadow: '0 1px 3px rgba(79, 70, 229, 0.3)',
+              boxShadow: '0 1px 3px rgba(18, 157, 185, 0.3)',
               transition: 'opacity 0.15s ease',
             }}
             onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
@@ -510,7 +510,7 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
                 style={{
                   padding: '0.6rem 1.4rem',
                   borderRadius: '8px',
-                  background: 'linear-gradient(135deg, #4F46E5 0%, #6D28D9 100%)',
+                  background: '#129DB9',
                   border: 'none',
                   color: '#FFFFFF',
                   fontSize: '0.86rem',
@@ -554,7 +554,7 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
             style={{
               padding: '3rem 1.5rem',
               textAlign: 'center',
-              background: '#F8FAFC',
+              background: '#F5F8FC',
               borderRadius: '12px',
               border: '1px dashed #CBD5E1',
             }}
@@ -564,8 +564,8 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
                 width: '54px',
                 height: '54px',
                 borderRadius: '50%',
-                background: '#FEF3C7',
-                color: '#D97706',
+                background: 'rgba(255, 181, 71, 0.15)',
+                color: '#B7791F',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -574,7 +574,7 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
             >
               <Award size={28} />
             </div>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0F172A', margin: '0 0 0.35rem' }}>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#102A43', margin: '0 0 0.35rem' }}>
               No achievements recorded yet
             </h3>
             <p style={{ fontSize: '0.86rem', color: '#64748B', maxWidth: '440px', margin: '0 auto 1.25rem', lineHeight: 1.5 }}>
@@ -588,7 +588,7 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
                 gap: '0.45rem',
                 padding: '0.6rem 1.25rem',
                 borderRadius: '8px',
-                background: '#4F46E5',
+                background: '#129DB9',
                 border: 'none',
                 color: '#FFFFFF',
                 fontSize: '0.86rem',

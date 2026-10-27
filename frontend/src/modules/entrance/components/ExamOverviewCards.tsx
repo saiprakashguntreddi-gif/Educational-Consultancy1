@@ -37,8 +37,8 @@ export const ExamOverviewCards: React.FC<ExamOverviewCardsProps> = ({
       value: safePlans.length,
       description: `of ${catalogCount} verified exams`,
       icon: Bookmark,
-      color: '#4338CA',
-      bgColor: '#EEF2FF',
+      color: '#129DB9',
+      bgColor: 'rgba(18, 157, 185, 0.12)',
       targetTab: 'plan' as const,
     },
     {
@@ -47,8 +47,8 @@ export const ExamOverviewCards: React.FC<ExamOverviewCardsProps> = ({
       value: preparingCount,
       description: `in preparation (${plannedCount} planned)`,
       icon: Clock,
-      color: '#EA580C',
-      bgColor: '#FFF7ED',
+      color: '#084F5E',
+      bgColor: 'rgba(8, 79, 94, 0.1)',
       targetTab: 'plan' as const,
     },
     {
@@ -57,8 +57,8 @@ export const ExamOverviewCards: React.FC<ExamOverviewCardsProps> = ({
       value: registeredCount,
       description: 'official test date booked',
       icon: CalendarCheck,
-      color: '#0284C7',
-      bgColor: '#F0F9FF',
+      color: '#102A43',
+      bgColor: '#EBF3F8',
       targetTab: 'plan' as const,
     },
     {
@@ -67,18 +67,18 @@ export const ExamOverviewCards: React.FC<ExamOverviewCardsProps> = ({
       value: completedCount,
       description: 'achieved exam scores',
       icon: CheckCircle2,
-      color: '#16A34A',
-      bgColor: '#F0FDF4',
+      color: '#B7791F',
+      bgColor: 'rgba(255, 181, 71, 0.18)',
       targetTab: 'plan' as const,
     },
     {
       id: 'diagnostic-mocks',
-      label: 'DIAGNOSTIC MOCKS',
+      label: 'MOCK TESTS',
       value: safeAttempts.length,
       description: avgScore !== null ? `Avg. ${avgScore}% accuracy` : 'No mock tests taken yet',
       icon: Award,
-      color: '#7C3AED',
-      bgColor: '#F5F3FF',
+      color: '#084F5E',
+      bgColor: 'rgba(64, 199, 229, 0.2)',
       targetTab: 'mocks' as const,
     },
   ];
@@ -111,10 +111,10 @@ export const ExamOverviewCards: React.FC<ExamOverviewCardsProps> = ({
             }}
             style={{
               background: '#FFFFFF',
-              border: '1px solid #E2E8F0',
-              borderRadius: '10px',
+              border: '1px solid #D9E2EC',
+              borderRadius: '12px',
               padding: '1rem 1.15rem',
-              boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+              boxShadow: '0 1px 3px rgba(16, 42, 67, 0.04)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
@@ -125,13 +125,13 @@ export const ExamOverviewCards: React.FC<ExamOverviewCardsProps> = ({
               outline: 'none',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = '#CBD5E1';
-              e.currentTarget.style.boxShadow = '0 4px 10px -2px rgba(15, 23, 42, 0.07)';
+              e.currentTarget.style.borderColor = '#129DB9';
+              e.currentTarget.style.boxShadow = '0 6px 16px -2px rgba(18, 157, 185, 0.14)';
               e.currentTarget.style.transform = 'translateY(-2px)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = '#E2E8F0';
-              e.currentTarget.style.boxShadow = '0 1px 3px rgba(15, 23, 42, 0.03)';
+              e.currentTarget.style.borderColor = '#D9E2EC';
+              e.currentTarget.style.boxShadow = '0 1px 3px rgba(16, 42, 67, 0.04)';
               e.currentTarget.style.transform = 'translateY(0)';
             }}
           >
@@ -178,7 +178,7 @@ export const ExamOverviewCards: React.FC<ExamOverviewCardsProps> = ({
                 style={{
                   fontSize: '1.75rem',
                   fontWeight: 800,
-                  color: '#0F172A',
+                  color: '#102A43',
                   lineHeight: 1.1,
                   letterSpacing: '-0.02em',
                 }}

@@ -464,15 +464,15 @@ export const StudentPreferencesPage: React.FC<StudentPreferencesPageProps> = ({
                       gap: '0.45rem',
                       transition: 'all 0.15s ease',
                       border: isSelected
-                        ? '1px solid #6366f1'
+                        ? '1px solid #129DB9'
                         : '1px solid rgba(255, 255, 255, 0.1)',
                       background: isSelected
-                        ? 'rgba(99, 102, 241, 0.25)'
+                        ? 'rgba(18, 157, 185, 0.25)'
                         : 'rgba(255, 255, 255, 0.04)',
                       color: isSelected ? '#f8fafc' : 'var(--text-muted)',
                     }}
                   >
-                    {isPrimary && <Star size={13} color="#f59e0b" fill="#f59e0b" />}
+                    {isPrimary && <Star size={13} color="#FFB547" fill="#FFB547" />}
                     {c}
                     {isSelected && <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>×</span>}
                   </button>
@@ -539,10 +539,10 @@ export const StudentPreferencesPage: React.FC<StudentPreferencesPageProps> = ({
                         padding: '0.65rem 1rem',
                         borderRadius: 'var(--radius-md)',
                         background: isPrimary
-                          ? 'rgba(99, 102, 241, 0.15)'
+                          ? 'rgba(18, 157, 185, 0.15)'
                           : 'rgba(255, 255, 255, 0.03)',
                         border: isPrimary
-                          ? '1px solid rgba(99, 102, 241, 0.4)'
+                          ? '1px solid rgba(18, 157, 185, 0.4)'
                           : '1px solid rgba(255, 255, 255, 0.06)',
                       }}
                     >
@@ -553,7 +553,7 @@ export const StudentPreferencesPage: React.FC<StudentPreferencesPageProps> = ({
                             fontWeight: 700,
                             padding: '0.15rem 0.5rem',
                             borderRadius: '4px',
-                            background: isPrimary ? '#6366f1' : 'rgba(255, 255, 255, 0.1)',
+                            background: isPrimary ? '#129DB9' : 'rgba(255, 255, 255, 0.1)',
                             color: '#ffffff',
                           }}
                         >
@@ -566,14 +566,14 @@ export const StudentPreferencesPage: React.FC<StudentPreferencesPageProps> = ({
                           <span
                             style={{
                               fontSize: '0.725rem',
-                              color: '#fbbf24',
+                              color: '#FFB547',
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: '0.25rem',
                               fontWeight: 600,
                             }}
                           >
-                            <Star size={13} fill="#fbbf24" /> Primary Target
+                            <Star size={13} fill="#FFB547" /> Primary Target
                           </span>
                         )}
                       </div>

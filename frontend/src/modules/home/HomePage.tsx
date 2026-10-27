@@ -14,6 +14,11 @@ import {
   Target,
   FileCheck2,
   PhoneCall,
+  Coins,
+  Award,
+  Globe,
+  Layers,
+  CalendarCheck,
 } from 'lucide-react';
 
 interface HomePageProps {
@@ -45,7 +50,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   return (
     <div className="landing-root" id="home">
       {/* =====================================================================
-          2. HERO SECTION
+          1. HERO SECTION (EUniStud Benchmark)
           ===================================================================== */}
       <section className="hero-section">
         <div className="landing-container">
@@ -54,19 +59,17 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <div className="hero-content">
               <div className="hero-badge">
                 <span className="hero-badge-dot" />
-                <span>PERSONALISED EDUCATION • GUIDANCE • FUTURE</span>
+                <span>✦ PREMIER EDUCATIONAL CONSULTANCY & GUIDANCE</span>
               </div>
 
               <h1 className="hero-title">
-                <span>Your Future.</span>
-                <span>Your Potential.</span>
-                <span className="hero-title-guidance">Our Guidance.</span>
+                <span>Your Gateway to</span>
+                <span>Premier Universities &</span>
+                <span className="hero-title-guidance">Global Excellence.</span>
               </h1>
 
               <p className="hero-subtitle">
-                Superconsciousness helps students understand their strengths, explore
-                educational opportunities, and make confident decisions about their
-                future.
+                Superconsciousness bridges the gap between student aspirations and top educational institutions worldwide. Plan 54+ entrance exams, assess competencies, and secure verified admissions with structured mentor guidance.
               </p>
 
               <div className="hero-actions">
@@ -75,22 +78,23 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                   className="btn-primary-indigo"
                   id="hero-get-started-btn"
                 >
-                  <span>Get Started</span>
+                  <span>{user ? 'Go to Dashboard' : 'Apply Now — Get Started'}</span>
                   <ArrowRight size={18} />
                 </button>
 
                 <button
-                  onClick={() => scrollTo('how-it-works')}
+                  onClick={() => onNavigate('entrance')}
                   className="btn-secondary-outline"
                   id="hero-explore-btn"
                 >
-                  <span>Explore How It Works</span>
+                  <Compass size={17} />
+                  <span>Explore 54+ Entrance Exams</span>
                 </button>
               </div>
 
               <div className="hero-trust-line">
-                <ShieldCheck size={18} />
-                <span>Built around personalised student guidance</span>
+                <ShieldCheck size={18} color="#129DB9" />
+                <span>Verified Admissions Guidance • Certified Counselling Framework</span>
               </div>
             </div>
 
@@ -99,7 +103,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               <div className="hero-image-wrapper">
                 <img
                   src="/assets/hero-student.jpg"
-                  alt="Confident university student in academic library"
+                  alt="University student in academic library researching admissions"
                   className="hero-image"
                 />
 
@@ -110,90 +114,82 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                   </div>
                   <div className="card-label-col">
                     <span className="card-label-title">Student Profile</span>
-                    <span className="card-label-sub" style={{ color: '#059669', fontWeight: 600 }}>
-                      Verified ✓
+                    <span className="card-label-sub" style={{ color: '#059669', fontWeight: 700 }}>
+                      Verified Intake ✓
                     </span>
                   </div>
                 </div>
 
-                {/* Floating Card 2: Personalised Guidance / ✓ */}
-                <div className="hero-floating-card floating-card-mid-right">
+                {/* Floating Card 2: 54+ Entrance Exams */}
+                <div
+                  className="hero-floating-card floating-card-mid-right"
+                  onClick={() => onNavigate('entrance')}
+                  style={{ cursor: 'pointer' }}
+                >
                   <div className="card-icon-bubble">
                     <Sparkles size={18} />
                   </div>
                   <div className="card-label-col">
-                    <span className="card-label-title">Personalised Guidance</span>
-                    <span className="card-label-sub" style={{ color: '#6D28D9', fontWeight: 600 }}>
-                      Active Pathway ✓
+                    <span className="card-label-title">Entrance Exams</span>
+                    <span className="card-label-sub" style={{ color: '#129DB9', fontWeight: 600 }}>
+                      54 Verified Catalog →
                     </span>
                   </div>
                 </div>
 
-                {/* Floating Card 3: Future Planning / Explore → */}
+                {/* Floating Card 3: 1-on-1 Guidance */}
                 <div
                   className="hero-floating-card floating-card-bottom-left"
-                  onClick={() => scrollTo('student-guidance')}
+                  onClick={() => scrollTo('services')}
                   style={{ cursor: 'pointer' }}
                 >
                   <div className="card-icon-bubble future">
                     <TrendingUp size={18} />
                   </div>
                   <div className="card-label-col">
-                    <span className="card-label-title">Future Planning</span>
-                    <span className="card-label-sub" style={{ color: '#4338CA', fontWeight: 600 }}>
-                      Explore →
+                    <span className="card-label-title">Advisory Pathways</span>
+                    <span className="card-label-sub" style={{ color: '#084F5E', fontWeight: 600 }}>
+                      Personalised Roadmap →
                     </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* =====================================================================
-          3. TRUST / VALUE STRIP
-          ===================================================================== */}
-      <section className="trust-strip">
-        <div className="landing-container">
-          <div className="trust-grid">
-            <div className="trust-item">
-              <div className="trust-icon-box">
-                <Compass size={22} />
+          {/* Credibility Stats Ribbon (Directly anchored below hero) */}
+          <div className="hero-stats-ribbon" id="hero-stats-ribbon">
+            <div className="hero-stats-grid">
+              <div className="hero-stat-card">
+                <div className="hero-stat-number">
+                  500<span>+</span>
+                </div>
+                <div className="hero-stat-label">Students Guided & Placed</div>
+                <div className="hero-stat-sublabel">Across Premier Global Institutions</div>
               </div>
-              <div className="trust-text">
-                <span className="trust-title">Personalised Guidance</span>
-                <span className="trust-desc">Customized to student capability</span>
-              </div>
-            </div>
 
-            <div className="trust-item">
-              <div className="trust-icon-box">
-                <GraduationCap size={22} />
+              <div className="hero-stat-card">
+                <div className="hero-stat-number">
+                  54<span>+</span>
+                </div>
+                <div className="hero-stat-label">Verified Entrance Exams</div>
+                <div className="hero-stat-sublabel">Detailed Syllabi & Mock Testing</div>
               </div>
-              <div className="trust-text">
-                <span className="trust-title">Student Profiles</span>
-                <span className="trust-desc">Structured academic intake</span>
-              </div>
-            </div>
 
-            <div className="trust-item">
-              <div className="trust-icon-box">
-                <Users size={22} />
+              <div className="hero-stat-card">
+                <div className="hero-stat-number">
+                  7<span></span>
+                </div>
+                <div className="hero-stat-label">Core Academic Streams</div>
+                <div className="hero-stat-sublabel">Engg, MBA, Study Abroad, Design & More</div>
               </div>
-              <div className="trust-text">
-                <span className="trust-title">Expert Counselling</span>
-                <span className="trust-desc">Qualified advisory support</span>
-              </div>
-            </div>
 
-            <div className="trust-item">
-              <div className="trust-icon-box">
-                <TrendingUp size={22} />
-              </div>
-              <div className="trust-text">
-                <span className="trust-title">Future Planning</span>
-                <span className="trust-desc">Actionable educational roadmap</span>
+              <div className="hero-stat-card">
+                <div className="hero-stat-number">
+                  99<span>%</span>
+                </div>
+                <div className="hero-stat-label">Guidance Satisfaction</div>
+                <div className="hero-stat-sublabel">Transparent Certified Advisory</div>
               </div>
             </div>
           </div>
@@ -201,7 +197,88 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </section>
 
       {/* =====================================================================
-          4. ABOUT / INTRODUCTION SECTION
+          2. ACCESS PORTAL TRACKS (Inspired by EUniStud Access Cards)
+          ===================================================================== */}
+      <section className="portal-tracks-section" id="portal-tracks">
+        <div className="landing-container">
+          <div className="portal-tracks-grid">
+            {/* Track 1: Student Command Center */}
+            <div
+              className="portal-track-card"
+              onClick={handleGetStarted}
+              id="portal-track-student"
+            >
+              <div>
+                <div className="portal-track-icon-row">
+                  <div className="portal-track-icon">
+                    <GraduationCap size={24} />
+                  </div>
+                  <span className="portal-track-badge">Student Portal</span>
+                </div>
+                <h3 className="portal-track-title">Student Command Center</h3>
+                <p className="portal-track-desc">
+                  Build your verified academic profile, complete 8-pathway career fit assessments, and manage your personalized exam prep roadmap.
+                </p>
+              </div>
+              <div className="portal-track-cta">
+                <span>{user ? 'Open Dashboard' : 'Register as a Student'}</span>
+                <ArrowRight size={17} />
+              </div>
+            </div>
+
+            {/* Track 2: Entrance Exam Intelligence */}
+            <div
+              className="portal-track-card"
+              onClick={() => onNavigate('entrance')}
+              id="portal-track-exams"
+            >
+              <div>
+                <div className="portal-track-icon-row">
+                  <div className="portal-track-icon" style={{ color: '#084F5E', background: 'rgba(8, 79, 94, 0.1)' }}>
+                    <BookOpen size={24} />
+                  </div>
+                  <span className="portal-track-badge" style={{ color: '#084F5E' }}>54+ Exams</span>
+                </div>
+                <h3 className="portal-track-title">Entrance Exam Intelligence</h3>
+                <p className="portal-track-desc">
+                  Discover competitive national & international entrance exams with syllabi, dates, scoring patterns, and full-length timed diagnostic mocks.
+                </p>
+              </div>
+              <div className="portal-track-cta" style={{ color: '#084F5E' }}>
+                <span>Explore 54+ Entrance Exams</span>
+                <ArrowRight size={17} />
+              </div>
+            </div>
+
+            {/* Track 3: 1-on-1 Guidance Advisory */}
+            <div
+              className="portal-track-card"
+              onClick={() => scrollTo('contact')}
+              id="portal-track-mentorship"
+            >
+              <div>
+                <div className="portal-track-icon-row">
+                  <div className="portal-track-icon" style={{ color: '#B7791F', background: 'rgba(255, 181, 71, 0.18)' }}>
+                    <Users size={24} />
+                  </div>
+                  <span className="portal-track-badge" style={{ color: '#B7791F' }}>Mentorship</span>
+                </div>
+                <h3 className="portal-track-title">1-on-1 Certified Mentorship</h3>
+                <p className="portal-track-desc">
+                  Consult directly with certified educational counsellors for university shortlisting, SOP verification, fee planning, and visa dossiers.
+                </p>
+              </div>
+              <div className="portal-track-cta" style={{ color: '#B7791F' }}>
+                <span>Book Guidance Consultation</span>
+                <ArrowRight size={17} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          3. ABOUT SECTION
           ===================================================================== */}
       <section className="about-section" id="about">
         <div className="landing-container">
@@ -222,9 +299,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 Education decisions should be informed, not overwhelming.
               </h2>
               <p className="about-paragraph">
-                Every student has different strengths, interests and aspirations.
-                Superconsciousness brings these factors together to create a structured
-                student guidance experience.
+                Every student has unique strengths, academic backgrounds, and aspirations.
+                Superconsciousness replaces fragmented advice and hearsay with a structured, verified student guidance framework.
               </p>
 
               <div className="about-features-list">
@@ -233,9 +309,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                     <Check size={14} strokeWidth={3} />
                   </div>
                   <div className="feature-text-block">
-                    <span className="feature-text-title">Understand your strengths</span>
+                    <span className="feature-text-title">Understand your individual strengths</span>
                     <span className="feature-text-desc">
-                      Gain clarity on individual competencies, academic records, and career inclinations.
+                      Clarify academic competencies, curriculum board strengths (CBSE, ICSE, IB, Cambridge, State), and career inclinations.
                     </span>
                   </div>
                 </div>
@@ -245,9 +321,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                     <Check size={14} strokeWidth={3} />
                   </div>
                   <div className="feature-text-block">
-                    <span className="feature-text-title">Explore suitable pathways</span>
+                    <span className="feature-text-title">Explore calibrated pathways</span>
                     <span className="feature-text-desc">
-                      Discover institutions, curriculum boards, and degree tracks calibrated to your profile.
+                      Discover colleges, entrance exams, and study programs calibrated precisely to your verified student profile.
                     </span>
                   </div>
                 </div>
@@ -257,9 +333,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                     <Check size={14} strokeWidth={3} />
                   </div>
                   <div className="feature-text-block">
-                    <span className="feature-text-title">Make informed decisions</span>
+                    <span className="feature-text-title">Make confident, informed decisions</span>
                     <span className="feature-text-desc">
-                      Confidently plan your next milestone backed by verifiable guidance data.
+                      Plan every milestone backed by real admission data, diagnostic mock testing, and certified counsellor oversight.
                     </span>
                   </div>
                 </div>
@@ -270,7 +346,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 className="btn-secondary-outline"
                 id="about-discover-btn"
               >
-                <span>Discover Superconsciousness</span>
+                <span>Discover Our Advisory Process</span>
                 <ArrowRight size={16} />
               </button>
             </div>
@@ -279,150 +355,307 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </section>
 
       {/* =====================================================================
-          5. HOW IT WORKS SECTION — 4 CONNECTED STEPS
+          4. CORE SERVICES SECTION (3-Column Grid, 6 Real Services)
           ===================================================================== */}
-      <section className="how-it-works-section" id="how-it-works">
+      <section className="services-section" id="services">
         <div className="landing-container">
           <div className="section-header-center">
-            <span className="section-badge">Structured Advisory Process</span>
-            <h2 className="section-heading-lg">Your journey, one step at a time</h2>
+            <span className="section-badge">Our Core Consultancy Services</span>
+            <h2 className="section-heading-lg">Comprehensive Guidance Across Every Stage</h2>
             <p className="section-subtext">
+              From initial entrance exam preparation to final university enrolment, our structured services provide end-to-end guidance tailored to your ambitions.
+            </p>
+          </div>
+
+          <div className="services-grid-3col">
+            {/* Service 1: Entrance Exam Discovery */}
+            <div className="service-box-card" id="service-card-entrance">
+              <div>
+                <div className="service-icon-wrapper">
+                  <BookOpen size={22} />
+                </div>
+                <h3 className="service-title">Entrance Exam Discovery</h3>
+                <p className="service-desc">
+                  Browse 54+ national & international entrance examinations across engineering, management, study abroad, medicine, and design with syllabi, dates, and patterns.
+                </p>
+              </div>
+              <button
+                className="service-action-link"
+                onClick={() => onNavigate('entrance')}
+              >
+                <span>Explore Entrance Exams</span>
+                <ArrowRight size={15} />
+              </button>
+            </div>
+
+            {/* Service 2: Personalised Academic Guidance */}
+            <div className="service-box-card" id="service-card-guidance">
+              <div>
+                <div className="service-icon-wrapper">
+                  <Compass size={22} />
+                </div>
+                <h3 className="service-title">Personalised Educational Guidance</h3>
+                <p className="service-desc">
+                  Structured intake evaluating academic history, curriculum boards (CBSE, ICSE, IB, Cambridge), subject specializations, and individual student capability.
+                </p>
+              </div>
+              <button
+                className="service-action-link"
+                onClick={handleGetStarted}
+              >
+                <span>Start Student Intake</span>
+                <ArrowRight size={15} />
+              </button>
+            </div>
+
+            {/* Service 3: Career Planning & Assessment */}
+            <div className="service-box-card" id="service-card-career">
+              <div>
+                <div className="service-icon-wrapper">
+                  <Target size={22} />
+                </div>
+                <h3 className="service-title">Career & Pathway Planning</h3>
+                <p className="service-desc">
+                  Rigorous 8-Pathway career fit assessments matching student inclinations with emerging global industry sectors, professional degrees, and career trajectories.
+                </p>
+              </div>
+              <button
+                className="service-action-link"
+                onClick={handleGetStarted}
+              >
+                <span>Assess Career Pathways</span>
+                <ArrowRight size={15} />
+              </button>
+            </div>
+
+            {/* Service 4: Diagnostic Mock Tests */}
+            <div className="service-box-card" id="service-card-mocks">
+              <div>
+                <div className="service-icon-wrapper">
+                  <Award size={22} />
+                </div>
+                <h3 className="service-title">Diagnostic Mock Tests & Prep</h3>
+                <p className="service-desc">
+                  Timed diagnostic mock exams with countdown timers, immediate accuracy analytics, question-level answer keys, and performance tracking.
+                </p>
+              </div>
+              <button
+                className="service-action-link"
+                onClick={() => onNavigate('entrance')}
+              >
+                <span>Take Diagnostic Mock</span>
+                <ArrowRight size={15} />
+              </button>
+            </div>
+
+            {/* Service 5: College & University Discovery */}
+            <div className="service-box-card" id="service-card-colleges">
+              <div>
+                <div className="service-icon-wrapper">
+                  <GraduationCap size={22} />
+                </div>
+                <h3 className="service-title">College & University Discovery</h3>
+                <p className="service-desc">
+                  Three-tier recommendation framework (Dream, Reach, Safe) matching student profiles to verified institutions across India and global study destinations.
+                </p>
+              </div>
+              <button
+                className="service-action-link"
+                onClick={() => onNavigate('colleges')}
+              >
+                <span>Discover Institutions</span>
+                <ArrowRight size={15} />
+              </button>
+            </div>
+
+            {/* Service 6: Scholarships & Financial Advisory */}
+            <div className="service-box-card" id="service-card-scholarships">
+              <div>
+                <div className="service-icon-wrapper">
+                  <Coins size={22} />
+                </div>
+                <h3 className="service-title">Scholarships & Fee Advisory</h3>
+                <p className="service-desc">
+                  Identify merit- and need-based scholarships, calculate net tuition and living expenditures, and prepare competitive financial aid submissions.
+                </p>
+              </div>
+              <button
+                className="service-action-link"
+                onClick={() => onNavigate('scholarships')}
+              >
+                <span>Search Scholarships</span>
+                <ArrowRight size={15} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          5. STUDENT JOURNEY (4-Step Connected Process in Dark Navy)
+          ===================================================================== */}
+      <section className="journey-dark-section" id="how-it-works">
+        <div className="landing-container">
+          <div className="section-header-center" style={{ color: '#FFFFFF' }}>
+            <span
+              className="section-badge"
+              style={{
+                backgroundColor: 'rgba(64, 199, 229, 0.15)',
+                color: '#40C7E5',
+                borderColor: 'rgba(64, 199, 229, 0.35)',
+              }}
+            >
+              Structured Advisory Roadmap
+            </span>
+            <h2 className="section-heading-lg" style={{ color: '#FFFFFF' }}>
+              Your Journey, One Step at a Time
+            </h2>
+            <p className="section-subtext" style={{ color: '#CBD5E1' }}>
               Four connected stages designed to take you from initial academic discovery to confident, verified university admissions.
             </p>
           </div>
 
-          <div className="steps-container-wrapper">
-            <div className="steps-grid">
-              {/* Step 01: Discover */}
-              <div className="step-card" id="step-discover">
-                <div className="step-header-row">
-                  <div className="step-number-badge">01</div>
-                  <span className="step-tag">Step One</span>
-                </div>
-                <h3 className="step-title">Discover</h3>
-                <p className="step-desc">
-                  Build your verified student profile and discover matched academic pathways, curriculum boards, and global institutions.
-                </p>
-              </div>
+          <div className="journey-steps-grid">
+            {/* Step 01: Discover */}
+            <div className="journey-step-card" id="step-discover">
+              <div className="journey-step-num">01.</div>
+              <h3 className="journey-step-title">Discover</h3>
+              <p className="journey-step-desc">
+                Build your verified student profile and discover matched academic pathways, curriculum boards, and global institutions.
+              </p>
+            </div>
 
-              {/* Step 02: Understand */}
-              <div className="step-card" id="step-understand">
-                <div className="step-header-row">
-                  <div className="step-number-badge">02</div>
-                  <span className="step-tag">Step Two</span>
-                </div>
-                <h3 className="step-title">Understand</h3>
-                <p className="step-desc">
-                  Analyze your strengths, academic inclinations, and study preferences through structured diagnostic evaluations.
-                </p>
-              </div>
+            {/* Step 02: Understand */}
+            <div className="journey-step-card" id="step-understand">
+              <div className="journey-step-num">02.</div>
+              <h3 className="journey-step-title">Understand</h3>
+              <p className="journey-step-desc">
+                Analyze your strengths, academic inclinations, and career interests through structured diagnostic evaluations.
+              </p>
+            </div>
 
-              {/* Step 03: Plan */}
-              <div className="step-card" id="step-plan">
-                <div className="step-header-row">
-                  <div className="step-number-badge">03</div>
-                  <span className="step-tag">Step Three</span>
-                </div>
-                <h3 className="step-title">Plan</h3>
-                <p className="step-desc">
-                  Create a personalised exam preparation roadmap with clear milestone schedules, target scores, and prerequisites.
-                </p>
-              </div>
+            {/* Step 03: Plan */}
+            <div className="journey-step-card" id="step-plan">
+              <div className="journey-step-num">03.</div>
+              <h3 className="journey-step-title">Plan</h3>
+              <p className="journey-step-desc">
+                Create a personalised exam preparation roadmap with clear milestone schedules, target scores, and prerequisites.
+              </p>
+            </div>
 
-              {/* Step 04: Move Forward */}
-              <div className="step-card" id="step-move-forward">
-                <div className="step-header-row">
-                  <div className="step-number-badge">04</div>
-                  <span className="step-tag">Step Four</span>
-                </div>
-                <h3 className="step-title">Move Forward</h3>
-                <p className="step-desc">
-                  Engage directly with expert educational counsellors to finalize admissions, verify documents, and secure your offer.
-                </p>
-              </div>
+            {/* Step 04: Move Forward */}
+            <div className="journey-step-card" id="step-move-forward">
+              <div className="journey-step-num">04.</div>
+              <h3 className="journey-step-title">Move Forward</h3>
+              <p className="journey-step-desc">
+                Engage directly with expert educational counsellors to finalize admissions, verify documents, and secure your offer.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* =====================================================================
-          6. STUDENT GUIDANCE SECTION
+          6. GLOBAL STUDY DESTINATIONS SHOWCASE (EUniStud Style)
           ===================================================================== */}
-      <section className="guidance-section" id="student-guidance">
+      <section className="destinations-section" id="destinations">
         <div className="landing-container">
           <div className="section-header-center">
-            <span className="section-badge">Advisory Framework</span>
-            <h2 className="section-heading-lg">Guidance built around you.</h2>
+            <span className="section-badge">Global Study Hubs</span>
+            <h2 className="section-heading-lg">Explore Premier Education Destinations</h2>
             <p className="section-subtext">
-              Comprehensive guidance pillars addressing every critical dimension of your
-              educational path and career growth.
+              Target world-renowned universities with tailored admission requirements, test prep, and visa support.
             </p>
           </div>
 
-          <div className="guidance-grid">
-            {/* Card 1: Academic Guidance */}
+          <div className="destinations-grid-5col">
+            {/* UK */}
             <div
-              className="guidance-card"
-              onClick={handleGetStarted}
-              title="Explore Academic Guidance"
+              className="destination-card"
+              onClick={() => onNavigate('entrance')}
+              id="destination-uk"
             >
-              <div className="guidance-card-top">
-                <div className="guidance-icon-circle">
-                  <BookOpen size={24} />
-                </div>
-                <h3 className="guidance-card-title">Academic Guidance</h3>
-                <p className="guidance-card-desc">
-                  Understand your academic direction and opportunities across leading
-                  curriculums, subject specializations, and degree programs.
-                </p>
-              </div>
-              <div className="guidance-card-action">
-                <span>Explore Academic Paths</span>
-                <ArrowRight size={16} />
+              <img
+                src="/assets/dest-uk.jpg"
+                alt="Study in United Kingdom"
+                className="destination-img"
+              />
+              <div className="destination-overlay" />
+              <div className="destination-content">
+                <div className="destination-country">United Kingdom</div>
+                <div className="destination-meta">Top QS Universities • Graduate Visa</div>
               </div>
             </div>
 
-            {/* Card 2: Career Exploration */}
+            {/* USA */}
             <div
-              className="guidance-card"
-              onClick={handleGetStarted}
-              title="Explore Career Exploration"
+              className="destination-card"
+              onClick={() => onNavigate('entrance')}
+              id="destination-usa"
             >
-              <div className="guidance-card-top">
-                <div className="guidance-icon-circle">
-                  <Compass size={24} />
-                </div>
-                <h3 className="guidance-card-title">Career Exploration</h3>
-                <p className="guidance-card-desc">
-                  Explore pathways aligned with your interests and strengths, analyzing
-                  industry developments and emerging professional sectors.
-                </p>
-              </div>
-              <div className="guidance-card-action">
-                <span>Discover Career Tracks</span>
-                <ArrowRight size={16} />
+              <img
+                src="/assets/dest-usa.jpg"
+                alt="Study in United States"
+                className="destination-img"
+              />
+              <div className="destination-overlay" />
+              <div className="destination-content">
+                <div className="destination-country">United States</div>
+                <div className="destination-meta">Ivy League & Research • STEM OPT</div>
               </div>
             </div>
 
-            {/* Card 3: Personalised Planning */}
+            {/* Canada */}
             <div
-              className="guidance-card"
-              onClick={handleGetStarted}
-              title="Explore Personalised Planning"
+              className="destination-card"
+              onClick={() => onNavigate('entrance')}
+              id="destination-canada"
             >
-              <div className="guidance-card-top">
-                <div className="guidance-icon-circle">
-                  <Target size={24} />
-                </div>
-                <h3 className="guidance-card-title">Personalised Planning</h3>
-                <p className="guidance-card-desc">
-                  Build a clearer plan for your educational future with sequenced milestones,
-                  prerequisites, and verified counsellor recommendations.
-                </p>
+              <img
+                src="/assets/dest-canada.jpg"
+                alt="Study in Canada"
+                className="destination-img"
+              />
+              <div className="destination-overlay" />
+              <div className="destination-content">
+                <div className="destination-country">Canada</div>
+                <div className="destination-meta">World-Class Degrees • PGWP Eligible</div>
               </div>
-              <div className="guidance-card-action">
-                <span>Start Your Plan</span>
-                <ArrowRight size={16} />
+            </div>
+
+            {/* Germany */}
+            <div
+              className="destination-card"
+              onClick={() => onNavigate('entrance')}
+              id="destination-germany"
+            >
+              <img
+                src="/assets/dest-germany.jpg"
+                alt="Study in Germany"
+                className="destination-img"
+              />
+              <div className="destination-overlay" />
+              <div className="destination-content">
+                <div className="destination-country">Germany</div>
+                <div className="destination-meta">Tuition-Free Public Unis • Tech Hub</div>
+              </div>
+            </div>
+
+            {/* Australia */}
+            <div
+              className="destination-card"
+              onClick={() => onNavigate('entrance')}
+              id="destination-australia"
+            >
+              <img
+                src="/assets/dest-australia.jpg"
+                alt="Study in Australia"
+                className="destination-img"
+              />
+              <div className="destination-overlay" />
+              <div className="destination-content">
+                <div className="destination-country">Australia</div>
+                <div className="destination-meta">Group of Eight • Post-Study Rights</div>
               </div>
             </div>
           </div>
@@ -430,59 +663,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </section>
 
       {/* =====================================================================
-          7. WHY SUPERCONSCIOUSNESS SECTION (Dark Navy)
-          ===================================================================== */}
-      <section className="why-section" id="why-us">
-        <div className="landing-container">
-          <div className="why-header">
-            <span className="why-badge">The Superconsciousness Difference</span>
-            <h2 className="why-heading">
-              <span>More than information.</span>
-              <span>A structured approach to your future.</span>
-            </h2>
-            <p className="why-subtext">
-              We replace fragmented advice and guesswork with a rigorous, transparent student guidance framework.
-            </p>
-          </div>
-
-          <div className="why-grid">
-            <div className="why-card">
-              <div className="why-num">01</div>
-              <h3 className="why-card-title">Personalised</h3>
-              <p className="why-card-desc">
-                Recommendations tailored to individual academic history, strengths, and geographical priorities.
-              </p>
-            </div>
-
-            <div className="why-card">
-              <div className="why-num">02</div>
-              <h3 className="why-card-title">Student-Centred</h3>
-              <p className="why-card-desc">
-                Every advisory session places student goals, learning style, and genuine ambitions first.
-              </p>
-            </div>
-
-            <div className="why-card">
-              <div className="why-num">03</div>
-              <h3 className="why-card-title">Structured</h3>
-              <p className="why-card-desc">
-                Clear progress milestones and audited workflows eliminate ambiguity across every stage.
-              </p>
-            </div>
-
-            <div className="why-card">
-              <div className="why-num">04</div>
-              <h3 className="why-card-title">Guidance-Focused</h3>
-              <p className="why-card-desc">
-                Direct engagement with qualified counsellors dedicated to meaningful academic mentorship.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================================
-          RESOURCES ANCHOR SECTION
+          7. STUDENT GUIDANCE RESOURCES & TOOLKITS
           ===================================================================== */}
       <section id="resources" className="resources-section">
         <div className="landing-container">
@@ -496,16 +677,17 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                   Student Guidance Resources & Toolkits
                 </h3>
                 <p className="resources-subtext">
-                  Access curated guidance frameworks, curriculum comparative guides, and university planning checklists.
+                  Access curated entrance examination syllabi, board comparative frameworks, and university admission checklists.
                 </p>
               </div>
             </div>
 
             <button
-              onClick={handleGetStarted}
+              onClick={() => onNavigate('entrance')}
               className="btn-primary-indigo resources-action-btn"
+              id="resources-action-btn"
             >
-              <span>Explore Resources</span>
+              <span>Explore Exam Catalog</span>
               <ArrowRight size={16} />
             </button>
           </div>
@@ -521,7 +703,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <h2 className="cta-title">Ready to understand your next step?</h2>
             <p className="cta-text">
               Start your student journey with Superconsciousness. Complete your initial
-              profile intake and receive structured guidance.
+              profile intake and receive structured, verified guidance from expert mentors.
             </p>
 
             <div className="cta-actions">
@@ -530,7 +712,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 className="btn-cta-primary"
                 id="cta-get-started-btn"
               >
-                <span>Get Started</span>
+                <span>{user ? 'Open Student Portal' : 'Apply Now — Get Started'}</span>
                 <ArrowRight size={18} />
               </button>
 
@@ -540,7 +722,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 id="cta-talk-to-us-btn"
               >
                 <PhoneCall size={16} />
-                <span>Talk to Us</span>
+                <span>Talk to an Advisor</span>
               </button>
             </div>
           </div>

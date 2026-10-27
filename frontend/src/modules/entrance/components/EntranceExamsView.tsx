@@ -266,15 +266,15 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
                 gap: '0.35rem',
                 background: 'none',
                 border: 'none',
-                color: '#4338CA',
+                color: '#129DB9',
                 fontSize: '0.85rem',
                 fontWeight: 600,
                 cursor: 'pointer',
                 padding: '0.2rem 0',
                 transition: 'color 0.15s ease',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#312E81')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#4338CA')}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#084F5E')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#129DB9')}
             >
               <ArrowLeft size={15} />
               <span>Back to Dashboard</span>
@@ -287,7 +287,7 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
           style={{
             fontSize: '1.95rem',
             fontWeight: 800,
-            color: '#0F172A',
+            color: '#102A43',
             letterSpacing: '-0.025em',
             margin: '0 0 0.35rem',
             lineHeight: 1.2,
@@ -299,7 +299,7 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
           id="entrance-module-subtitle"
           style={{
             fontSize: '0.94rem',
-            color: '#64748B',
+            color: '#627D98',
             margin: 0,
             lineHeight: 1.5,
           }}
@@ -313,9 +313,9 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
         <div
           id="entrance-feedback-alert"
           style={{
-            background: feedback.type === 'success' ? '#F0FDF4' : '#FEF2F2',
-            border: feedback.type === 'success' ? '1px solid #BBF7D0' : '1px solid #FECACA',
-            color: feedback.type === 'success' ? '#166534' : '#991B1B',
+            background: feedback.type === 'success' ? '#E6F7FA' : '#FEF2F2',
+            border: feedback.type === 'success' ? '1px solid rgba(18, 157, 185, 0.35)' : '1px solid #FECACA',
+            color: feedback.type === 'success' ? '#084F5E' : '#991B1B',
             borderRadius: '8px',
             padding: '0.75rem 1rem',
             marginBottom: '1.25rem',
@@ -362,7 +362,7 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
           display: 'flex',
           alignItems: 'center',
           gap: '0.5rem',
-          borderBottom: '1px solid #E2E8F0',
+          borderBottom: '1px solid #D9E2EC',
           marginBottom: '1.5rem',
           overflowX: 'auto',
           scrollbarWidth: 'none',
@@ -374,8 +374,8 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
           style={{
             background: 'none',
             border: 'none',
-            borderBottom: activeTab === 'catalog' ? '2.5px solid #4338CA' : '2.5px solid transparent',
-            color: activeTab === 'catalog' ? '#4338CA' : '#64748B',
+            borderBottom: activeTab === 'catalog' ? '2.5px solid #129DB9' : '2.5px solid transparent',
+            color: activeTab === 'catalog' ? '#129DB9' : '#627D98',
             fontWeight: activeTab === 'catalog' ? 700 : 500,
             fontSize: '0.9rem',
             padding: '0.65rem 0.9rem',
@@ -391,9 +391,9 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
           <span>Exam Discovery</span>
           <span
             style={{
-              background: activeTab === 'catalog' ? '#EEF2FF' : '#F1F5F9',
-              color: activeTab === 'catalog' ? '#4338CA' : '#64748B',
-              border: activeTab === 'catalog' ? '1px solid #C7D2FE' : '1px solid transparent',
+              background: activeTab === 'catalog' ? 'rgba(18, 157, 185, 0.12)' : '#EDF2F7',
+              color: activeTab === 'catalog' ? '#084F5E' : '#627D98',
+              border: activeTab === 'catalog' ? '1px solid rgba(18, 157, 185, 0.25)' : '1px solid transparent',
               fontSize: '0.72rem',
               fontWeight: 700,
               padding: '0.1rem 0.45rem',
@@ -410,8 +410,8 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
           style={{
             background: 'none',
             border: 'none',
-            borderBottom: activeTab === 'plan' ? '2.5px solid #4338CA' : '2.5px solid transparent',
-            color: activeTab === 'plan' ? '#4338CA' : '#64748B',
+            borderBottom: activeTab === 'plan' ? '2.5px solid #129DB9' : '2.5px solid transparent',
+            color: activeTab === 'plan' ? '#129DB9' : '#627D98',
             fontWeight: activeTab === 'plan' ? 700 : 500,
             fontSize: '0.9rem',
             padding: '0.65rem 0.9rem',
@@ -428,9 +428,9 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
           {planItems.length > 0 && (
             <span
               style={{
-                background: activeTab === 'plan' ? '#EEF2FF' : '#F1F5F9',
-                color: activeTab === 'plan' ? '#4338CA' : '#64748B',
-                border: activeTab === 'plan' ? '1px solid #C7D2FE' : '1px solid transparent',
+                background: activeTab === 'plan' ? 'rgba(18, 157, 185, 0.12)' : '#EDF2F7',
+                color: activeTab === 'plan' ? '#084F5E' : '#627D98',
+                border: activeTab === 'plan' ? '1px solid rgba(18, 157, 185, 0.25)' : '1px solid transparent',
                 fontSize: '0.72rem',
                 fontWeight: 700,
                 padding: '0.1rem 0.45rem',
@@ -448,8 +448,8 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
           style={{
             background: 'none',
             border: 'none',
-            borderBottom: activeTab === 'mocks' ? '2.5px solid #4338CA' : '2.5px solid transparent',
-            color: activeTab === 'mocks' ? '#4338CA' : '#64748B',
+            borderBottom: activeTab === 'mocks' ? '2.5px solid #129DB9' : '2.5px solid transparent',
+            color: activeTab === 'mocks' ? '#129DB9' : '#627D98',
             fontWeight: activeTab === 'mocks' ? 700 : 500,
             fontSize: '0.9rem',
             padding: '0.65rem 0.9rem',
@@ -466,9 +466,9 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
           {mockAttempts.length > 0 && (
             <span
               style={{
-                background: activeTab === 'mocks' ? '#EEF2FF' : '#F1F5F9',
-                color: activeTab === 'mocks' ? '#4338CA' : '#64748B',
-                border: activeTab === 'mocks' ? '1px solid #C7D2FE' : '1px solid transparent',
+                background: activeTab === 'mocks' ? 'rgba(18, 157, 185, 0.12)' : '#EDF2F7',
+                color: activeTab === 'mocks' ? '#084F5E' : '#627D98',
+                border: activeTab === 'mocks' ? '1px solid rgba(18, 157, 185, 0.25)' : '1px solid transparent',
                 fontSize: '0.72rem',
                 fontWeight: 700,
                 padding: '0.1rem 0.45rem',
@@ -557,27 +557,27 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
                   >
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.4rem' }}>
-                        <span style={{ fontSize: '0.74rem', fontWeight: 800, background: '#EEF2FF', color: '#4338CA', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
+                        <span style={{ fontSize: '0.74rem', fontWeight: 800, background: 'rgba(18, 157, 185, 0.12)', color: '#084F5E', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
                           {examCode}
                         </span>
-                        <span style={{ fontSize: '0.74rem', color: '#64748B' }}>
+                        <span style={{ fontSize: '0.74rem', color: '#627D98' }}>
                           {examName} • Diagnostic Mock
                         </span>
                       </div>
-                      <h4 style={{ fontSize: '1.02rem', fontWeight: 800, color: '#0F172A', margin: '0 0 0.35rem' }}>
+                      <h4 style={{ fontSize: '1.02rem', fontWeight: 800, color: '#102A43', margin: '0 0 0.35rem' }}>
                         {mock.title}
                       </h4>
-                      <p style={{ fontSize: '0.84rem', color: '#475569', lineHeight: 1.5, margin: '0 0 1rem' }}>
+                      <p style={{ fontSize: '0.84rem', color: '#486581', lineHeight: 1.5, margin: '0 0 1rem' }}>
                         {mock.description}
                       </p>
 
-                      <div style={{ display: 'flex', gap: '1rem', fontSize: '0.8rem', color: '#64748B', marginBottom: '1.25rem' }}>
+                      <div style={{ display: 'flex', gap: '1rem', fontSize: '0.8rem', color: '#627D98', marginBottom: '1.25rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                          <Clock size={14} />
+                          <Clock size={14} color="#129DB9" />
                           <span>{mock.durationMinutes} mins</span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                          <Award size={14} />
+                          <Award size={14} color="#40C7E5" />
                           <span>{mock.totalMarks} Marks ({mock.totalQuestions} Questions)</span>
                         </div>
                       </div>
@@ -587,7 +587,7 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
                       id={`start-mock-btn-${mock.id}`}
                       onClick={() => setActiveMockTestId(mock.id)}
                       style={{
-                        background: '#6D28D9',
+                        background: '#129DB9',
                         color: '#FFFFFF',
                         border: 'none',
                         padding: '0.6rem 1.15rem',
@@ -599,7 +599,10 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: '0.4rem',
+                        transition: 'background 0.15s ease',
                       }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = '#084F5E')}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = '#129DB9')}
                     >
                       <PlayCircle size={16} />
                       <span>Start Timed Diagnostic Test</span>
@@ -772,10 +775,10 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
               <div>
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#5B4FE9', background: '#EEF2FF', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#084F5E', background: 'rgba(18, 157, 185, 0.12)', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
                   {examToAdd.code}
                 </span>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0F172A', margin: '0.3rem 0 0' }}>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#102A43', margin: '0.3rem 0 0' }}>
                   Add to My Exam Plan
                 </h3>
               </div>
@@ -787,13 +790,13 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
               </button>
             </div>
 
-            <p style={{ fontSize: '0.86rem', color: '#64748B', lineHeight: 1.5, margin: '0 0 1.25rem' }}>
+            <p style={{ fontSize: '0.86rem', color: '#627D98', lineHeight: 1.5, margin: '0 0 1.25rem' }}>
               Track your preparation milestones, registration deadlines, and test scores for <strong>{examToAdd.name}</strong>.
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '1.5rem' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#334155', marginBottom: '0.35rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#102A43', marginBottom: '0.35rem' }}>
                   Current Status
                 </label>
                 <select
@@ -810,7 +813,7 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#334155', marginBottom: '0.35rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#102A43', marginBottom: '0.35rem' }}>
                   Target Exam Date (Optional)
                 </label>
                 <input
@@ -823,7 +826,7 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#334155', marginBottom: '0.35rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#102A43', marginBottom: '0.35rem' }}>
                   Target Score (Optional)
                 </label>
                 <input
@@ -837,7 +840,7 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#334155', marginBottom: '0.35rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#102A43', marginBottom: '0.35rem' }}>
                   Study Notes (Optional)
                 </label>
                 <textarea
@@ -862,7 +865,9 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
               <button
                 id="confirm-add-plan-btn"
                 onClick={handleConfirmAddToPlan}
-                style={{ background: '#5B4FE9', border: 'none', color: '#FFFFFF', padding: '0.6rem 1.35rem', borderRadius: '8px', fontSize: '0.86rem', fontWeight: 700, cursor: 'pointer' }}
+                style={{ background: '#129DB9', border: 'none', color: '#FFFFFF', padding: '0.6rem 1.35rem', borderRadius: '8px', fontSize: '0.86rem', fontWeight: 700, cursor: 'pointer', transition: 'background 0.15s ease' }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = '#084F5E')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = '#129DB9')}
               >
                 Save to My Plan
               </button>
@@ -921,16 +926,16 @@ class EntranceErrorBoundary extends React.Component<
           >
             <AlertCircle size={24} />
           </div>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0F172A', margin: '0 0 0.5rem' }}>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#102A43', margin: '0 0 0.5rem' }}>
             Entrance Exams Workspace
           </h3>
-          <p style={{ fontSize: '0.88rem', color: '#64748B', lineHeight: 1.6, margin: '0 0 1.25rem' }}>
+          <p style={{ fontSize: '0.88rem', color: '#627D98', lineHeight: 1.6, margin: '0 0 1.25rem' }}>
             An unexpected error occurred while rendering the entrance exams workspace: {this.state.error?.message}
           </p>
           <button
             onClick={() => this.setState({ hasError: false, error: null })}
             style={{
-              background: '#5B4FE9',
+              background: '#129DB9',
               color: '#FFFFFF',
               border: 'none',
               padding: '0.6rem 1.4rem',
