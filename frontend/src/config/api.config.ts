@@ -79,6 +79,9 @@ export const API_ENDPOINTS = {
   },
   COLLEGES: {
     DISCOVERY: `${API_BASE_URL}/colleges`,
+    COUNTRIES: `${API_BASE_URL}/colleges/countries`,
+    COUNTRY_BY_CODE: (code: string) => `${API_BASE_URL}/colleges/countries/${code}`,
+    BY_EXAM: (examCode: string) => `${API_BASE_URL}/colleges/by-exam/${examCode}`,
     BY_ID: (id: string) => `${API_BASE_URL}/colleges/${id}`,
     COURSE_BY_ID: (courseId: string) => `${API_BASE_URL}/colleges/courses/${courseId}`,
     SAVED_ME: `${API_BASE_URL}/colleges/saved/me`,

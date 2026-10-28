@@ -4,6 +4,8 @@ export const listCollegesQuerySchema = z.object({
   query: z.object({
     search: z.string().optional(),
     country: z.string().optional(),
+    countryId: z.string().optional(),
+    counsellingTier: z.string().optional(),
     city: z.string().optional(),
     department: z.string().optional(),
     course: z.string().optional(),
@@ -25,6 +27,7 @@ export const listCollegesQuerySchema = z.object({
         'hasScholarship must be boolean'
       ),
     entranceExam: z.string().optional(),
+    examCode: z.string().optional(),
     page: z
       .string()
       .optional()

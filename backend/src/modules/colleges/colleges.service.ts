@@ -99,11 +99,21 @@ export class CollegesService {
       }
     });
 
+    const examRulesList = (record.examRules || []).map((r: any) => ({
+      id: r.id,
+      examCode: r.examCode,
+      ruleStatus: r.ruleStatus,
+      minScore: r.minScore || null,
+      notes: r.notes || null,
+      sourceUrl: r.sourceUrl || null,
+    }));
+
     return {
       id: record.id,
       slug: record.slug,
       name: record.name,
       country: record.country,
+      countryId: record.countryId || null,
       city: record.city,
       state: record.state || null,
       institutionType: record.institutionType || null,
@@ -127,6 +137,21 @@ export class CollegesService {
       entranceExams: Array.from(examSet),
       isSaved: savedInstitutionIds ? savedInstitutionIds.has(record.id) : false,
       isCompared: comparedInstitutionIds ? comparedInstitutionIds.has(record.id) : false,
+
+      // 2026 Admissions Guide fields
+      counsellingTier: record.counsellingTier || null,
+      managedTier: record.managedTier || null,
+      admissionsOverview: record.admissionsOverview || null,
+      academicProfileSummary: record.academicProfileSummary || null,
+      examRequirementsSummary: record.examRequirementsSummary || null,
+      tuitionStructureNotes: record.tuitionStructureNotes || null,
+      livingCostEstimate: record.livingCostEstimate || null,
+      postStudyWorkDetails: record.postStudyWorkDetails || null,
+      sourceUrl: record.sourceUrl || null,
+      sourceType: record.sourceType || null,
+      lastVerifiedAt: record.lastVerifiedAt ? record.lastVerifiedAt.toISOString() : null,
+      verificationConfidence: record.verificationConfidence || null,
+      examRules: examRulesList,
     };
   }
 
@@ -152,6 +177,147 @@ export class CollegesService {
   // =========================================================================
 
   /**
+   * Get all 5 destination countries with institution counts and guide metadata
+   */
+  static async getCountries() {
+    const countries = await prisma.country.findMany({
+      orderBy: { name: 'asc' },
+      include: {
+        _count: {
+          select: {
+            institutions: {
+              where: {
+                status: 'PUBLISHED',
+                isPublished: true,
+                isActive: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return countries.map((c) => ({
+      id: c.id,
+      code: c.code,
+      name: c.name,
+      currency: c.currency,
+      currencySymbol: c.currencySymbol,
+      flag: c.flag,
+      bannerImageUrl: c.bannerImageUrl,
+      tagline: c.tagline,
+      avgTuitionRange: c.avgTuitionRange,
+      livingCostRange: c.livingCostRange,
+      postStudyWorkVisa: c.postStudyWorkVisa,
+      postStudyWorkSourceUrl: c.postStudyWorkSourceUrl,
+      visaNotes: c.visaNotes,
+      sourceUrl: c.sourceUrl,
+      lastVerifiedAt: c.lastVerifiedAt ? c.lastVerifiedAt.toISOString() : null,
+      institutionsCount: c._count.institutions,
+    }));
+  }
+
+  /**
+   * Get single country guide by code (e.g. USA, GBR, AUS, DEU, CAN)
+   */
+  static async getCountryByCode(code: string) {
+    const upperCode = code.toUpperCase();
+    const country = await prisma.country.findFirst({
+      where: {
+        OR: [{ code: upperCode }, { name: { equals: code, mode: 'insensitive' } }],
+      },
+      include: {
+        _count: {
+          select: {
+            institutions: {
+              where: {
+                status: 'PUBLISHED',
+                isPublished: true,
+                isActive: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!country) {
+      const err: any = new Error(`Country with code '${code}' not found.`);
+      err.statusCode = 404;
+      throw err;
+    }
+
+    return {
+      id: country.id,
+      code: country.code,
+      name: country.name,
+      currency: country.currency,
+      currencySymbol: country.currencySymbol,
+      flag: country.flag,
+      bannerImageUrl: country.bannerImageUrl,
+      tagline: country.tagline,
+      avgTuitionRange: country.avgTuitionRange,
+      livingCostRange: country.livingCostRange,
+      postStudyWorkVisa: country.postStudyWorkVisa,
+      postStudyWorkSourceUrl: country.postStudyWorkSourceUrl,
+      visaNotes: country.visaNotes,
+      sourceUrl: country.sourceUrl,
+      lastVerifiedAt: country.lastVerifiedAt ? country.lastVerifiedAt.toISOString() : null,
+      institutionsCount: country._count.institutions,
+    };
+  }
+
+  /**
+   * Get institutions that accept or require a specific entrance exam
+   */
+  static async getInstitutionsForExam(examCode: string) {
+    const cleanExamCode = examCode.trim().toUpperCase();
+
+    const rules = await prisma.institutionExamRule.findMany({
+      where: {
+        examCode: cleanExamCode,
+        institution: {
+          status: 'PUBLISHED',
+          isPublished: true,
+          isActive: true,
+        },
+      },
+      include: {
+        institution: {
+          select: {
+            id: true,
+            slug: true,
+            name: true,
+            country: true,
+            city: true,
+            bannerImageUrl: true,
+            counsellingTier: true,
+            managedTier: true,
+            minAnnualFee: true,
+            maxAnnualFee: true,
+            feeCurrency: true,
+            officialWebsiteUrl: true,
+          },
+        },
+      },
+      orderBy: [
+        { ruleStatus: 'asc' },
+        { institution: { name: 'asc' } },
+      ],
+    });
+
+    return rules.map((r) => ({
+      ruleId: r.id,
+      examCode: r.examCode,
+      ruleStatus: r.ruleStatus,
+      minScore: r.minScore,
+      notes: r.notes,
+      sourceUrl: r.sourceUrl,
+      institution: r.institution,
+    }));
+  }
+
+  /**
    * List and filter institutions catalog with server-side pagination & search
    * STRICT VISIBILITY: Students and public see ONLY PUBLISHED records
    */
@@ -162,7 +328,7 @@ export class CollegesService {
     await this.ensureCatalogSeeded();
 
     const page = Math.max(1, parseInt(String(query.page || '1'), 10));
-    const limit = Math.max(1, Math.min(50, parseInt(String(query.limit || '9'), 10)));
+    const limit = Math.max(1, Math.min(100, parseInt(String(query.limit || '9'), 10)));
     const skip = (page - 1) * limit;
 
     // Filter sets for student personalization
@@ -225,6 +391,28 @@ export class CollegesService {
     // Country filter
     if (query.country && query.country.trim() && query.country !== 'ALL') {
       andConditions.push({ country: { contains: query.country.trim() } });
+    }
+
+    // Country ID filter
+    if (query.countryId && query.countryId.trim() && query.countryId !== 'ALL') {
+      andConditions.push({ countryId: query.countryId.trim() });
+    }
+
+    // Counselling Tier filter (TOP, MID, LOW, COLLEGE)
+    if (query.counsellingTier && query.counsellingTier.trim() && query.counsellingTier !== 'ALL') {
+      andConditions.push({ counsellingTier: query.counsellingTier.trim() });
+    }
+
+    // Exam Code filter (via InstitutionExamRule)
+    if (query.examCode && query.examCode.trim() && query.examCode !== 'ALL') {
+      andConditions.push({
+        examRules: {
+          some: {
+            examCode: query.examCode.trim(),
+            ruleStatus: { in: ['REQUIRED', 'ACCEPTED', 'ALTERNATIVE'] },
+          },
+        },
+      });
     }
 
     // City filter
@@ -344,6 +532,8 @@ export class CollegesService {
               isActive: true,
             },
           },
+          examRules: true,
+          countryRel: true,
         },
         orderBy,
         skip,
@@ -456,6 +646,8 @@ export class CollegesService {
           },
           orderBy: { name: 'asc' },
         },
+        examRules: true,
+        countryRel: true,
       },
     });
 

@@ -1,10 +1,39 @@
 export type CatalogueStatus = 'DRAFT' | 'REVIEW' | 'PUBLISHED' | 'ARCHIVED';
 
+export interface CountrySummary {
+  id: string;
+  code: string;
+  name: string;
+  currency: string;
+  currencySymbol: string;
+  flag: string;
+  bannerImageUrl: string;
+  tagline: string;
+  avgTuitionRange: string;
+  livingCostRange: string;
+  postStudyWorkVisa: string;
+  postStudyWorkSourceUrl?: string | null;
+  visaNotes?: string | null;
+  sourceUrl?: string | null;
+  lastVerifiedAt?: string | null;
+  institutionsCount?: number;
+}
+
+export interface InstitutionExamRuleItem {
+  id?: string;
+  examCode: string;
+  ruleStatus: 'REQUIRED' | 'ACCEPTED' | 'ALTERNATIVE' | 'WAIVED' | 'NOT_REQUIRED' | 'NOT_VERIFIED' | string;
+  minScore?: string | null;
+  notes?: string | null;
+  sourceUrl?: string | null;
+}
+
 export interface InstitutionSummary {
   id: string;
   slug: string;
   name: string;
   country: string;
+  countryId?: string | null;
   city: string;
   state: string | null;
   institutionType: string | null;
@@ -28,6 +57,21 @@ export interface InstitutionSummary {
   entranceExams: string[];
   isSaved?: boolean;
   isCompared?: boolean;
+
+  // 2026 Admissions Guide Enhanced Fields
+  counsellingTier?: 'TOP' | 'MID' | 'LOW' | 'COLLEGE' | string | null;
+  managedTier?: 'ASPIRATIONAL' | 'BEST_FIT' | 'SAFE' | string | null;
+  admissionsOverview?: string | null;
+  academicProfileSummary?: string | null;
+  examRequirementsSummary?: string | null;
+  tuitionStructureNotes?: string | null;
+  livingCostEstimate?: string | null;
+  postStudyWorkDetails?: string | null;
+  sourceUrl?: string | null;
+  sourceType?: string | null;
+  lastVerifiedAt?: string | null;
+  verificationConfidence?: string | null;
+  examRules?: InstitutionExamRuleItem[];
 }
 
 export interface CourseSummary {
@@ -124,6 +168,8 @@ export interface ComparisonResponse {
 export interface CollegeSearchParams {
   search?: string;
   country?: string;
+  countryId?: string;
+  counsellingTier?: string;
   city?: string;
   department?: string;
   course?: string;
@@ -133,6 +179,7 @@ export interface CollegeSearchParams {
   maxFee?: number | string;
   hasScholarship?: boolean | string;
   entranceExam?: string;
+  examCode?: string;
   page?: number;
   limit?: number;
   sortBy?: 'name_asc' | 'name_desc' | 'fee_asc' | 'fee_desc';

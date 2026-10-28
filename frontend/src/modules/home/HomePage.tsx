@@ -16,9 +16,6 @@ import {
   PhoneCall,
   Coins,
   Award,
-  Globe,
-  Layers,
-  CalendarCheck,
 } from 'lucide-react';
 
 interface HomePageProps {

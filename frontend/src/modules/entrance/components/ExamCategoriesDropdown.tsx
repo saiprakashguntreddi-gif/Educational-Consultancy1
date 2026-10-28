@@ -8,7 +8,6 @@ import {
   PlayCircle,
   Clock,
   Search,
-  Layers,
   Award,
 } from 'lucide-react';
 import { EntranceExamRecord, ExamCategoryGroup } from '../entrance.types';

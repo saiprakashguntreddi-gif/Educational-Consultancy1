@@ -20,6 +20,7 @@ import {
   DiscoveryFilterOptions,
   DiscoveryPagination,
   CollegeSearchParams,
+  CountrySummary,
 } from '../colleges.types';
 import { CollegesService } from '../services/colleges.service';
 import { CollegeSearchBar } from './CollegeSearchBar';
@@ -29,6 +30,8 @@ import { InstitutionDetailModal } from './InstitutionDetailModal';
 import { CourseDetailModal } from './CourseDetailModal';
 import { CollegeCompareView } from './CollegeCompareView';
 import { SavedCollegesView } from './SavedCollegesView';
+import { CountryDiscoveryCards } from './CountryDiscoveryCards';
+import { CountryDetailPage } from './CountryDetailPage';
 
 interface CollegeDiscoveryViewProps {
   onBackToDashboard?: () => void;
@@ -44,6 +47,7 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
   const [currentFilters, setCurrentFilters] = useState<CollegeSearchParams>({
     search: '',
     country: 'ALL',
+    counsellingTier: 'ALL',
     city: 'ALL',
     department: 'ALL',
     specialization: 'ALL',
@@ -54,15 +58,21 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
     entranceExam: 'ALL',
     sortBy: 'name_asc',
     page: 1,
-    limit: 6,
+    limit: 9,
   });
+
+  // Countries Data for Visual Reference A
+  const [countries, setCountries] = useState<CountrySummary[]>([]);
+
+  // Selected Country for Full Country Dedicated Page
+  const [selectedCountryObj, setSelectedCountryObj] = useState<CountrySummary | null>(null);
 
   // Catalog Data
   const [institutions, setInstitutions] = useState<InstitutionSummary[]>([]);
   const [pagination, setPagination] = useState<DiscoveryPagination>({
     total: 0,
     page: 1,
-    limit: 6,
+    limit: 9,
     totalPages: 1,
   });
   const [filterOptions, setFilterOptions] = useState<DiscoveryFilterOptions>({
@@ -183,12 +193,27 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
     }
   }, []);
 
+  /**
+   * Fetch destination countries for Visual Reference A
+   */
+  const fetchCountries = useCallback(async () => {
+    try {
+      const response = await CollegesService.getCountries();
+      if (response.success && response.data) {
+        setCountries(response.data);
+      }
+    } catch (_err) {
+      // Non-blocking
+    }
+  }, []);
+
   // Initial load
   useEffect(() => {
+    fetchCountries();
     fetchInstitutions();
     fetchSavedItems();
     fetchComparisonItems();
-  }, [fetchInstitutions, fetchSavedItems, fetchComparisonItems]);
+  }, [fetchCountries, fetchInstitutions, fetchSavedItems, fetchComparisonItems]);
 
   /**
    * Open institution detail modal (fetches full profile)
@@ -357,6 +382,42 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
       }
     } catch (_err) {
       showToast('Error clearing comparison items.', 'error');
+    }
+  };
+
+  // Fast lookup sets for saved and compared institutions
+  const savedInstIdsSet = useMemo(
+    () => new Set(savedInstitutions.map((i) => i.id)),
+    [savedInstitutions]
+  );
+  const comparedInstIdsSet = useMemo(
+    () => new Set(comparedInstitutions.map((i) => i.id)),
+    [comparedInstitutions]
+  );
+
+  /**
+   * Navigate to complete dedicated country page (e.g. Australia, Canada, Germany, United States, United Kingdom)
+   */
+  const handleOpenCountryPage = (countryName: string) => {
+    if (!countryName || countryName === 'ALL') {
+      setSelectedCountryObj(null);
+      handleFilterChange({ country: 'ALL', page: 1 });
+      return;
+    }
+    const q = countryName.toLowerCase();
+    const matched = countries.find(
+      (c) =>
+        c.name.toLowerCase() === q ||
+        c.code.toLowerCase() === q ||
+        (q.includes('australia') && c.code === 'AUS') ||
+        (q.includes('canada') && c.code === 'CAN') ||
+        (q.includes('germany') && c.code === 'DEU') ||
+        ((q.includes('state') || q.includes('usa') || q === 'us') && c.code === 'USA') ||
+        ((q.includes('kingdom') || q.includes('uk') || q === 'gb') && c.code === 'GBR')
+    );
+    if (matched) {
+      setSelectedCountryObj(matched);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -666,7 +727,92 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
 
       {/* VIEW TAB 1: CATALOGUE EXPLORER */}
       {activeTab === 'catalog' && (
+        selectedCountryObj ? (
+          <CountryDetailPage
+            country={selectedCountryObj}
+            allCountries={countries}
+            onSelectCountry={handleOpenCountryPage}
+            onBackToAllCountries={() => setSelectedCountryObj(null)}
+            onViewInstitutionDetails={handleOpenInstitutionDetail}
+            onToggleSave={handleToggleSaveInstitution}
+            onToggleCompare={handleToggleCompareInstitution}
+            savedInstitutionIds={savedInstIdsSet}
+            comparedInstitutionIds={comparedInstIdsSet}
+          />
+        ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          {/* Visual Reference A: Destination Country Discovery Cards */}
+          {countries.length > 0 && (
+            <CountryDiscoveryCards
+              countries={countries}
+              selectedCountry={currentFilters.country || 'ALL'}
+              onSelectCountry={(countryName) => handleOpenCountryPage(countryName)}
+            />
+          )}
+
+          {/* Quick Country Switcher Tabs */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              overflowX: 'auto',
+              paddingBottom: '0.25rem',
+            }}
+          >
+            {[
+              { label: '🌍 All Destinations', value: 'ALL', count: 138 },
+              { label: '🇺🇸 United States', value: 'United States', count: 25 },
+              { label: '🇬🇧 United Kingdom', value: 'United Kingdom', count: 30 },
+              { label: '🇦🇺 Australia', value: 'Australia', count: 27 },
+              { label: '🇩🇪 Germany', value: 'Germany', count: 26 },
+              { label: '🇨🇦 Canada', value: 'Canada', count: 30 },
+            ].map((tab) => {
+              const isSelected = (currentFilters.country || 'ALL') === tab.value;
+              return (
+                <button
+                  key={tab.value}
+                  onClick={() => {
+                    if (tab.value === 'ALL') {
+                      setSelectedCountryObj(null);
+                      handleFilterChange({ country: 'ALL', page: 1 });
+                    } else {
+                      handleOpenCountryPage(tab.value);
+                    }
+                  }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    padding: '0.45rem 0.85rem',
+                    borderRadius: '999px',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    border: isSelected ? '1px solid #5B4FE9' : '1px solid #E2E8F0',
+                    background: isSelected ? '#5B4FE9' : '#FFFFFF',
+                    color: isSelected ? '#FFFFFF' : '#475569',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  <span>{tab.label}</span>
+                  <span
+                    style={{
+                      fontSize: '0.72rem',
+                      padding: '0.05rem 0.4rem',
+                      borderRadius: '999px',
+                      background: isSelected ? 'rgba(255,255,255,0.25)' : '#F1F5F9',
+                      color: isSelected ? '#FFFFFF' : '#64748B',
+                    }}
+                  >
+                    {tab.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
           {/* Prominent Search Bar */}
           <CollegeSearchBar
             searchQuery={currentFilters.search || ''}
@@ -1059,6 +1205,7 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
             </div>
           </div>
         </div>
+        )
       )}
 
       {/* VIEW TAB 2: SAVED COLLEGES & COURSES */}

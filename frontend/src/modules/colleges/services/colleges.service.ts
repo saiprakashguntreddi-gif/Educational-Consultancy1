@@ -13,9 +13,36 @@ import {
   AdminUpdateInstitutionInput,
   AdminCreateCourseInput,
   AdminUpdateCourseInput,
+  CountrySummary,
+  ExamAcceptedInstitutionItem,
 } from '../colleges.types';
 
 export class CollegesService {
+  /**
+   * Get all destination countries with tuition/work-visa highlights
+   */
+  public static async getCountries(): Promise<ApiResponse<CountrySummary[]>> {
+    return apiClient.get<CountrySummary[]>(API_ENDPOINTS.COLLEGES.COUNTRIES);
+  }
+
+  /**
+   * Get specific country guide details
+   */
+  public static async getCountryByCode(code: string): Promise<ApiResponse<CountrySummary>> {
+    return apiClient.get<CountrySummary>(API_ENDPOINTS.COLLEGES.COUNTRY_BY_CODE(code));
+  }
+
+  /**
+   * Get institutions accepting a specific entrance exam
+   */
+  public static async getInstitutionsForExam(
+    examCode: string
+  ): Promise<ApiResponse<ExamAcceptedInstitutionItem[]>> {
+    return apiClient.get<ExamAcceptedInstitutionItem[]>(
+      API_ENDPOINTS.COLLEGES.BY_EXAM(examCode)
+    );
+  }
+
   /**
    * Search and filter colleges catalog with server-side pagination (Students/Counsellors)
    */
@@ -26,6 +53,9 @@ export class CollegesService {
 
     if (params?.search) searchParams.append('search', params.search);
     if (params?.country && params.country !== 'ALL') searchParams.append('country', params.country);
+    if (params?.countryId && params.countryId !== 'ALL') searchParams.append('countryId', params.countryId);
+    if (params?.counsellingTier && params.counsellingTier !== 'ALL')
+      searchParams.append('counsellingTier', params.counsellingTier);
     if (params?.city && params.city !== 'ALL') searchParams.append('city', params.city);
     if (params?.department && params.department !== 'ALL')
       searchParams.append('department', params.department);
@@ -40,6 +70,8 @@ export class CollegesService {
     if (params?.hasScholarship) searchParams.append('hasScholarship', 'true');
     if (params?.entranceExam && params.entranceExam !== 'ALL')
       searchParams.append('entranceExam', params.entranceExam);
+    if (params?.examCode && params.examCode !== 'ALL')
+      searchParams.append('examCode', params.examCode);
     if (params?.page) searchParams.append('page', String(params.page));
     if (params?.limit) searchParams.append('limit', String(params.limit));
     if (params?.sortBy) searchParams.append('sortBy', params.sortBy);

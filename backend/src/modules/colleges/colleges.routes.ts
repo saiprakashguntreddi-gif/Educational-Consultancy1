@@ -24,6 +24,27 @@ const router = Router();
 // 1. DISCOVERY CATALOG & SEARCH (STUDENTS, COUNSELLORS, PUBLIC)
 // ==========================================
 
+// Destination countries for 2026 Admissions Guide
+router.get(
+  '/countries',
+  optionalAuthenticateJwt,
+  CollegesController.getCountries
+);
+
+// Single country guide details
+router.get(
+  '/countries/:code',
+  optionalAuthenticateJwt,
+  CollegesController.getCountryByCode
+);
+
+// Institutions accepting / requiring a specific entrance exam
+router.get(
+  '/by-exam/:examCode',
+  optionalAuthenticateJwt,
+  CollegesController.getInstitutionsForExam
+);
+
 // Discover colleges with multi-faceted search, filters & pagination
 router.get(
   '/',

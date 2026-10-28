@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   X,
   ExternalLink,
@@ -10,8 +10,11 @@ import {
   FileText,
   Bookmark,
   PlayCircle,
+  GraduationCap,
 } from 'lucide-react';
 import { EntranceExamRecord } from '../entrance.types';
+import { CollegesService } from '../../colleges/services/colleges.service';
+import { ExamAcceptedInstitutionItem } from '../../colleges/colleges.types';
 
 interface ExamDetailModalProps {
   exam: EntranceExamRecord | null;
@@ -26,6 +29,22 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
   onAddToPlan,
   onTakeMockTest,
 }) => {
+  const [acceptedInstitutions, setAcceptedInstitutions] = useState<ExamAcceptedInstitutionItem[]>([]);
+  const [isLoadingInstitutions, setIsLoadingInstitutions] = useState(false);
+
+  useEffect(() => {
+    if (!exam?.code) return;
+    setIsLoadingInstitutions(true);
+    CollegesService.getInstitutionsForExam(exam.code)
+      .then((res) => {
+        if (res.success && res.data) {
+          setAcceptedInstitutions(res.data);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setIsLoadingInstitutions(false));
+  }, [exam?.code]);
+
   if (!exam) return null;
 
   return (
@@ -362,6 +381,104 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
               </ul>
             </div>
           )}
+
+          {/* 2026 Admissions Guide: Institutions Accepting This Exam */}
+          <div>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#102A43', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <GraduationCap size={18} color="#129DB9" />
+              Institutions & Programmes Accepting This Exam ({acceptedInstitutions.length})
+            </h3>
+
+            {isLoadingInstitutions ? (
+              <div style={{ padding: '1rem', background: '#F8FAFC', borderRadius: '8px', color: '#64748B', fontSize: '0.85rem' }}>
+                Checking institutional acceptance records...
+              </div>
+            ) : acceptedInstitutions.length > 0 ? (
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.65rem',
+                  maxHeight: '260px',
+                  overflowY: 'auto',
+                  border: '1px solid #E2E8F0',
+                  borderRadius: '10px',
+                  padding: '0.75rem',
+                  background: '#F8FAFC',
+                }}
+              >
+                {acceptedInstitutions.map((item) => {
+                  const isReq = item.ruleStatus === 'REQUIRED';
+                  const isAlt = item.ruleStatus === 'ALTERNATIVE';
+                  const isWaived = item.ruleStatus === 'WAIVED';
+
+                  return (
+                    <div
+                      key={item.ruleId}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '0.65rem 0.85rem',
+                        background: '#FFFFFF',
+                        border: '1px solid #E2E8F0',
+                        borderRadius: '8px',
+                        gap: '0.75rem',
+                      }}
+                    >
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0F172A' }}>
+                          {item.institution.name}
+                        </div>
+                        <div style={{ fontSize: '0.78rem', color: '#64748B' }}>
+                          {item.institution.city}, {item.institution.country}
+                          {item.minScore ? ` • Min score: ${item.minScore}` : ''}
+                          {item.notes ? ` • ${item.notes}` : ''}
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
+                        <span
+                          style={{
+                            fontSize: '0.7rem',
+                            fontWeight: 700,
+                            padding: '0.15rem 0.5rem',
+                            borderRadius: '4px',
+                            background: isReq ? '#EFF6FF' : isAlt ? '#FEF3C7' : isWaived ? '#ECFDF5' : '#F1F5F9',
+                            color: isReq ? '#1D4ED8' : isAlt ? '#B45309' : isWaived ? '#047857' : '#475569',
+                            border: isReq ? '1px solid #BFDBFE' : '1px solid #E2E8F0',
+                          }}
+                        >
+                          {item.ruleStatus}
+                        </span>
+
+                        {item.institution.officialWebsiteUrl && (
+                          <a
+                            href={item.institution.officialWebsiteUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              color: '#6366F1',
+                              padding: '0.25rem',
+                              display: 'flex',
+                              alignItems: 'center',
+                            }}
+                            title="Visit Institution Site"
+                          >
+                            <ExternalLink size={13} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p style={{ fontSize: '0.86rem', color: '#64748B', margin: 0 }}>
+                This exam is recognized across premier institutions in relevant disciplines; see specific course listings for faculty cutoff guidelines.
+              </p>
+            )}
+          </div>
 
           {/* Verified Official Registration Website */}
           <div

@@ -8,6 +8,42 @@ export class CollegesController {
   // =========================================================================
 
   /**
+   * GET /api/v1/colleges/countries (List Destination Countries)
+   */
+  static async getCountries(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await CollegesService.getCountries();
+      return ApiResponse.success(res, data, 'Destination countries retrieved successfully');
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  /**
+   * GET /api/v1/colleges/countries/:code (Get Country Guide)
+   */
+  static async getCountryByCode(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await CollegesService.getCountryByCode(req.params.code);
+      return ApiResponse.success(res, data, 'Country guide retrieved successfully');
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  /**
+   * GET /api/v1/colleges/by-exam/:examCode (Get Institutions accepting/requiring an exam)
+   */
+  static async getInstitutionsForExam(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await CollegesService.getInstitutionsForExam(req.params.examCode);
+      return ApiResponse.success(res, data, 'Institutions accepting exam retrieved successfully');
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  /**
    * GET /api/v1/colleges (Discover & Filter Published Institutions)
    */
   static async listColleges(req: Request, res: Response, next: NextFunction) {

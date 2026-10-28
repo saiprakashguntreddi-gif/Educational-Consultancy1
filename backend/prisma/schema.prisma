@@ -405,6 +405,29 @@ model StudentAchievement {
 // MODULE 6: COLLEGE AND COURSE DISCOVERY
 // ==========================================
 
+model Country {
+  id                      String        @id @default(uuid())
+  code                    String        @unique // "USA", "GBR", "AUS", "DEU", "CAN"
+  name                    String        @unique // "United States", "United Kingdom", "Australia", "Germany", "Canada"
+  currency                String        // "USD", "GBP", "AUD", "EUR", "CAD"
+  currencySymbol          String        // "$", "£", "A$", "€", "C$"
+  flag                    String        // "🇺🇸", "🇬🇧", "🇦🇺", "🇩🇪", "🇨🇦"
+  bannerImageUrl          String        // High quality destination image
+  tagline                 String        // e.g. "Ivy League & R1 Research Powerhouses"
+  avgTuitionRange         String        // e.g. "$25,000 - $55,000 / yr"
+  livingCostRange         String        // e.g. "$12,000 - $18,000 / yr"
+  postStudyWorkVisa       String        // e.g. "12 - 36 Months (STEM OPT)"
+  postStudyWorkSourceUrl  String?
+  postStudyWorkCheckedAt  DateTime?
+  visaNotes               String?
+  sourceUrl               String?
+  lastVerifiedAt          DateTime?     @default(now())
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+
+  institutions            Institution[]
+}
+
 model Institution {
   id                   String                   @id @default(uuid())
   slug                 String                   @unique
@@ -452,6 +475,23 @@ model Institution {
   tierAssignedBy            String?              // Admin user ID who assigned/updated the tier
   tierReason                String?              // Rationale or justification for current tier assignment
 
+  // Admissions Guide 2026 Enhanced Fields
+  counsellingTier           String?              // "TOP" | "MID" | "LOW" | "COLLEGE"
+  admissionsOverview        String?              // Programme-led, requirements context
+  academicProfileSummary    String?              // e.g. "~80–90%+ competitive profile"
+  examRequirementsSummary   String?              // e.g. "GRE varies; IELTS/TOEFL accepted"
+  tuitionStructureNotes     String?              // e.g. "USD 50k–70k+/year"
+  livingCostEstimate        String?              // e.g. "USD 12k–18k/year"
+  postStudyWorkDetails      String?              // e.g. "OPT: Up to 3 Years STEM"
+  sourceUrl                 String?              // Official university/gov source
+  sourceType                String?              // "OFFICIAL_UNIVERSITY" | "OFFICIAL_GOVERNMENT" | "SOURCE_DERIVED"
+  lastVerifiedAt            DateTime?
+  verificationConfidence    String?              // "HIGH" | "ESTIMATED" | "PROGRAMME_SPECIFIC"
+
+  countryId                 String?
+  countryRel                Country?             @relation(fields: [countryId], references: [id], onDelete: SetNull)
+  examRules                 InstitutionExamRule[]
+
   courses              Course[]
   savedByStudents      StudentSavedInstitution[]
   comparisonItems      StudentComparisonItem[]
@@ -472,6 +512,25 @@ model Institution {
   @@index([minAnnualFee])
   @@index([maxAnnualFee])
   @@index([managedTier])
+  @@index([counsellingTier])
+  @@index([countryId])
+}
+
+model InstitutionExamRule {
+  id             String        @id @default(uuid())
+  institutionId  String
+  institution    Institution   @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  examCode       String        // "GRE", "GMAT", "IELTS", "TOEFL", "PTE", "SAT", "ACT", "TestDaF"
+  ruleStatus     String        // "REQUIRED" | "ACCEPTED" | "ALTERNATIVE" | "WAIVED" | "NOT_REQUIRED" | "NOT_VERIFIED"
+  minScore       String?       // e.g. "6.5 overall", "310 GRE", "100 TOEFL"
+  notes          String?       // Course-specific notes
+  sourceUrl      String?
+  checkedAt      DateTime?     @default(now())
+  createdAt      DateTime      @default(now())
+
+  @@index([institutionId])
+  @@index([examCode])
+  @@index([ruleStatus])
 }
 
 model Course {

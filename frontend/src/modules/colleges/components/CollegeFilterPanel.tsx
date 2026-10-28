@@ -114,8 +114,6 @@ export const CollegeFilterPanel: React.FC<CollegeFilterPanelProps> = ({
           ))}
         </select>
       </div>
-
-      {/* City Filter */}
       {filterOptions.cities.length > 0 && (
         <div>
           <div
