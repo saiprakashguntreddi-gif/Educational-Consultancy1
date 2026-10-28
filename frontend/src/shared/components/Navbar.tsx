@@ -105,22 +105,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
             <nav className="nav-menu-links">
               <button
                 onClick={() => handleNavClick('home')}
-                className="nav-link-btn"
-                style={{
-                  color: currentView === 'home' ? '#FFFFFF' : '#E2E8F0',
-                  fontWeight: currentView === 'home' ? 700 : 500,
-                }}
+                className={`nav-link-btn ${currentView === 'home' ? 'is-active' : ''}`}
               >
                 Home
               </button>
               <button
                 onClick={() => handleNavClick('entrance')}
-                className="nav-link-btn"
+                className={`nav-link-btn ${currentView === 'entrance' || currentView === 'entrance-exams' ? 'is-active' : ''}`}
                 id="nav-entrance-exams-btn"
-                style={{
-                  color: currentView === 'entrance' || currentView === 'entrance-exams' ? '#FFFFFF' : '#E2E8F0',
-                  fontWeight: currentView === 'entrance' || currentView === 'entrance-exams' ? 700 : 500,
-                }}
               >
                 Entrance Exams
               </button>
@@ -153,41 +145,25 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
             <nav className="nav-menu-links nav-menu-links-authenticated">
               <button
                 onClick={() => handleNavClick('home')}
-                className="nav-link-btn"
-                style={{
-                  color: currentView === 'home' ? '#FFFFFF' : '#E2E8F0',
-                  fontWeight: currentView === 'home' ? 700 : 500,
-                }}
+                className={`nav-link-btn ${currentView === 'home' ? 'is-active' : ''}`}
               >
                 Home
               </button>
               <button
                 onClick={() => handleNavClick('entrance')}
-                className="nav-link-btn"
-                style={{
-                  color: currentView === 'entrance' || currentView === 'entrance-exams' ? '#FFFFFF' : '#E2E8F0',
-                  fontWeight: currentView === 'entrance' || currentView === 'entrance-exams' ? 700 : 500,
-                }}
+                className={`nav-link-btn ${currentView === 'entrance' || currentView === 'entrance-exams' ? 'is-active' : ''}`}
               >
                 Entrance Exams
               </button>
               <button
                 onClick={() => handleNavClick('colleges')}
-                className="nav-link-btn"
-                style={{
-                  color: currentView === 'colleges' ? '#FFFFFF' : '#E2E8F0',
-                  fontWeight: currentView === 'colleges' ? 700 : 500,
-                }}
+                className={`nav-link-btn ${currentView === 'colleges' ? 'is-active' : ''}`}
               >
                 Colleges
               </button>
               <button
                 onClick={() => handleNavClick('scholarships')}
-                className="nav-link-btn"
-                style={{
-                  color: currentView === 'scholarships' ? '#FFFFFF' : '#E2E8F0',
-                  fontWeight: currentView === 'scholarships' ? 700 : 500,
-                }}
+                className={`nav-link-btn ${currentView === 'scholarships' ? 'is-active' : ''}`}
               >
                 Scholarships
               </button>

@@ -25,38 +25,35 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
       <div className="landing-container">
         <div className="footer-inner-grid">
           {/* Brand Column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div className="footer-brand-badge">
               <div
                 style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #129DB9 0%, #40C7E5 100%)',
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  background: 'var(--color-brand-dark)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#FFFFFF',
-                  boxShadow: '0 4px 12px rgba(18, 157, 185, 0.35)',
+                  color: '#ffffff',
                 }}
               >
-                <Compass size={22} />
+                <Compass size={18} />
               </div>
-              <div>
-                <span
-                  style={{
-                    fontSize: '1.2rem',
-                    fontWeight: 800,
-                    color: '#FFFFFF',
-                    letterSpacing: '-0.02em',
-                  }}
-                >
-                  SUPER<span style={{ color: '#40C7E5' }}>CONSCIOUSNESS</span>
-                </span>
-              </div>
+              <span
+                style={{
+                  fontSize: '1.1rem',
+                  fontWeight: 800,
+                  color: 'var(--color-ink)',
+                  letterSpacing: '-0.02em',
+                }}
+              >
+                SUPER<span style={{ color: 'var(--color-brand-dark)' }}>CONSCIOUSNESS</span>
+              </span>
             </div>
 
-            <p style={{ fontSize: '0.925rem', color: '#CBD5E1', lineHeight: 1.65, maxWidth: '380px' }}>
+            <p style={{ fontSize: '15px', color: 'var(--color-ink-dim)', lineHeight: 1.65, maxWidth: '380px', margin: 0 }}>
               Integrated Educational Consultancy and Student Guidance Platform.
             </p>
 
@@ -64,18 +61,18 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.35rem 0.75rem',
+                gap: '8px',
+                padding: '6px 14px',
                 borderRadius: '6px',
-                background: 'rgba(18, 157, 185, 0.12)',
-                border: '1px solid rgba(64, 199, 229, 0.3)',
-                color: '#40C7E5',
-                fontSize: '0.775rem',
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                color: '#ffffff',
+                fontSize: '13px',
                 fontWeight: 600,
                 width: 'fit-content',
               }}
             >
-              <ShieldCheck size={14} color="#FFB547" /> Verified Student Guidance System
+              <ShieldCheck size={15} color="#38bdf8" /> Verified Student Guidance System
             </div>
           </div>
 
@@ -149,18 +146,18 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           {/* Advisory & Contact */}
           <div id="contact">
             <h4 className="footer-col-header">Contact & Advisory</h4>
-            <ul className="footer-links-vertical" style={{ gap: '0.95rem' }}>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.875rem', color: '#CBD5E1' }}>
-                <Mail size={16} color="#40C7E5" />
+            <ul className="footer-links-vertical" style={{ gap: '14px' }}>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '15px', color: 'var(--color-ink-dim)' }}>
+                <Mail size={16} color="var(--color-brand-bright)" />
                 <a href="mailto:guidance@superconsciousness.edu" style={{ color: 'inherit', textDecoration: 'none', whiteSpace: 'nowrap' }}>
                   guidance@superconsciousness.edu
                 </a>
               </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.85rem', color: '#94A3B8' }}>
-                <Clock size={16} color="#40C7E5" />
+              <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', color: '#999999' }}>
+                <Clock size={16} color="var(--color-brand-bright)" />
                 <span>Advisory Hours: Mon – Fri, 9:00 AM – 6:00 PM</span>
               </li>
-              <li style={{ fontSize: '0.825rem', color: '#94A3B8', lineHeight: 1.5 }}>
+              <li style={{ fontSize: '13px', color: '#888888', lineHeight: 1.5 }}>
                 Structured student intakes and profiles are reviewed directly through the verified counsellor advisory portal.
               </li>
             </ul>
@@ -172,7 +169,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div>
             © 2026 Superconsciousness. All rights reserved.
           </div>
-          <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', color: '#94A3B8', fontSize: '0.85rem' }}>
+          <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', color: '#888888', fontSize: '14px' }}>
             <span>Privacy Policy</span>
             <span>•</span>
             <span>Terms of Service</span>
