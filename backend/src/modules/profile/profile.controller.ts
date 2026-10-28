@@ -44,6 +44,28 @@ export class ProfileController {
   }
 
   /**
+   * Fast unified student dashboard summary
+   */
+  public static async getDashboardSummary(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      if (!req.user) {
+        ApiResponse.error(res, 'Authentication required', 401, 'Unauthorized');
+        return;
+      }
+
+      const summary = await ProfileService.getDashboardSummary(req.user.id);
+      if (!summary) {
+        ApiResponse.error(res, 'Profile has not been created yet', 404, 'Profile Not Found');
+        return;
+      }
+
+      ApiResponse.success(res, summary, 'Dashboard summary retrieved successfully');
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Get authenticated student's locked verified record & guidance clearance
    * Protected by requireVerifiedStudentProfile (Gated to VERIFIED students only)
    */

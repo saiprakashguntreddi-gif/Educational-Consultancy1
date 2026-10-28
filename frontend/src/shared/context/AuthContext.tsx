@@ -27,9 +27,16 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    try {
+      const cached = localStorage.getItem('superc_user');
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
+  });
   const [token, setToken] = useState<string | null>(localStorage.getItem('superc_token'));
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !localStorage.getItem('superc_user'));
 
   const refreshUser = async () => {
     const storedToken = localStorage.getItem('superc_token');
@@ -43,6 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const response = await apiClient.get<User>(API_ENDPOINTS.AUTH.ME);
       if (response.success && response.data) {
         setUser(response.data);
+        localStorage.setItem('superc_user', JSON.stringify(response.data));
       } else {
         logout();
       }
@@ -66,6 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (response.success && response.data) {
       const { user: userData, tokens } = response.data;
       localStorage.setItem('superc_token', tokens.accessToken);
+      localStorage.setItem('superc_user', JSON.stringify(userData));
       setToken(tokens.accessToken);
       setUser(userData);
       return userData;
@@ -82,6 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (response.success && response.data) {
       const { user: userData, tokens } = response.data;
       localStorage.setItem('superc_token', tokens.accessToken);
+      localStorage.setItem('superc_user', JSON.stringify(userData));
       setToken(tokens.accessToken);
       setUser(userData);
       return userData;
@@ -91,6 +101,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     localStorage.removeItem('superc_token');
+    localStorage.removeItem('superc_user');
+    localStorage.removeItem('sc_student_profile');
+    localStorage.removeItem('sc_student_preferences');
+    localStorage.removeItem('sc_student_education');
+    localStorage.removeItem('sc_student_counsellor');
     setToken(null);
     setUser(null);
   };

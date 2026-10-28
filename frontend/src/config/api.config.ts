@@ -12,6 +12,7 @@ export const API_ENDPOINTS = {
   PROFILE: {
     INTAKE: `${API_BASE_URL}/profile/intake`,
     ME: `${API_BASE_URL}/profile/me`,
+    SUMMARY: `${API_BASE_URL}/profile/me/summary`,
     VERIFIED_RECORD: `${API_BASE_URL}/profile/me/verified`,
     REVIEW: `${API_BASE_URL}/profile/review`,
     BY_ID: (id: string) => `${API_BASE_URL}/profile/${id}`,

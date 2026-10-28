@@ -9,22 +9,32 @@ interface StudentProfilePageProps {
 }
 
 export const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ onNavigateToPreferences }) => {
-  const [profile, setProfile] = useState<StudentProfileRecord | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [profile, setProfile] = useState<StudentProfileRecord | null>(() => {
+    try {
+      const cached = localStorage.getItem('sc_student_profile');
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(() => !localStorage.getItem('sc_student_profile'));
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchProfile = async () => {
-    setIsLoading(true);
+    if (!localStorage.getItem('sc_student_profile')) {
+      setIsLoading(true);
+    }
     setError(null);
     try {
       const response = await ProfileService.getMyProfile();
       if (response.success && response.data) {
         setProfile(response.data);
+        localStorage.setItem('sc_student_profile', JSON.stringify(response.data));
       }
     } catch {
       // 404 means student hasn't submitted their intake yet, which is normal for a new account
-      setProfile(null);
+      if (!profile) setProfile(null);
     } finally {
       setIsLoading(false);
     }
@@ -40,6 +50,7 @@ export const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ onNaviga
 
   const handleSuccess = (record: StudentProfileRecord) => {
     setProfile(record);
+    localStorage.setItem('sc_student_profile', JSON.stringify(record));
     setIsEditing(false);
   };
 

@@ -9,7 +9,7 @@ export class EducationService {
   /**
    * Transforms database StudentEducation model into client record.
    */
-  private static mapToRecord(record: any): StudentEducationRecord {
+  public static mapToRecord(record: any): StudentEducationRecord {
     let parsedSubjects: SubjectDetail[] = [];
     try {
       parsedSubjects = record.subjectDetails ? JSON.parse(record.subjectDetails) : [];

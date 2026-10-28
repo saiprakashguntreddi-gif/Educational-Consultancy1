@@ -135,7 +135,7 @@ export class PreferencesService {
   /**
    * Format raw Prisma record into StudentPreferenceRecord with backward compatibility
    */
-  private static mapToRecord(raw: any): StudentPreferenceRecord {
+  public static mapToRecord(raw: any): StudentPreferenceRecord {
     let parsedCountries: string[] = [];
     let countriesNotFinalized = false;
 

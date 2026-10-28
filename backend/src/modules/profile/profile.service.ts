@@ -2,6 +2,8 @@ import { prisma } from '../../shared/database/prisma.service';
 import { VerificationStatus } from '../../config/constants';
 import { ProfileIntakeDto, VerifyProfileDto } from './profile.validation';
 import { StudentProfileRecord } from './profile.types';
+import { PreferencesService } from '../preferences/preferences.service';
+import { EducationService } from '../education/education.service';
 
 export class ProfileService {
   /**
@@ -86,6 +88,42 @@ export class ProfileService {
 
     if (!profile) return null;
     return this.mapToRecord(profile);
+  }
+
+  /**
+   * High-performance unified summary endpoint:
+   * Retrieves profile, preferences, education, and assigned counsellor in a single fast database query.
+   */
+  public static async getDashboardSummary(userId: string) {
+    const profile = await prisma.studentProfile.findUnique({
+      where: { userId },
+      include: {
+        assignedCounsellor: {
+          select: {
+            id: true,
+            email: true,
+            counsellorProfile: true,
+          },
+        },
+        preference: true,
+        education: true,
+      },
+    });
+
+    if (!profile) return null;
+
+    return {
+      profile: this.mapToRecord(profile),
+      preferences: profile.preference ? PreferencesService.mapToRecord(profile.preference) : null,
+      education: profile.education ? EducationService.mapToRecord(profile.education) : null,
+      assignedCounsellor: profile.assignedCounsellor ? {
+        id: profile.assignedCounsellor.id,
+        email: profile.assignedCounsellor.email,
+        fullName: profile.assignedCounsellor.counsellorProfile?.fullName || profile.assignedCounsellor.email,
+        phone: profile.assignedCounsellor.counsellorProfile?.phone || null,
+        designation: profile.assignedCounsellor.counsellorProfile?.designation || 'Educational Counsellor',
+      } : null,
+    };
   }
 
   /**

@@ -346,10 +346,39 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
 }) => {
   const { user, logout } = useAuth();
 
-  const [profile, setProfile] = useState<StudentProfileRecord | null>(null);
-  const [preferences, setPreferences] = useState<StudentPreferenceRecord | null>(null);
-  const [education, setEducation] = useState<StudentEducationRecord | null>(null);
-  const [assignedCounsellor, setAssignedCounsellor] = useState<CounsellorSummary | null>(null);
+  // Instant zero-delay hydration from local cache
+  const [profile, setProfile] = useState<StudentProfileRecord | null>(() => {
+    try {
+      const cached = localStorage.getItem('sc_student_profile');
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [preferences, setPreferences] = useState<StudentPreferenceRecord | null>(() => {
+    try {
+      const cached = localStorage.getItem('sc_student_preferences');
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [education, setEducation] = useState<StudentEducationRecord | null>(() => {
+    try {
+      const cached = localStorage.getItem('sc_student_education');
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [assignedCounsellor, setAssignedCounsellor] = useState<CounsellorSummary | null>(() => {
+    try {
+      const cached = localStorage.getItem('sc_student_counsellor');
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
+  });
   const [isEditingBasic, setIsEditingBasic] = useState<boolean>(false);
   const [isEditingPreferences, setIsEditingPreferences] = useState<boolean>(
     initialSection === 'preferences'
@@ -431,7 +460,30 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
   const loadData = async () => {
     setFeedback(null);
     try {
-      // Fetch Profile, Preferences, and Education concurrently in parallel without blocking UI
+      // 1. Unified high-performance summary query (single roundtrip)
+      const summaryRes = await ProfileService.getDashboardSummary().catch(() => null);
+      if (summaryRes && summaryRes.success && summaryRes.data) {
+        const { profile: p, preferences: pref, education: edu, assignedCounsellor: ac } = summaryRes.data;
+        if (p) {
+          setProfile(p);
+          localStorage.setItem('sc_student_profile', JSON.stringify(p));
+        }
+        if (pref) {
+          setPreferences(pref);
+          localStorage.setItem('sc_student_preferences', JSON.stringify(pref));
+        }
+        if (edu) {
+          setEducation(edu);
+          localStorage.setItem('sc_student_education', JSON.stringify(edu));
+        }
+        if (ac) {
+          setAssignedCounsellor(ac);
+          localStorage.setItem('sc_student_counsellor', JSON.stringify(ac));
+        }
+        return;
+      }
+
+      // 2. Fallback: Fetch in parallel if summary endpoint is not supported
       const [profRes, prefRes, eduRes] = await Promise.all([
         ProfileService.getMyProfile().catch(() => null),
         PreferencesService.getMyPreferences().catch(() => null),
@@ -440,14 +492,17 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
 
       if (profRes && profRes.success && profRes.data) {
         setProfile(profRes.data);
+        localStorage.setItem('sc_student_profile', JSON.stringify(profRes.data));
       }
 
       if (prefRes && prefRes.success && prefRes.data) {
         setPreferences(prefRes.data);
+        localStorage.setItem('sc_student_preferences', JSON.stringify(prefRes.data));
       }
 
       if (eduRes && eduRes.success && eduRes.data) {
         setEducation(eduRes.data);
+        localStorage.setItem('sc_student_education', JSON.stringify(eduRes.data));
       }
 
       // Fetch Counsellor/Appointments metadata in background
@@ -458,6 +513,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
                            metaRes.data.counsellors?.find((c: any) => c.isAssigned) || 
                            null;
           setAssignedCounsellor(assigned);
+          if (assigned) localStorage.setItem('sc_student_counsellor', JSON.stringify(assigned));
         }
       }).catch(() => {});
     } catch {
@@ -504,6 +560,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
 
   const handleBasicInfoSuccess = (record: StudentProfileRecord) => {
     setProfile(record);
+    localStorage.setItem('sc_student_profile', JSON.stringify(record));
     setIsEditingBasic(false);
     setFeedback({
       type: 'success',
@@ -518,6 +575,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
 
   const handlePreferencesSuccess = (record: StudentPreferenceRecord) => {
     setPreferences(record);
+    localStorage.setItem('sc_student_preferences', JSON.stringify(record));
     setIsEditingPreferences(false);
     setFeedback({
       type: 'success',
@@ -532,6 +590,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
 
   const handleEducationSuccess = (record: StudentEducationRecord) => {
     setEducation(record);
+    localStorage.setItem('sc_student_education', JSON.stringify(record));
     setIsEditingEducation(false);
     setFeedback({
       type: 'success',

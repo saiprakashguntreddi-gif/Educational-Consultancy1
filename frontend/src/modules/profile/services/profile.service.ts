@@ -20,6 +20,18 @@ export class ProfileService {
   }
 
   /**
+   * Fast unified student dashboard summary (Profile + Preferences + Education + Counsellor in ONE request)
+   */
+  public static async getDashboardSummary(): Promise<ApiResponse<{
+    profile: StudentProfileRecord;
+    preferences: any;
+    education: any;
+    assignedCounsellor: any;
+  }>> {
+    return apiClient.get(API_ENDPOINTS.PROFILE.SUMMARY);
+  }
+
+  /**
    * Fetch authenticated student's verified record & guidance clearance
    * Server-side gated: Requires VERIFIED status (returns 403 if PENDING or REJECTED)
    */

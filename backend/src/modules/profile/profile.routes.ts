@@ -22,6 +22,14 @@ router.post(
   ProfileController.submitIntake
 );
 
+// High-performance unified summary endpoint for instant student profile/dashboard loading
+router.get(
+  '/me/summary',
+  authenticateJwt,
+  requireRoles(Role.STUDENT),
+  ProfileController.getDashboardSummary
+);
+
 // Student views their own profile record & verification status (Open to students while PENDING or REJECTED)
 router.get(
   '/me',
