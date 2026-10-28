@@ -3,7 +3,6 @@ import { useAuth } from '../../shared/context/AuthContext';
 import {
   Compass,
   GraduationCap,
-  Users,
   Check,
   ArrowRight,
   BookOpen,

@@ -40,6 +40,8 @@ import {
   Menu,
   X,
   ChevronDown,
+  ChevronRight,
+  Briefcase,
   ArrowRight,
   Clock,
   Sparkles,
@@ -48,7 +50,6 @@ import {
   Pencil,
   ArrowLeft,
   Check,
-  ExternalLink,
   UserCheck,
   CalendarCheck,
   Lock,
@@ -388,6 +389,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [userDropdownOpen, setUserDropdownOpen] = useState<boolean>(false);
+  const [isProfessionalInfoOpen, setIsProfessionalInfoOpen] = useState<boolean>(true);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   const userDropdownRef = useRef<HTMLDivElement>(null);
@@ -687,8 +689,15 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
         {/* Sidebar Brand Wordmark */}
         <div
           className="cmd-sidebar-brand"
-          onClick={() => handleNavSelection('dashboard')}
-          title="Student Command Center"
+          onClick={() => {
+            if (onNavigateHome) {
+              onNavigateHome();
+            } else {
+              window.location.href = '/';
+            }
+          }}
+          title="Go to Superconsciousness Website"
+          style={{ cursor: 'pointer' }}
         >
           <div className="cmd-brand-title">
             <div className="cmd-brand-icon-box">
@@ -715,52 +724,92 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
             <span>Dashboard</span>
           </button>
 
-          <button
-            className={`cmd-nav-item ${activeMenu === 'basic' ? 'active' : ''}`}
-            onClick={() => handleNavSelection('basic')}
-          >
-            <span className="cmd-nav-item-icon">
-              <User size={17} />
-            </span>
-            <span>My Profile</span>
-            {basicInfoPercent === 100 && (
-              <span className="cmd-nav-item-badge" style={{ background: 'rgba(22, 163, 74, 0.2)', color: '#4ADE80' }}>
-                Done
+          {/* Professional Info Dropdown */}
+          <div className="cmd-nav-dropdown-group">
+            <button
+              type="button"
+              className={`cmd-nav-item cmd-nav-dropdown-trigger ${['preferences', 'education', 'personal'].includes(activeMenu) ? 'active' : ''}`}
+              onClick={() => setIsProfessionalInfoOpen((prev) => !prev)}
+            >
+              <span className="cmd-nav-item-icon">
+                <Briefcase size={17} />
               </span>
-            )}
-          </button>
+              <span className="cmd-nav-dropdown-label">Professional Info</span>
+              <span className="cmd-nav-dropdown-arrow">
+                {isProfessionalInfoOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+              </span>
+            </button>
 
-          <button
-            className={`cmd-nav-item ${activeMenu === 'preferences' ? 'active' : ''}`}
-            onClick={() => handleNavSelection('preferences')}
-          >
-            <span className="cmd-nav-item-icon">
-              <Sliders size={17} />
-            </span>
-            <span>Preferences</span>
-            {preferencesPercent === 100 && (
-              <span className="cmd-nav-item-badge" style={{ background: 'rgba(22, 163, 74, 0.2)', color: '#4ADE80' }}>
-                Done
-              </span>
-            )}
-          </button>
+            {isProfessionalInfoOpen && (
+              <div className="cmd-nav-submenu">
+                <button
+                  className={`cmd-nav-item cmd-nav-subitem ${activeMenu === 'preferences' ? 'active' : ''}`}
+                  onClick={() => handleNavSelection('preferences')}
+                >
+                  <span className="cmd-nav-item-icon">
+                    <Sliders size={15} />
+                  </span>
+                  <span>Preferences</span>
+                  {preferencesPercent === 100 && (
+                    <span className="cmd-nav-item-badge" style={{ background: 'rgba(22, 163, 74, 0.2)', color: '#4ADE80' }}>
+                      Done
+                    </span>
+                  )}
+                </button>
 
-          <button
-            className={`cmd-nav-item ${activeMenu === 'education' ? 'active' : ''}`}
-            onClick={() => handleNavSelection('education')}
-          >
-            <span className="cmd-nav-item-icon">
-              <GraduationCap size={17} />
-            </span>
-            <span>Education</span>
-            {educationPercent === 100 && (
-              <span className="cmd-nav-item-badge" style={{ background: 'rgba(22, 163, 74, 0.2)', color: '#4ADE80' }}>
-                Done
-              </span>
+                <button
+                  className={`cmd-nav-item cmd-nav-subitem ${activeMenu === 'education' ? 'active' : ''}`}
+                  onClick={() => handleNavSelection('education')}
+                >
+                  <span className="cmd-nav-item-icon">
+                    <GraduationCap size={15} />
+                  </span>
+                  <span>Educational Details</span>
+                  {educationPercent === 100 && (
+                    <span className="cmd-nav-item-badge" style={{ background: 'rgba(22, 163, 74, 0.2)', color: '#4ADE80' }}>
+                      Done
+                    </span>
+                  )}
+                </button>
+
+                <button
+                  className={`cmd-nav-item cmd-nav-subitem ${activeMenu === 'personal' ? 'active' : ''}`}
+                  onClick={() => handleNavSelection('personal')}
+                >
+                  <span className="cmd-nav-item-icon">
+                    <IdCard size={15} />
+                  </span>
+                  <span>Personal Information</span>
+                  {!profile?.isEnrolled && (
+                    <span className="cmd-nav-item-badge" style={{ background: 'rgba(100, 116, 139, 0.2)', color: '#94A3B8', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                      <Lock size={10} /> Locked
+                    </span>
+                  )}
+                </button>
+              </div>
             )}
-          </button>
+          </div>
 
           <div className="cmd-nav-category-label" style={{ marginTop: '0.8rem' }}>Discovery & Planning</div>
+
+          <button
+            className={`cmd-nav-item ${activeMenu === 'appointments' ? 'active' : ''}`}
+            onClick={() => handleNavSelection('appointments')}
+          >
+            <span className="cmd-nav-item-icon">
+              <Calendar size={17} />
+            </span>
+            <span>Appointments</span>
+            {verificationStatus !== 'VERIFIED' ? (
+              <span className="cmd-nav-item-badge" style={{ background: 'rgba(234, 88, 12, 0.15)', color: '#F97316', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                <Lock size={10} /> Verify First
+              </span>
+            ) : (
+              <span className="cmd-nav-item-badge" style={{ background: 'rgba(22, 163, 74, 0.2)', color: '#4ADE80' }}>
+                Open
+              </span>
+            )}
+          </button>
 
           <button
             className={`cmd-nav-item ${activeMenu === 'entrance' ? 'active' : ''}`}
@@ -770,21 +819,6 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
               <FileText size={17} />
             </span>
             <span>Entrance Exams</span>
-            {!profile?.isEnrolled && (
-              <span className="cmd-nav-item-badge" style={{ background: 'rgba(100, 116, 139, 0.2)', color: '#94A3B8', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                <Lock size={10} /> Locked
-              </span>
-            )}
-          </button>
-
-          <button
-            className={`cmd-nav-item ${activeMenu === 'personal' ? 'active' : ''}`}
-            onClick={() => handleNavSelection('personal')}
-          >
-            <span className="cmd-nav-item-icon">
-              <IdCard size={17} />
-            </span>
-            <span>Personal Information</span>
             {!profile?.isEnrolled && (
               <span className="cmd-nav-item-badge" style={{ background: 'rgba(100, 116, 139, 0.2)', color: '#94A3B8', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
                 <Lock size={10} /> Locked
@@ -883,25 +917,6 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
               </span>
             )}
           </button>
-
-          <button
-            className={`cmd-nav-item ${activeMenu === 'appointments' ? 'active' : ''}`}
-            onClick={() => handleNavSelection('appointments')}
-          >
-            <span className="cmd-nav-item-icon">
-              <Calendar size={17} />
-            </span>
-            <span>Appointments</span>
-            {verificationStatus !== 'VERIFIED' ? (
-              <span className="cmd-nav-item-badge" style={{ background: 'rgba(234, 88, 12, 0.15)', color: '#F97316', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                <Lock size={10} /> Verify First
-              </span>
-            ) : (
-              <span className="cmd-nav-item-badge" style={{ background: 'rgba(22, 163, 74, 0.2)', color: '#4ADE80' }}>
-                Open
-              </span>
-            )}
-          </button>
         </nav>
 
         {/* Sidebar Bottom Items: Settings & Logout */}
@@ -947,15 +962,6 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
           </div>
 
           <div className="cmd-header-right">
-            {/* Direct Link to Homepage */}
-            <button
-              className="cmd-header-website-btn"
-              onClick={onNavigateHome ? onNavigateHome : () => window.open('/', '_blank')}
-              title="View consultancy public portal"
-            >
-              <span>Website</span>
-              <ExternalLink size={13} />
-            </button>
 
             {/* Notification Bell Icon */}
             <button
