@@ -67,13 +67,45 @@ export const AppointmentsDashboard: React.FC<AppointmentsDashboardProps> = ({
   );
 
   // Data states
-  const [meta, setMeta] = useState<AppointmentsMetaResponse | null>(null);
-  const [appointments, setAppointments] = useState<AppointmentDto[]>([]);
-  const [webinars, setWebinars] = useState<WebinarDto[]>([]);
-  const [shortlists, setShortlists] = useState<ShortlistedCollegeDto[]>([]);
+  // Data states with instant local storage cache hydration
+  const [meta, setMeta] = useState<AppointmentsMetaResponse | null>(() => {
+    try {
+      const c = localStorage.getItem('sc_student_appointments_meta');
+      return c ? JSON.parse(c) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [appointments, setAppointments] = useState<AppointmentDto[]>(() => {
+    try {
+      const c = localStorage.getItem('sc_student_appointments');
+      return c ? JSON.parse(c) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [webinars, setWebinars] = useState<WebinarDto[]>(() => {
+    try {
+      const c = localStorage.getItem('sc_student_webinars');
+      return c ? JSON.parse(c) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [shortlists, setShortlists] = useState<ShortlistedCollegeDto[]>(() => {
+    try {
+      const c = localStorage.getItem('sc_student_shortlists');
+      return c ? JSON.parse(c) : [];
+    } catch {
+      return [];
+    }
+  });
 
-  // Loading & Feedback states
-  const [loading, setLoading] = useState<boolean>(true);
+  // Loading & Feedback states: never block shortlist view with full-page loading screen
+  const [loading, setLoading] = useState<boolean>(() => {
+    if (isShortlistOnly || initialTab === 'shortlist') return false;
+    return !localStorage.getItem('sc_student_appointments_meta');
+  });
   const [submittingBooking, setSubmittingBooking] = useState<boolean>(false);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{
@@ -183,7 +215,11 @@ export const AppointmentsDashboard: React.FC<AppointmentsDashboardProps> = ({
 
   // Load all data on mount
   const loadDashboardData = async () => {
-    setLoading(true);
+    if (!isShortlistOnly && activeTab !== 'shortlist') {
+      if (!localStorage.getItem('sc_student_appointments_meta')) {
+        setLoading(true);
+      }
+    }
     try {
       const [metaRes, appRes, webRes, shortRes, enrollRes] = await Promise.all([
         AppointmentsService.getMeta(),
@@ -205,6 +241,7 @@ export const AppointmentsDashboard: React.FC<AppointmentsDashboardProps> = ({
           assignedCounsellor: assignedCounsellorObj,
         };
         setMeta(normalizedMeta);
+        localStorage.setItem('sc_student_appointments_meta', JSON.stringify(normalizedMeta));
         const resolvedCounsellorId =
           assignedCounsellorObj?.id ||
           (metaRes.data.counsellors && metaRes.data.counsellors.length > 0 ? metaRes.data.counsellors[0].id : '');
@@ -217,14 +254,17 @@ export const AppointmentsDashboard: React.FC<AppointmentsDashboardProps> = ({
 
       if (appRes.success && appRes.data) {
         setAppointments(appRes.data);
+        localStorage.setItem('sc_student_appointments', JSON.stringify(appRes.data));
       }
 
       if (webRes.success && webRes.data) {
         setWebinars(webRes.data);
+        localStorage.setItem('sc_student_webinars', JSON.stringify(webRes.data));
       }
 
       if (shortRes.success && shortRes.data) {
         setShortlists(shortRes.data);
+        localStorage.setItem('sc_student_shortlists', JSON.stringify(shortRes.data));
       }
 
       if (enrollRes?.success && enrollRes.data) {
@@ -580,7 +620,7 @@ export const AppointmentsDashboard: React.FC<AppointmentsDashboardProps> = ({
     (a) => a.status === 'SCHEDULED' || a.status === 'CONFIRMED'
   ).length;
 
-  if (loading) {
+  if (loading && !isShortlistOnly && activeTab !== 'shortlist') {
     return (
       <div className="app-container" style={{ textAlign: 'center', padding: '5rem 2rem' }}>
         <div style={{ color: '#5B4FE9', fontWeight: 750, fontSize: '1.15rem' }}>
