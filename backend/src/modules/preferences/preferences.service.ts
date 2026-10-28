@@ -37,7 +37,7 @@ export class PreferencesService {
     let pairs: DepartmentPreferencePair[] = [];
     if (!coursesNotFinalized) {
       if (dto.departmentPreferences && dto.departmentPreferences.length > 0) {
-        pairs = dto.departmentPreferences.filter((p) => p.department && p.subDepartment);
+        pairs = dto.departmentPreferences.filter((p) => p.department && p.subDepartment) as DepartmentPreferencePair[];
       } else if (dto.department && dto.subDepartment) {
         pairs = [{ department: dto.department, subDepartment: dto.subDepartment }];
       }

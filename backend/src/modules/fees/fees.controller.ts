@@ -72,7 +72,7 @@ export class FeesController {
         return ApiResponse.error(res, parsed.error.format(), 400, 'Invalid calculation input');
       }
 
-      const result = FeesService.calculateCourseFee(parsed.data);
+      const result = FeesService.calculateCourseFee(parsed.data as any);
       return ApiResponse.success(res, result, 'Course fee calculation computed successfully');
     } catch (err: any) {
       return ApiResponse.error(res, err.message || 'Failed to calculate course fees', 500);
@@ -116,7 +116,7 @@ export class FeesController {
         studentProfileId = user.id;
       }
 
-      const record = await FeesService.saveBudgetDecision(parsed.data, studentProfileId);
+      const record = await FeesService.saveBudgetDecision(parsed.data as any, studentProfileId);
       return ApiResponse.created(res, record, 'Budget decision saved successfully');
     } catch (err: any) {
       return ApiResponse.error(res, err.message || 'Failed to save budget decision', 500);

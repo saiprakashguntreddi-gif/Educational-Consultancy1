@@ -77,9 +77,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
     onNavigate('home');
   };
 
+  const isSolidNav = currentView !== 'home';
+
   return (
-    <div className="premium-navbar-wrapper">
-      <header className={`premium-navbar ${isScrolled ? 'is-scrolled' : ''} ${isAdmin ? 'navbar-has-admin' : ''}`}>
+    <div className={`premium-navbar-wrapper ${isSolidNav ? 'is-solid-page' : ''}`}>
+      <header className={`premium-navbar ${isSolidNav ? 'is-solid-theme' : ''} ${isScrolled ? 'is-scrolled' : ''} ${isAdmin ? 'navbar-has-admin' : ''}`}>
         <div className="navbar-inner">
           {/* Brand Logo / Wordmark */}
           <div

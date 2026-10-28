@@ -353,6 +353,28 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* Solid Navbar for dedicated non-home pages (Login, Register, Entrance, Colleges, etc.) */
+.premium-navbar-wrapper.is-solid-page {
+  position: sticky;
+  top: 0;
+  inset-x: 0;
+  z-index: 1000;
+  width: 100%;
+  padding: 12px clamp(20px, 4vw, 50px);
+  background: #07192E;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  pointer-events: auto;
+}
+
+.premium-navbar-wrapper.is-solid-page .premium-navbar {
+  position: relative;
+  background: transparent;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+}
+
 .navbar-inner {
   width: 100%;
   padding: 0;

@@ -11,6 +11,7 @@
     "frontend"
   ],
   "scripts": {
+    "build": "npm --prefix backend run db:generate && npm --prefix frontend run build",
     "dev:backend": "npm --prefix backend run dev",
     "dev:frontend": "npm --prefix frontend run dev",
     "build:backend": "npm --prefix backend run build",
@@ -28,4 +29,3 @@
   "author": "Superconsciousness Engineering Team",
   "license": "UNLICENSED"
 }
-

@@ -389,22 +389,27 @@ export const createApp = (): Application => {
     );
   });
 
-  // Mount domain modules
-  app.use('/api/v1/auth', authRouter);
-  app.use('/api/v1/profile', profileRouter);
-  app.use('/api/v1/preferences', preferencesRouter);
-  app.use('/api/v1/education', educationRouter);
-  app.use('/api/v1/exams', entranceRouter);
-  app.use('/api/v1/personal', personalRouter);
-  app.use('/api/v1/colleges', collegesRouter);
-  app.use('/api/v1/recommendations', recommendationsRouter);
-  app.use('/api/v1/scholarships', scholarshipsRouter);
-  app.use('/api/v1/fees', feesRouter);
-  app.use('/api/v1/exam-intelligence', examIntelligenceRouter);
-  app.use('/api/v1/assessments', assessmentsRouter);
-  app.use('/api/v1/appointments', appointmentsRouter);
-  app.use('/api/v1/counsellor', counsellorRouter);
-  app.use('/api/v1/admin', adminRouter);
+  // Mount domain modules for both /api/v1 and /v1 (supports direct or proxy rewrites on Vercel)
+  const mountRoutes = (prefix: string) => {
+    app.use(`${prefix}/auth`, authRouter);
+    app.use(`${prefix}/profile`, profileRouter);
+    app.use(`${prefix}/preferences`, preferencesRouter);
+    app.use(`${prefix}/education`, educationRouter);
+    app.use(`${prefix}/exams`, entranceRouter);
+    app.use(`${prefix}/personal`, personalRouter);
+    app.use(`${prefix}/colleges`, collegesRouter);
+    app.use(`${prefix}/recommendations`, recommendationsRouter);
+    app.use(`${prefix}/scholarships`, scholarshipsRouter);
+    app.use(`${prefix}/fees`, feesRouter);
+    app.use(`${prefix}/exam-intelligence`, examIntelligenceRouter);
+    app.use(`${prefix}/assessments`, assessmentsRouter);
+    app.use(`${prefix}/appointments`, appointmentsRouter);
+    app.use(`${prefix}/counsellor`, counsellorRouter);
+    app.use(`${prefix}/admin`, adminRouter);
+  };
+
+  mountRoutes('/api/v1');
+  mountRoutes('/v1');
 
   // SPA fallback for frontend client-side routing
   if (frontendDistPath) {

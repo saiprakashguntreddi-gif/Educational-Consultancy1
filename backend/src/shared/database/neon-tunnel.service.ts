@@ -41,6 +41,11 @@ function updateTargetIp(hostname: string) {
 export function getOrCreateNeonTunnel(): string {
   const originalUrl = process.env.DATABASE_URL || '';
 
+  // In cloud environments (such as Vercel, AWS Lambda, or production hosts), standard pooler works directly
+  if (process.env.VERCEL || (process.env.NODE_ENV === 'production' && !process.env.USE_LOCAL_TUNNEL)) {
+    return originalUrl;
+  }
+
   // If already initialized or not a Neon cloud URL, return existing or original URL
   if (isTunnelInitialized && activeTunnelUrl) {
     return activeTunnelUrl;

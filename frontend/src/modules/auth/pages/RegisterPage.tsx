@@ -66,8 +66,29 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onSuccess, onNavigat
   };
 
   return (
-    <div style={{ maxWidth: '460px', margin: '3.5rem auto', padding: '0 1rem' }}>
-      <div className="glass-panel" style={{ padding: '2.5rem' }}>
+    <div
+      style={{
+        minHeight: 'calc(100vh - 76px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '3rem 1.25rem',
+        background: 'linear-gradient(180deg, #F0F6FC 0%, #FFFFFF 100%)',
+        boxSizing: 'border-box',
+      }}
+    >
+      <div
+        className="glass-panel"
+        style={{
+          width: '100%',
+          maxWidth: '460px',
+          padding: '2.5rem',
+          background: '#FFFFFF',
+          borderRadius: '20px',
+          boxShadow: '0 16px 40px -8px rgba(16, 42, 67, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04)',
+          border: '1px solid #D9E2EC',
+        }}
+      >
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{
             width: '48px',
