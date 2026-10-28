@@ -40,6 +40,8 @@ import {
   Menu,
   X,
   ChevronDown,
+  ChevronRight,
+  Briefcase,
   ArrowRight,
   Clock,
   Sparkles,
@@ -48,7 +50,6 @@ import {
   Pencil,
   ArrowLeft,
   Check,
-  ExternalLink,
   UserCheck,
   CalendarCheck,
   Lock,
@@ -337,11 +338,13 @@ const EnrolmentLockedView: React.FC<EnrolmentLockedViewProps> = ({
 interface StudentDashboardPageProps {
   initialSection?: 'dashboard' | 'basic' | 'preferences' | 'education' | 'entrance' | 'personal' | 'colleges' | 'recommendations' | 'scholarships' | 'fees' | 'assessments' | 'appointments' | 'shortlist';
   onNavigateHome?: () => void;
+  initialFeedback?: { type: 'success' | 'error'; message: string } | null;
 }
 
 export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
   initialSection = 'dashboard',
   onNavigateHome,
+  initialFeedback = null,
 }) => {
   const { user, logout } = useAuth();
 
@@ -386,9 +389,18 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
   );
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
+  const [isProfessionalInfoOpen, setIsProfessionalInfoOpen] = useState<boolean>(true);
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [userDropdownOpen, setUserDropdownOpen] = useState<boolean>(false);
-  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(
+    initialFeedback
+  );
+
+  useEffect(() => {
+    if (initialFeedback) {
+      setFeedback(initialFeedback);
+    }
+  }, [initialFeedback]);
 
   const userDropdownRef = useRef<HTMLDivElement>(null);
   const userDropdownTriggerRef = useRef<HTMLDivElement>(null);
@@ -427,7 +439,9 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
   }, [userDropdownOpen]);
 
   const loadData = async () => {
-    setFeedback(null);
+    if (!initialFeedback) {
+      setFeedback(null);
+    }
     try {
       // Fetch Profile, Preferences, and Education concurrently in parallel without blocking UI
       const [profRes, prefRes, eduRes] = await Promise.all([
@@ -495,6 +509,13 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
     }
   }, [initialSection]);
 
+  // Keep Professional Info dropdown open if an item inside it is active
+  useEffect(() => {
+    if (['preferences', 'education', 'personal'].includes(activeMenu)) {
+      setIsProfessionalInfoOpen(true);
+    }
+  }, [activeMenu]);
+
   // Handle Basic Info Submission
   const handleBasicInfoSubmit = async (data: StudentProfileIntakeInput) => {
     return await ProfileService.submitIntake(data);
@@ -505,8 +526,9 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
     setIsEditingBasic(false);
     setFeedback({
       type: 'success',
-      message: 'Basic Information successfully updated and submitted for review.',
+      message: 'Registration successful.',
     });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Handle Preferences Submission
@@ -687,18 +709,18 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
         {/* Sidebar Brand Wordmark */}
         <div
           className="cmd-sidebar-brand"
-          onClick={() => handleNavSelection('dashboard')}
-          title="Student Command Center"
+          onClick={onNavigateHome ? onNavigateHome : () => { window.location.href = '/'; }}
+          title="Return to Main Page"
         >
-          <div className="cmd-brand-title">
-            <div className="cmd-brand-icon-box">
-              <Compass size={16} />
-            </div>
-            <span>SUPERCONSCIOUSNESS</span>
+          <div className="cmd-brand-icon-box">
+            <Compass size={18} />
           </div>
-          <span className="cmd-brand-subtitle">
-            EDUCATIONAL CONSULTANCY & GUIDANCE
-          </span>
+          <div className="cmd-brand-text-block">
+            <span className="cmd-brand-title">SUPERCONSCIOUSNESS</span>
+            <span className="cmd-brand-subtitle">
+              EDUCATIONAL CONSULTANCY & GUIDANCE
+            </span>
+          </div>
         </div>
 
         {/* Sidebar Navigation Items */}
@@ -715,52 +737,94 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
             <span>Dashboard</span>
           </button>
 
-          <button
-            className={`cmd-nav-item ${activeMenu === 'basic' ? 'active' : ''}`}
-            onClick={() => handleNavSelection('basic')}
-          >
-            <span className="cmd-nav-item-icon">
-              <User size={17} />
-            </span>
-            <span>My Profile</span>
-            {basicInfoPercent === 100 && (
-              <span className="cmd-nav-item-badge" style={{ background: 'rgba(22, 163, 74, 0.2)', color: '#4ADE80' }}>
-                Done
+          {/* Professional Info Dropdown */}
+          <div className="cmd-nav-dropdown-group">
+            <button
+              className={`cmd-nav-item cmd-nav-dropdown-trigger ${
+                ['preferences', 'education', 'personal'].includes(activeMenu) ? 'has-active-child' : ''
+              }`}
+              onClick={() => setIsProfessionalInfoOpen(!isProfessionalInfoOpen)}
+              type="button"
+            >
+              <span className="cmd-nav-item-icon">
+                <Briefcase size={17} />
               </span>
-            )}
-          </button>
+              <span className="cmd-nav-dropdown-label">Professional Info</span>
+              <span className="cmd-nav-dropdown-arrow">
+                {isProfessionalInfoOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+              </span>
+            </button>
 
-          <button
-            className={`cmd-nav-item ${activeMenu === 'preferences' ? 'active' : ''}`}
-            onClick={() => handleNavSelection('preferences')}
-          >
-            <span className="cmd-nav-item-icon">
-              <Sliders size={17} />
-            </span>
-            <span>Preferences</span>
-            {preferencesPercent === 100 && (
-              <span className="cmd-nav-item-badge" style={{ background: 'rgba(22, 163, 74, 0.2)', color: '#4ADE80' }}>
-                Done
-              </span>
-            )}
-          </button>
+            {isProfessionalInfoOpen && (
+              <div className="cmd-nav-submenu">
+                <button
+                  className={`cmd-nav-item cmd-nav-subitem ${activeMenu === 'preferences' ? 'active' : ''}`}
+                  onClick={() => handleNavSelection('preferences')}
+                >
+                  <span className="cmd-nav-item-icon">
+                    <Sliders size={15} />
+                  </span>
+                  <span>Preferences</span>
+                  {preferencesPercent === 100 && (
+                    <span className="cmd-nav-item-badge" style={{ background: 'rgba(22, 163, 74, 0.2)', color: '#4ADE80' }}>
+                      Done
+                    </span>
+                  )}
+                </button>
 
-          <button
-            className={`cmd-nav-item ${activeMenu === 'education' ? 'active' : ''}`}
-            onClick={() => handleNavSelection('education')}
-          >
-            <span className="cmd-nav-item-icon">
-              <GraduationCap size={17} />
-            </span>
-            <span>Education</span>
-            {educationPercent === 100 && (
-              <span className="cmd-nav-item-badge" style={{ background: 'rgba(22, 163, 74, 0.2)', color: '#4ADE80' }}>
-                Done
-              </span>
+                <button
+                  className={`cmd-nav-item cmd-nav-subitem ${activeMenu === 'education' ? 'active' : ''}`}
+                  onClick={() => handleNavSelection('education')}
+                >
+                  <span className="cmd-nav-item-icon">
+                    <GraduationCap size={15} />
+                  </span>
+                  <span>Educational Details</span>
+                  {educationPercent === 100 && (
+                    <span className="cmd-nav-item-badge" style={{ background: 'rgba(22, 163, 74, 0.2)', color: '#4ADE80' }}>
+                      Done
+                    </span>
+                  )}
+                </button>
+
+                <button
+                  className={`cmd-nav-item cmd-nav-subitem ${activeMenu === 'personal' ? 'active' : ''}`}
+                  onClick={() => handleNavSelection('personal')}
+                >
+                  <span className="cmd-nav-item-icon">
+                    <IdCard size={15} />
+                  </span>
+                  <span>Personal Information</span>
+                  {!profile?.isEnrolled && (
+                    <span className="cmd-nav-item-badge" style={{ background: 'rgba(100, 116, 139, 0.2)', color: '#94A3B8', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                      <Lock size={10} /> Locked
+                    </span>
+                  )}
+                </button>
+              </div>
             )}
-          </button>
+          </div>
 
           <div className="cmd-nav-category-label" style={{ marginTop: '0.8rem' }}>Discovery & Planning</div>
+
+          <button
+            className={`cmd-nav-item ${activeMenu === 'appointments' ? 'active' : ''}`}
+            onClick={() => handleNavSelection('appointments')}
+          >
+            <span className="cmd-nav-item-icon">
+              <Calendar size={17} />
+            </span>
+            <span>Appointments</span>
+            {verificationStatus !== 'VERIFIED' ? (
+              <span className="cmd-nav-item-badge" style={{ background: 'rgba(234, 88, 12, 0.15)', color: '#F97316', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                <Lock size={10} /> Verify First
+              </span>
+            ) : (
+              <span className="cmd-nav-item-badge" style={{ background: 'rgba(22, 163, 74, 0.2)', color: '#4ADE80' }}>
+                Open
+              </span>
+            )}
+          </button>
 
           <button
             className={`cmd-nav-item ${activeMenu === 'entrance' ? 'active' : ''}`}
@@ -770,21 +834,6 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
               <FileText size={17} />
             </span>
             <span>Entrance Exams</span>
-            {!profile?.isEnrolled && (
-              <span className="cmd-nav-item-badge" style={{ background: 'rgba(100, 116, 139, 0.2)', color: '#94A3B8', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                <Lock size={10} /> Locked
-              </span>
-            )}
-          </button>
-
-          <button
-            className={`cmd-nav-item ${activeMenu === 'personal' ? 'active' : ''}`}
-            onClick={() => handleNavSelection('personal')}
-          >
-            <span className="cmd-nav-item-icon">
-              <IdCard size={17} />
-            </span>
-            <span>Personal Information</span>
             {!profile?.isEnrolled && (
               <span className="cmd-nav-item-badge" style={{ background: 'rgba(100, 116, 139, 0.2)', color: '#94A3B8', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
                 <Lock size={10} /> Locked
@@ -883,25 +932,6 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
               </span>
             )}
           </button>
-
-          <button
-            className={`cmd-nav-item ${activeMenu === 'appointments' ? 'active' : ''}`}
-            onClick={() => handleNavSelection('appointments')}
-          >
-            <span className="cmd-nav-item-icon">
-              <Calendar size={17} />
-            </span>
-            <span>Appointments</span>
-            {verificationStatus !== 'VERIFIED' ? (
-              <span className="cmd-nav-item-badge" style={{ background: 'rgba(234, 88, 12, 0.15)', color: '#F97316', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                <Lock size={10} /> Verify First
-              </span>
-            ) : (
-              <span className="cmd-nav-item-badge" style={{ background: 'rgba(22, 163, 74, 0.2)', color: '#4ADE80' }}>
-                Open
-              </span>
-            )}
-          </button>
         </nav>
 
         {/* Sidebar Bottom Items: Settings & Logout */}
@@ -947,16 +977,6 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
           </div>
 
           <div className="cmd-header-right">
-            {/* Direct Link to Homepage */}
-            <button
-              className="cmd-header-website-btn"
-              onClick={onNavigateHome ? onNavigateHome : () => window.open('/', '_blank')}
-              title="View consultancy public portal"
-            >
-              <span>Website</span>
-              <ExternalLink size={13} />
-            </button>
-
             {/* Notification Bell Icon */}
             <button
               className="cmd-notification-btn"
@@ -1048,7 +1068,24 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
               }`}
             >
               {feedback.type === 'success' ? <Check size={18} /> : <AlertCircle size={18} />}
-              <span>{feedback.message}</span>
+              <span style={{ flex: 1 }}>{feedback.message}</span>
+              <button
+                type="button"
+                onClick={() => setFeedback(null)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'inherit',
+                  cursor: 'pointer',
+                  padding: '2px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  opacity: 0.7,
+                }}
+                aria-label="Dismiss notification"
+              >
+                <X size={16} />
+              </button>
             </div>
           )}
 

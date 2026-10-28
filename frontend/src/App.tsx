@@ -113,6 +113,7 @@ const AppContent: React.FC = () => {
         return (
           <StudentDashboardPage
             initialSection="basic"
+            initialFeedback={{ type: 'success', message: 'Registration successful.' }}
             onNavigateHome={() => handleNavigate('home')}
           />
         );

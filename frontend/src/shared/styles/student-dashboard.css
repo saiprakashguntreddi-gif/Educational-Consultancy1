@@ -36,7 +36,7 @@
   --cmd-warning-subtle: rgba(255, 181, 71, 0.14);
   --cmd-error: #DC2626;
   --cmd-error-subtle: #FEE2E2;
-  --cmd-sidebar-width: 260px;
+  --cmd-sidebar-width: 270px;
   --cmd-header-height: 68px;
   --cmd-radius-sm: 8px;
   --cmd-radius-md: 12px;
@@ -108,50 +108,60 @@
 
 /* Sidebar Top Branding */
 .cmd-sidebar-brand {
-  padding: 1.5rem 1.4rem 1.25rem;
+  padding: 1.25rem 1.1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   cursor: pointer;
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
   transition: background 0.15s ease;
+  user-select: none;
 }
 
 .cmd-sidebar-brand:hover {
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.cmd-brand-title {
-  font-size: 1.05rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  color: #FFFFFF;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .cmd-brand-icon-box {
-  width: 28px;
-  height: 28px;
-  border-radius: 7px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   background: linear-gradient(135deg, #129DB9 0%, #40C7E5 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #FFFFFF;
-  font-size: 0.9rem;
   flex-shrink: 0;
   box-shadow: 0 2px 8px rgba(18, 157, 185, 0.35);
 }
 
+.cmd-brand-text-block {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.cmd-brand-title {
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #FFFFFF;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .cmd-brand-subtitle {
-  font-size: 0.65rem;
+  font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   color: #8C99B2;
   text-transform: uppercase;
-  padding-left: 0.1rem;
+  line-height: 1.25;
+  margin-top: 0.2rem;
 }
 
 /* Sidebar Navigation Items */
@@ -241,6 +251,67 @@
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.1);
   color: #CBD5E1;
+}
+
+/* Professional Info Dropdown & Submenu */
+.cmd-nav-dropdown-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.cmd-nav-dropdown-trigger {
+  width: 100%;
+  cursor: pointer;
+}
+
+.cmd-nav-dropdown-label {
+  flex: 1;
+  text-align: left;
+}
+
+.cmd-nav-dropdown-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #8C99B2;
+  margin-left: auto;
+  transition: color 0.16s ease, transform 0.2s ease;
+}
+
+.cmd-nav-dropdown-trigger:hover .cmd-nav-dropdown-arrow,
+.cmd-nav-dropdown-trigger.has-active-child .cmd-nav-dropdown-arrow {
+  color: #FFFFFF;
+}
+
+.cmd-nav-dropdown-trigger.has-active-child {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.cmd-nav-dropdown-trigger.has-active-child .cmd-nav-item-icon {
+  color: #40C7E5;
+}
+
+.cmd-nav-submenu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-left: 1.15rem;
+  padding-left: 0.65rem;
+  border-left: 1.5px solid rgba(255, 255, 255, 0.12);
+  margin-top: 0.2rem;
+  margin-bottom: 0.35rem;
+}
+
+.cmd-nav-subitem {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.83rem;
+  border-radius: var(--cmd-radius-sm);
+}
+
+.cmd-nav-subitem.active {
+  background: rgba(18, 157, 185, 0.2);
+  color: #FFFFFF;
 }
 
 /* Sidebar Footer (Settings & Logout) */
@@ -1456,7 +1527,7 @@
 /* Large Tablets & Small Laptops (<= 1024px) */
 @media screen and (max-width: 1024px) {
   :root {
-    --cmd-sidebar-width: 250px;
+    --cmd-sidebar-width: 270px;
   }
 
   .cmd-sidebar {
