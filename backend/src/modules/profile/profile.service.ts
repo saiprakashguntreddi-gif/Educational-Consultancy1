@@ -121,7 +121,7 @@ export class ProfileService {
         email: profile.assignedCounsellor.email,
         fullName: profile.assignedCounsellor.counsellorProfile?.fullName || profile.assignedCounsellor.email,
         phone: profile.assignedCounsellor.counsellorProfile?.phone || null,
-        designation: profile.assignedCounsellor.counsellorProfile?.designation || 'Educational Counsellor',
+        designation: (profile.assignedCounsellor.counsellorProfile as any)?.designation || 'Educational Counsellor',
       } : null,
     };
   }

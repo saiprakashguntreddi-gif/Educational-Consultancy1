@@ -15,9 +15,9 @@
   --cmd-navy-secondary: #084F5E;
   --cmd-navy-elevated: #133854;
   --cmd-navy-hover: #1D3D5D;
-  --cmd-bg: #F5F8FC;
-  --cmd-card: #FFFFFF;
-  --cmd-card-hover: #F0F4F8;
+  --cmd-bg: #FAF7F2;
+  --cmd-card: #FFFDFB;
+  --cmd-card-hover: #F4EFEA;
   --cmd-accent: #129DB9;
   --cmd-accent-hover: #084F5E;
   --cmd-accent-subtle: rgba(18, 157, 185, 0.08);
@@ -27,8 +27,8 @@
   --cmd-text-main: #102A43;
   --cmd-text-muted: #486581;
   --cmd-text-light: #627D98;
-  --cmd-border: #D9E2EC;
-  --cmd-border-subtle: #EDF2F7;
+  --cmd-border: #E8E2D8;
+  --cmd-border-subtle: #F0ECE4;
   --cmd-success: #084F5E;
   --cmd-success-subtle: #E6F7FA;
   --cmd-success-text: #084F5E;

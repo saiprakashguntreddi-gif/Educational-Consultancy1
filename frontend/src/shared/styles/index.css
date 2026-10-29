@@ -11,15 +11,15 @@
   --bright-cyan: #40C7E5;    /* Progress indicators, icons, interactive highlights */
   --dark-teal: #084F5E;      /* Secondary buttons, hover states, feature backgrounds */
   --premium-gold: #FFB547;   /* Achievements, special badges, verified highlights */
-  --soft-white: #F5F8FC;     /* Page background, clean neutral surfaces */
+  --soft-white: #FAF7F2;     /* Warm Ivory */
 
-  /* Surface & Background Tokens */
-  --bg-app: #F5F8FC;
-  --bg-surface: #FFFFFF;
-  --bg-surface-elevated: #EBF3F8;
+  /* Surface & Background Tokens — Warm Ivory Theme */
+  --bg-app: #FAF7F2;
+  --bg-surface: #FFFDFB;
+  --bg-surface-elevated: #F4EFEA;
   --bg-glass: rgba(16, 42, 67, 0.85);
-  --bg-glass-card: rgba(255, 255, 255, 0.95);
-  --border-subtle: #D9E2EC;
+  --bg-glass-card: rgba(255, 253, 251, 0.95);
+  --border-subtle: #E8E2D8;
   --border-focus: rgba(18, 157, 185, 0.5);
 
   /* Functional Brand Aliases */

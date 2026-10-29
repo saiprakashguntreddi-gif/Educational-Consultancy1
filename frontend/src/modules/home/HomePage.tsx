@@ -7,10 +7,10 @@ import {
   ArrowRight,
   BookOpen,
   Target,
-  FileCheck2,
   PhoneCall,
   Coins,
   Award,
+  ShieldCheck,
 } from 'lucide-react';
 
 interface HomePageProps {
@@ -64,24 +64,27 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   const handleGetStarted = () => {
     if (user) {
       if (user.role === 'STUDENT') {
-        onNavigate('profile-intake');
+        onNavigate('dashboard');
       } else {
         onNavigate('counsellor-queue');
       }
     } else {
-      onNavigate('register');
+      onNavigate('login');
     }
   };
 
-  const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+  const handleExplore = (targetView: string) => {
+    if (!user) {
+      onNavigate('login');
+      return;
     }
+    onNavigate(targetView);
   };
+
+
 
   return (
-    <div className="landing-root" id="home">
+    <div className="landing-root" id="home" onClick={!user ? () => onNavigate('login') : undefined}>
       {/* =====================================================================
           1. HERO SECTION (Animated Multi-College Background Slideshow)
           ===================================================================== */}
@@ -136,7 +139,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </h1>
 
             <p className="t-body text-ink-dim">
-              Superconsciousness bridges the gap between student aspirations and top educational institutions worldwide. Plan 54+ entrance exams, assess competencies, and secure verified admissions with structured mentor guidance.
+              Superconsciousness bridges the gap between student aspirations and top educational institutions worldwide. Explore premier university pathways, assess academic competencies, and secure verified admissions with structured mentor guidance.
             </p>
 
             <div className="hero-actions">
@@ -147,15 +150,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               >
                 <span>{user ? 'Go to Dashboard' : 'Apply Now — Get Started'}</span>
                 <ArrowRight size={18} />
-              </button>
-
-              <button
-                onClick={() => onNavigate('entrance')}
-                className="btn btn-ghost"
-                id="hero-explore-btn"
-              >
-                <Compass size={17} />
-                <span>Explore 54+ Entrance Exams</span>
               </button>
             </div>
           </div>
@@ -186,13 +180,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             {/* Tall Left Card: Student Command Center */}
             <div
               className="eunistud-portal-card-tall group"
-              onClick={handleGetStarted}
               id="portal-track-student"
+              onClick={() => handleExplore('dashboard')}
             >
               <img
                 src="/assets/card-students-library.jpg"
                 alt="Student Command Center"
-                className="eunistud-card-bg-img"
+                className="eunistud-card-bg-img eunistud-card-library-img"
               />
               <div className="eunistud-card-overlay" />
               <div className="eunistud-card-content">
@@ -213,30 +207,30 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
             {/* Stacked Right Column: 2 Cards */}
             <div className="eunistud-portal-cards-stacked">
-              {/* Card 2: Entrance Exam Intelligence */}
+              {/* Card 2: Global University Discovery */}
               <div
                 className="eunistud-portal-card-stacked group"
-                onClick={() => onNavigate('entrance')}
-                id="portal-track-exams"
+                onClick={() => handleExplore('colleges')}
+                id="portal-track-colleges"
               >
                 <img
                   src="/assets/card-campus-exterior.jpg"
-                  alt="Entrance Exam Intelligence"
-                  className="eunistud-card-bg-img"
+                  alt="Global University Discovery"
+                  className="eunistud-card-bg-img eunistud-card-campus-img"
                 />
                 <div className="eunistud-card-overlay" />
                 <div className="eunistud-card-content">
                   <div className="eunistud-card-tag-row">
-                    <span className="eunistud-badge-brand">54+ Exams</span>
+                    <span className="eunistud-badge-brand">750+ Universities</span>
                   </div>
                   <div className="eunistud-card-title-row">
-                    <h3 className="t-h3 text-white">Entrance Exam Intelligence</h3>
+                    <h3 className="t-h3 text-white">Global University Discovery</h3>
                     <span className="eunistud-round-arrow">
                       <ArrowRight size={18} />
                     </span>
                   </div>
                   <p className="t-small text-ink-dim">
-                    Discover competitive national & international entrance exams with syllabi, dates, scoring patterns, and full-length timed diagnostic mocks.
+                    Discover world-renowned universities across India, UK, USA, Canada, Germany, and Australia calibrated precisely to your verified student profile.
                   </p>
                 </div>
               </div>
@@ -244,13 +238,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               {/* Card 3: 1-on-1 Certified Mentorship */}
               <div
                 className="eunistud-portal-card-stacked group"
-                onClick={() => scrollTo('contact')}
+                onClick={() => handleExplore('counsellors')}
                 id="portal-track-mentorship"
               >
                 <img
                   src="/assets/card-advisor-office.jpg"
                   alt="1-on-1 Certified Mentorship"
-                  className="eunistud-card-bg-img"
+                  className="eunistud-card-bg-img eunistud-card-advisor-img"
                 />
                 <div className="eunistud-card-overlay" />
                 <div className="eunistud-card-content">
@@ -293,9 +287,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </div>
 
             <div className="eunistud-stat-item">
-              <p className="t-stat-number">54+</p>
-              <p className="t-stat-label">Verified Entrance Exams</p>
-              <p className="t-stat-sub">Detailed Syllabi & Mock Testing</p>
+              <p className="t-stat-number">750+</p>
+              <p className="t-stat-label">Accredited Global Universities</p>
+              <p className="t-stat-sub">Calibrated Requirements & Cut-Offs</p>
             </div>
 
             <div className="eunistud-stat-item">
@@ -319,13 +313,26 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       <section className="eunistud-section" id="about">
         <div className="landing-container">
           <div className="eunistud-about-grid">
-            {/* Left: Mentor / Student Consultation Image */}
+            {/* Left: Premier Campus Image with Credibility Badges */}
             <div className="eunistud-about-image-wrap">
               <img
-                src="/assets/about-counselor-student.jpg"
-                alt="Educational consultant mentoring student on university pathways"
+                src="/assets/about-students-campus.jpg"
+                alt="Diverse university students collaborating on premier campus grounds"
                 className="eunistud-about-img"
               />
+              <div className="eunistud-about-top-badge">
+                <span className="eunistud-about-pulse-dot" />
+                <span>Global Campus Network</span>
+              </div>
+              <div className="eunistud-about-floating-card">
+                <div className="eunistud-about-floating-icon">
+                  <ShieldCheck size={20} />
+                </div>
+                <div>
+                  <div className="eunistud-about-floating-title">100% Verified Pathways</div>
+                  <div className="eunistud-about-floating-subtitle">Calibrated admissions & exam advisory</div>
+                </div>
+              </div>
             </div>
 
             {/* Right: Content & Value Proposition */}
@@ -363,7 +370,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                   <div>
                     <span className="eunistud-check-title">Explore calibrated pathways</span>
                     <p className="eunistud-check-desc">
-                      Discover colleges, entrance exams, and study programs calibrated precisely to your verified student profile.
+                      Discover premier colleges, degree programs, and calibrated study pathways to your verified student profile.
                     </p>
                   </div>
                 </div>
@@ -382,7 +389,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               </div>
 
               <button
-                onClick={() => scrollTo('how-it-works')}
+                onClick={() => handleExplore('dashboard')}
                 className="btn btn-outline"
                 id="about-discover-btn"
               >
@@ -406,33 +413,38 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </div>
             <h2 className="t-h2">Comprehensive Guidance Across Every Stage</h2>
             <p className="t-body text-ink-mute">
-              From initial entrance exam preparation to final university enrolment, our structured services provide end-to-end guidance tailored to your ambitions.
+              From university shortlisting to final enrollment, our structured services provide end-to-end guidance tailored to your ambitions.
             </p>
           </div>
 
           <div className="eunistud-services-grid">
-            {/* Service 1: Entrance Exam Discovery */}
-            <div className="eunistud-service-card" id="service-card-entrance">
+            {/* Service 1: Global University Discovery */}
+            <div
+              className="eunistud-service-card"
+              id="service-card-discovery"
+              onClick={() => handleExplore('colleges')}
+              style={{ cursor: 'pointer' }}
+            >
               <div>
                 <div className="eunistud-service-icon-box">
                   <BookOpen size={24} />
                 </div>
-                <h3 className="t-h4 text-ink">Entrance Exam Discovery</h3>
+                <h3 className="t-h4 text-ink">Global University Discovery</h3>
                 <p className="t-small text-ink-mute" style={{ marginTop: '8px' }}>
-                  Browse 54+ national & international entrance examinations across engineering, management, study abroad, medicine, and design with syllabi, dates, and patterns.
+                  Browse 750+ accredited institutions across engineering, management, medicine, arts, and science with tailored admission requirements, cut-offs, and deadlines.
                 </p>
               </div>
               <button
                 className="t-link"
                 style={{ background: 'none', border: 'none', padding: 0 }}
-                onClick={() => onNavigate('entrance')}
+                onClick={(e) => { e.stopPropagation(); handleExplore('colleges'); }}
               >
-                <span>Explore Entrance Exams →</span>
+                <span>Explore Universities →</span>
               </button>
             </div>
 
             {/* Service 2: Personalised Academic Guidance */}
-            <div className="eunistud-service-card" id="service-card-guidance">
+            <div className="eunistud-service-card" id="service-card-guidance" onClick={() => handleExplore('dashboard')} style={{ cursor: 'pointer' }}>
               <div>
                 <div className="eunistud-service-icon-box">
                   <Compass size={24} />
@@ -452,7 +464,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </div>
 
             {/* Service 3: Career Planning & Assessment */}
-            <div className="eunistud-service-card" id="service-card-career">
+            <div className="eunistud-service-card" id="service-card-career" onClick={() => handleExplore('dashboard')} style={{ cursor: 'pointer' }}>
               <div>
                 <div className="eunistud-service-icon-box">
                   <Target size={24} />
@@ -472,7 +484,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </div>
 
             {/* Service 4: Diagnostic Mock Tests */}
-            <div className="eunistud-service-card" id="service-card-mocks">
+            <div className="eunistud-service-card" id="service-card-mocks" onClick={() => handleExplore('dashboard')} style={{ cursor: 'pointer' }}>
               <div>
                 <div className="eunistud-service-icon-box">
                   <Award size={24} />
@@ -485,14 +497,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               <button
                 className="t-link"
                 style={{ background: 'none', border: 'none', padding: 0 }}
-                onClick={() => onNavigate('entrance')}
+                onClick={(e) => { e.stopPropagation(); handleExplore('dashboard'); }}
               >
                 <span>Take Diagnostic Mock →</span>
               </button>
             </div>
 
             {/* Service 5: College & University Discovery */}
-            <div className="eunistud-service-card" id="service-card-colleges">
+            <div className="eunistud-service-card" id="service-card-colleges" onClick={() => handleExplore('colleges')} style={{ cursor: 'pointer' }}>
               <div>
                 <div className="eunistud-service-icon-box">
                   <GraduationCap size={24} />
@@ -505,14 +517,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               <button
                 className="t-link"
                 style={{ background: 'none', border: 'none', padding: 0 }}
-                onClick={() => onNavigate('colleges')}
+                onClick={(e) => { e.stopPropagation(); handleExplore('colleges'); }}
               >
                 <span>Discover Institutions →</span>
               </button>
             </div>
 
             {/* Service 6: Scholarships & Financial Advisory */}
-            <div className="eunistud-service-card" id="service-card-scholarships">
+            <div className="eunistud-service-card" id="service-card-scholarships" onClick={() => handleExplore('scholarships')} style={{ cursor: 'pointer' }}>
               <div>
                 <div className="eunistud-service-icon-box">
                   <Coins size={24} />
@@ -525,7 +537,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               <button
                 className="t-link"
                 style={{ background: 'none', border: 'none', padding: 0 }}
-                onClick={() => onNavigate('scholarships')}
+                onClick={(e) => { e.stopPropagation(); handleExplore('scholarships'); }}
               >
                 <span>Search Scholarships →</span>
               </button>
@@ -567,7 +579,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           {/* 4 Connected Cards in Single Horizontal Row */}
           <div className="roadmap-cards-grid">
             {/* Step 01: Discover */}
-            <div className="roadmap-step-card step-card-1" id="step-discover">
+            <div className="roadmap-step-card step-card-1" id="step-discover" onClick={() => handleExplore('dashboard')} style={{ cursor: 'pointer' }}>
               <div className="roadmap-card-top">
                 <span className="roadmap-step-num">01.</span>
                 <div className="roadmap-icon-box">
@@ -581,7 +593,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </div>
 
             {/* Step 02: Understand */}
-            <div className="roadmap-step-card step-card-2" id="step-understand">
+            <div className="roadmap-step-card step-card-2" id="step-understand" onClick={() => handleExplore('dashboard')} style={{ cursor: 'pointer' }}>
               <div className="roadmap-card-top">
                 <span className="roadmap-step-num">02.</span>
                 <div className="roadmap-icon-box">
@@ -595,7 +607,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </div>
 
             {/* Step 03: Plan */}
-            <div className="roadmap-step-card step-card-3" id="step-plan">
+            <div className="roadmap-step-card step-card-3" id="step-plan" onClick={() => handleExplore('dashboard')} style={{ cursor: 'pointer' }}>
               <div className="roadmap-card-top">
                 <span className="roadmap-step-num">03.</span>
                 <div className="roadmap-icon-box">
@@ -609,7 +621,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </div>
 
             {/* Step 04: Move Forward */}
-            <div className="roadmap-step-card step-card-4 is-highlighted" id="step-move-forward">
+            <div className="roadmap-step-card step-card-4 is-highlighted" id="step-move-forward" onClick={() => handleExplore('dashboard')} style={{ cursor: 'pointer' }}>
               <div className="roadmap-card-top">
                 <span className="roadmap-step-num">04.</span>
                 <div className="roadmap-icon-box">
@@ -645,7 +657,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             {/* UK */}
             <div
               className="eunistud-destination-card"
-              onClick={() => onNavigate('entrance')}
+              onClick={() => handleExplore('colleges')}
               id="destination-uk"
             >
               <img
@@ -654,10 +666,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 className="eunistud-destination-img"
               />
               <div className="eunistud-dest-overlay" />
-              <div className="eunistud-dest-tags">
-                <span className="eunistud-badge-brand">Education</span>
-                <span className="eunistud-badge-accent">Partner</span>
-              </div>
               <div className="eunistud-dest-bottom">
                 <h3 className="t-h4 text-white">United Kingdom</h3>
                 <span className="t-small text-ink-dim">Top QS Universities • Graduate Visa</span>
@@ -667,7 +675,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             {/* USA */}
             <div
               className="eunistud-destination-card"
-              onClick={() => onNavigate('entrance')}
+              onClick={() => handleExplore('colleges')}
               id="destination-usa"
             >
               <img
@@ -676,10 +684,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 className="eunistud-destination-img"
               />
               <div className="eunistud-dest-overlay" />
-              <div className="eunistud-dest-tags">
-                <span className="eunistud-badge-brand">Education</span>
-                <span className="eunistud-badge-accent">Partner</span>
-              </div>
               <div className="eunistud-dest-bottom">
                 <h3 className="t-h4 text-white">United States</h3>
                 <span className="t-small text-ink-dim">Ivy League & Research • STEM OPT</span>
@@ -689,7 +693,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             {/* Canada */}
             <div
               className="eunistud-destination-card"
-              onClick={() => onNavigate('entrance')}
+              onClick={() => handleExplore('colleges')}
               id="destination-canada"
             >
               <img
@@ -698,10 +702,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 className="eunistud-destination-img"
               />
               <div className="eunistud-dest-overlay" />
-              <div className="eunistud-dest-tags">
-                <span className="eunistud-badge-brand">Education</span>
-                <span className="eunistud-badge-accent">Partner</span>
-              </div>
               <div className="eunistud-dest-bottom">
                 <h3 className="t-h4 text-white">Canada</h3>
                 <span className="t-small text-ink-dim">World-Class Degrees • PGWP Eligible</span>
@@ -711,7 +711,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             {/* Germany */}
             <div
               className="eunistud-destination-card"
-              onClick={() => onNavigate('entrance')}
+              onClick={() => handleExplore('colleges')}
               id="destination-germany"
             >
               <img
@@ -720,10 +720,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 className="eunistud-destination-img"
               />
               <div className="eunistud-dest-overlay" />
-              <div className="eunistud-dest-tags">
-                <span className="eunistud-badge-brand">Education</span>
-                <span className="eunistud-badge-accent">Partner</span>
-              </div>
               <div className="eunistud-dest-bottom">
                 <h3 className="t-h4 text-white">Germany</h3>
                 <span className="t-small text-ink-dim">Tuition-Free Public Unis • Tech Hub</span>
@@ -733,7 +729,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             {/* Australia */}
             <div
               className="eunistud-destination-card"
-              onClick={() => onNavigate('entrance')}
+              onClick={() => handleExplore('colleges')}
               id="destination-australia"
             >
               <img
@@ -742,45 +738,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 className="eunistud-destination-img"
               />
               <div className="eunistud-dest-overlay" />
-              <div className="eunistud-dest-tags">
-                <span className="eunistud-badge-brand">Education</span>
-                <span className="eunistud-badge-accent">Partner</span>
-              </div>
               <div className="eunistud-dest-bottom">
                 <h3 className="t-h4 text-white">Australia</h3>
                 <span className="t-small text-ink-dim">Group of Eight • Post-Study Rights</span>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================================
-          8. STUDENT GUIDANCE RESOURCES & TOOLKITS
-          ===================================================================== */}
-      <section id="resources" className="eunistud-section bg-surface">
-        <div className="landing-container">
-          <div className="eunistud-resource-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flex: 1, minWidth: '280px' }}>
-              <div className="eunistud-round-arrow" style={{ width: '56px', height: '56px', borderRadius: '14px' }}>
-                <FileCheck2 size={26} />
-              </div>
-              <div>
-                <h3 className="t-h3 text-white">Student Guidance Resources & Toolkits</h3>
-                <p className="t-body text-ink-dim" style={{ marginTop: '4px' }}>
-                  Access curated entrance examination syllabi, board comparative frameworks, and university admission checklists.
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => onNavigate('entrance')}
-              className="btn btn-primary"
-              id="resources-action-btn"
-            >
-              <span>Explore Exam Catalog</span>
-              <ArrowRight size={16} />
-            </button>
           </div>
         </div>
       </section>
@@ -807,7 +769,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               </button>
 
               <button
-                onClick={() => scrollTo('contact')}
+                onClick={() => handleExplore('counsellors')}
                 className="btn-cta-secondary"
                 id="cta-talk-to-us-btn"
               >

@@ -73,7 +73,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onSuccess, onNavigat
         alignItems: 'center',
         justifyContent: 'center',
         padding: '3rem 1.25rem',
-        background: 'linear-gradient(180deg, #F0F6FC 0%, #FFFFFF 100%)',
+        background: 'linear-gradient(180deg, #FAF7F2 0%, #F4EFEA 100%)',
         boxSizing: 'border-box',
       }}
     >
@@ -83,10 +83,10 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onSuccess, onNavigat
           width: '100%',
           maxWidth: '460px',
           padding: '2.5rem',
-          background: '#FFFFFF',
+          background: '#FFFDFB',
           borderRadius: '20px',
-          boxShadow: '0 16px 40px -8px rgba(16, 42, 67, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04)',
-          border: '1px solid #D9E2EC',
+          boxShadow: '0 16px 40px -8px rgba(16, 42, 67, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04)',
+          border: '1px solid #E8E2D8',
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>

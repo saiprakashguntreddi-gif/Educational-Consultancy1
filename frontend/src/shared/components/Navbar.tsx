@@ -111,13 +111,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
               >
                 Home
               </button>
-              <button
-                onClick={() => handleNavClick('entrance')}
-                className={`nav-link-btn ${currentView === 'entrance' || currentView === 'entrance-exams' ? 'is-active' : ''}`}
-                id="nav-entrance-exams-btn"
-              >
-                Entrance Exams
-              </button>
+
               <button
                 onClick={() => handleNavClick('#services')}
                 className="nav-link-btn"
@@ -151,12 +145,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
               >
                 Home
               </button>
-              <button
-                onClick={() => handleNavClick('entrance')}
-                className={`nav-link-btn ${currentView === 'entrance' || currentView === 'entrance-exams' ? 'is-active' : ''}`}
-              >
-                Entrance Exams
-              </button>
+
               <button
                 onClick={() => handleNavClick('colleges')}
                 className={`nav-link-btn ${currentView === 'colleges' ? 'is-active' : ''}`}
@@ -223,7 +212,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
                 Login
               </button>
               <button
-                onClick={() => onNavigate('register')}
+                onClick={() => onNavigate('login')}
                 className="btn-nav-signup"
                 id="nav-get-started-btn"
               >
@@ -254,13 +243,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
           >
             Home
           </button>
-          <button
-            onClick={() => handleNavClick('entrance')}
-            className={`nav-mobile-link ${currentView === 'entrance' || currentView === 'entrance-exams' ? 'is-active' : ''}`}
-            id="mobile-nav-entrance-btn"
-          >
-            Entrance Exams
-          </button>
+
           <button
             onClick={() => handleNavClick('#services')}
             className="nav-mobile-link"
@@ -339,7 +322,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
                 Login
               </button>
               <button
-                onClick={() => handleNavClick('register')}
+                onClick={() => handleNavClick('login')}
                 className="btn-nav-signup"
                 style={{ flex: 1, textAlign: 'center', padding: '0.65rem' }}
                 id="mobile-nav-register-btn"
