@@ -393,7 +393,7 @@
 .nav-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
   cursor: pointer;
   flex-shrink: 0;
@@ -401,30 +401,49 @@
 }
 
 .nav-brand-logo-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: var(--color-brand-bright);
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 12px;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(0, 113, 227, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28), 0 0 10px rgba(56, 189, 248, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   flex-shrink: 0;
+  overflow: hidden;
+  padding: 4px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nav-brand:hover .nav-brand-logo-icon {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 113, 227, 0.45);
+}
+
+.nav-brand-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .nav-brand-text {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  gap: 2px;
 }
 
 .nav-brand-title {
   font-family: var(--font-sans);
-  font-size: 1.15rem;
+  font-size: 1.18rem;
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
   color: #ffffff;
-  line-height: 1.1;
+  line-height: 1.15;
   white-space: nowrap;
 }
 
@@ -433,15 +452,15 @@
 }
 
 .nav-brand-sub {
-  font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.78);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   font-weight: 600;
   white-space: nowrap;
+  line-height: 1.2;
 }
 
-/* Menu Links */
 .nav-menu-links {
   display: flex;
   align-items: center;
@@ -1279,21 +1298,24 @@
    ========================================================================== */
 .eunistud-about-grid {
   display: grid;
-  grid-template-columns: 1fr 1.1fr;
+  grid-template-columns: 1fr 1.08fr;
   align-items: stretch;
-  gap: clamp(32px, 4vw, 56px);
+  gap: clamp(36px, 4.5vw, 64px);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 960px) {
   .eunistud-about-grid {
     grid-template-columns: 1fr;
     align-items: start;
+    gap: 36px;
   }
 }
 
+/* Left Image Wrap: Full-height drag displaying Westminster London Students with Big Ben */
 .eunistud-about-image-wrap {
   position: relative;
-  min-height: 460px;
+  height: 100%;
+  min-height: 520px;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 16px 42px -12px rgba(10, 25, 47, 0.14), 0 3px 12px rgba(0, 0, 0, 0.04);
@@ -1301,10 +1323,10 @@
   background-color: #f0ebe4;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 960px) {
   .eunistud-about-image-wrap {
-    min-height: 320px;
-    height: 320px;
+    min-height: 440px;
+    height: 440px;
   }
 }
 
@@ -1314,46 +1336,52 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(10, 25, 47, 0.3) 0%,
-    rgba(10, 25, 47, 0) 30%,
-    rgba(10, 25, 47, 0) 58%,
-    rgba(10, 25, 47, 0.52) 100%
+    rgba(10, 25, 47, 0.22) 0%,
+    rgba(10, 25, 47, 0) 25%,
+    rgba(10, 25, 47, 0) 65%,
+    rgba(10, 25, 47, 0.48) 100%
   );
   z-index: 1;
   pointer-events: none;
 }
 
 .eunistud-about-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 25%;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  object-position: center 30% !important;
   display: block;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+  filter: brightness(1.02) contrast(1.02);
 }
 
 .eunistud-about-image-wrap:hover .eunistud-about-img {
   transform: scale(1.025);
+  filter: brightness(1.05) contrast(1.03);
 }
 
 .eunistud-about-top-badge {
   position: absolute;
-  top: 18px;
-  left: 18px;
+  top: 16px;
+  left: 16px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 14px;
+  padding: 6px 14px;
   border-radius: 9999px;
-  background: rgba(10, 25, 47, 0.72);
+  background: rgba(10, 25, 47, 0.78);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   color: #ffffff;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 12.5px;
+  font-weight: 600;
   letter-spacing: 0.02em;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
   z-index: 2;
 }
 
@@ -1380,35 +1408,35 @@
 
 .eunistud-about-floating-card {
   position: absolute;
-  bottom: 20px;
-  left: 20px;
-  right: 20px;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 13px 18px;
-  border-radius: 14px;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 16px 36px rgba(10, 25, 47, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12px 28px rgba(10, 25, 47, 0.16);
   z-index: 2;
 }
 
 @media (max-width: 900px) {
   .eunistud-about-floating-card {
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
-    padding: 10px 14px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    padding: 8px 12px;
   }
 }
 
 .eunistud-about-floating-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
   background: #eff6ff;
   display: flex;
   align-items: center;
@@ -1418,71 +1446,116 @@
 }
 
 .eunistud-about-floating-title {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   color: #0f172a;
   line-height: 1.25;
 }
 
 .eunistud-about-floating-subtitle {
-  font-size: 12px;
+  font-size: 11.5px;
   color: #64748b;
   line-height: 1.35;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
+/* Right Content Styling — Perfectly Symmetrical & Aligned */
 .eunistud-about-content {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
-  gap: 16px;
+  gap: 14px;
+}
+
+.eunistud-about-heading {
+  font-size: clamp(28px, 22px + 1.2vw, 38px);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  color: #0a192f;
+  margin: 0;
+  max-width: 540px;
+}
+
+.eunistud-about-lead {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #475569;
+  margin: 0;
+  max-width: 530px;
 }
 
 .eunistud-checklist {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin: 6px 0 8px 0;
+  gap: 15px;
+  margin: 4px 0 8px 0;
   width: 100%;
+  max-width: 530px;
 }
 
 .eunistud-checklist-item {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  gap: 12px;
 }
 
 .eunistud-check-bubble {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background-color: var(--color-brand-dark);
+  background-color: var(--color-brand-dark, #0071e3);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   margin-top: 2px;
+  box-shadow: 0 2px 8px rgba(0, 113, 227, 0.28);
+}
+
+.eunistud-check-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .eunistud-check-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--color-ink);
-  display: block;
-  margin-bottom: 2px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.3;
 }
 
 .eunistud-check-desc {
-  font-size: 14px;
-  color: var(--color-ink-mute);
+  font-size: 13.5px;
+  color: #64748b;
   line-height: 1.5;
   margin: 0;
 }
 
-#about-discover-btn {
+.eunistud-about-btn {
   margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 10px;
+  background-color: #0071e3;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 113, 227, 0.25);
+}
+
+.eunistud-about-btn:hover {
+  background-color: #005bb5;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 113, 227, 0.35);
 }
 
 /* ==========================================================================
@@ -1737,22 +1810,64 @@
   gap: 16px;
 }
 
+/* Enhanced Roadmap Header Badge with Breathing Glow & Beacon Dot */
 .roadmap-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 18px;
+  gap: 9px;
+  padding: 7px 20px;
   border-radius: var(--radius-pill);
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #38bdf8;
-  background: rgba(0, 113, 227, 0.25);
+  background: rgba(0, 113, 227, 0.22);
   border: 1px solid rgba(56, 189, 248, 0.45);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 4px 18px rgba(0, 113, 227, 0.35);
+  animation: roadmapBadgeGlow 4s ease-in-out infinite alternate;
+}
+
+.roadmap-badge::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8, 0 0 16px #38bdf8;
+  animation: roadmapBadgeDotPulse 2s ease-in-out infinite;
+}
+
+@keyframes roadmapBadgeGlow {
+  0% {
+    box-shadow: 0 4px 18px rgba(0, 113, 227, 0.35), 0 0 0 rgba(56, 189, 248, 0);
+    border-color: rgba(56, 189, 248, 0.45);
+  }
+  100% {
+    box-shadow: 0 4px 26px rgba(0, 113, 227, 0.6), 0 0 16px rgba(56, 189, 248, 0.45);
+    border-color: rgba(56, 189, 248, 0.85);
+  }
+}
+
+@keyframes roadmapBadgeDotPulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.7;
+    box-shadow: 0 0 6px #38bdf8;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+    box-shadow: 0 0 12px #38bdf8, 0 0 20px #38bdf8;
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0.7;
+    box-shadow: 0 0 6px #38bdf8;
+  }
 }
 
 .roadmap-subtext {
@@ -1768,6 +1883,59 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 22px;
   width: 100%;
+  position: relative;
+}
+
+/* Connecting Luminous Track & Animated Photon Stream for Desktop */
+@media (min-width: 1025px) {
+  .roadmap-cards-grid::before {
+    content: '';
+    position: absolute;
+    top: 56px;
+    left: 70px;
+    right: 70px;
+    height: 2px;
+    background: linear-gradient(90deg, 
+      rgba(56, 189, 248, 0.15) 0%, 
+      rgba(56, 189, 248, 0.6) 30%, 
+      rgba(56, 189, 248, 0.7) 70%, 
+      rgba(56, 189, 248, 0.2) 100%
+    );
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .roadmap-cards-grid::after {
+    content: '';
+    position: absolute;
+    top: 55px;
+    left: 70px;
+    width: 140px;
+    height: 4px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, transparent, #38bdf8, #ffffff, #38bdf8, transparent);
+    box-shadow: 0 0 14px #38bdf8, 0 0 26px #0071e3;
+    z-index: 0;
+    pointer-events: none;
+    animation: trackPhotonStream 4.8s ease-in-out infinite;
+  }
+}
+
+@keyframes trackPhotonStream {
+  0% {
+    left: 70px;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    left: calc(100% - 210px);
+    opacity: 0;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -1786,6 +1954,7 @@
 
 .roadmap-step-card {
   position: relative;
+  z-index: 1;
   background: linear-gradient(165deg, rgba(18, 48, 86, 0.85) 0%, rgba(9, 25, 48, 0.92) 100%);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -1795,12 +1964,12 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, background 0.35s ease;
   box-shadow: 0 14px 38px rgba(3, 13, 28, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15);
   overflow: hidden;
 }
 
-/* Elegant top accent bar for each card */
+/* Elegant animated top accent bar for each card */
 .roadmap-step-card::before {
   content: '';
   position: absolute;
@@ -1808,34 +1977,109 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #38bdf8 0%, #0071e3 100%);
-  opacity: 0.85;
+  background: linear-gradient(90deg, #38bdf8 0%, #0071e3 50%, #38bdf8 100%);
+  background-size: 200% 100%;
+  animation: topBarFlow 4.5s linear infinite;
+  opacity: 0.9;
   transition: opacity 0.3s ease, height 0.3s ease;
+  z-index: 3;
+}
+
+@keyframes topBarFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .step-card-1::before {
-  background: linear-gradient(90deg, #38bdf8 0%, #0284c7 100%);
+  background: linear-gradient(90deg, #38bdf8 0%, #0284c7 50%, #38bdf8 100%);
+  background-size: 200% 100%;
 }
 
 .step-card-2::before {
-  background: linear-gradient(90deg, #60a5fa 0%, #2563eb 100%);
+  background: linear-gradient(90deg, #60a5fa 0%, #2563eb 50%, #60a5fa 100%);
+  background-size: 200% 100%;
 }
 
 .step-card-3::before {
-  background: linear-gradient(90deg, #818cf8 0%, #4f46e5 100%);
+  background: linear-gradient(90deg, #818cf8 0%, #4f46e5 50%, #818cf8 100%);
+  background-size: 200% 100%;
 }
 
 .step-card-4::before {
-  background: linear-gradient(90deg, #38bdf8 0%, #0071e3 100%);
+  background: linear-gradient(90deg, #38bdf8 0%, #0071e3 50%, #38bdf8 100%);
+  background-size: 200% 100%;
   height: 5px;
   opacity: 1;
 }
 
+/* Diagonal glass reflection sweep across cards 01 -> 02 -> 03 -> 04 */
+.roadmap-card-shine {
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 90%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(56, 189, 248, 0.22) 50%,
+    rgba(255, 255, 255, 0.08) 75%,
+    transparent 100%
+  );
+  transform: skewX(-24deg);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.step-card-1 .roadmap-card-shine {
+  animation: cardShineSweep 7.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: 0s;
+}
+
+.step-card-2 .roadmap-card-shine {
+  animation: cardShineSweep 7.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: 1.8s;
+}
+
+.step-card-3 .roadmap-card-shine {
+  animation: cardShineSweep 7.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: 3.6s;
+}
+
+.step-card-4 .roadmap-card-shine {
+  animation: cardShineSweep 7.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: 5.4s;
+}
+
+@keyframes cardShineSweep {
+  0% {
+    left: -130%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  38% {
+    left: 210%;
+    opacity: 0;
+  }
+  100% {
+    left: 210%;
+    opacity: 0;
+  }
+}
+
 .roadmap-step-card:hover {
-  background: linear-gradient(165deg, rgba(24, 60, 106, 0.92) 0%, rgba(12, 32, 60, 0.96) 100%);
-  border-color: rgba(56, 189, 248, 0.65);
-  transform: translateY(-8px);
-  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.5), 0 0 35px rgba(0, 113, 227, 0.4);
+  background: linear-gradient(165deg, rgba(26, 68, 120, 0.94) 0%, rgba(12, 34, 66, 0.97) 100%);
+  border-color: rgba(56, 189, 248, 0.75);
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 28px 56px rgba(0, 0, 0, 0.55), 0 0 40px rgba(56, 189, 248, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.roadmap-step-card:active {
+  transform: translateY(-6px) scale(1.005);
 }
 
 .roadmap-step-card:hover::before {
@@ -1844,9 +2088,21 @@
 }
 
 .roadmap-step-card.is-highlighted {
-  border-color: rgba(56, 189, 248, 0.5);
-  background: linear-gradient(165deg, rgba(22, 64, 116, 0.9) 0%, rgba(10, 30, 58, 0.95) 100%);
-  box-shadow: 0 16px 42px rgba(0, 113, 227, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-color: rgba(56, 189, 248, 0.55);
+  background: linear-gradient(165deg, rgba(22, 64, 116, 0.92) 0%, rgba(10, 30, 58, 0.96) 100%);
+  box-shadow: 0 16px 42px rgba(0, 113, 227, 0.35), 0 0 25px rgba(56, 189, 248, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  animation: cardGoalPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes cardGoalPulse {
+  0% {
+    box-shadow: 0 16px 42px rgba(0, 113, 227, 0.35), 0 0 20px rgba(56, 189, 248, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: rgba(56, 189, 248, 0.45);
+  }
+  100% {
+    box-shadow: 0 20px 48px rgba(0, 113, 227, 0.5), 0 0 32px rgba(56, 189, 248, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    border-color: rgba(56, 189, 248, 0.75);
+  }
 }
 
 .roadmap-card-top {
@@ -1861,9 +2117,28 @@
   font-weight: 800;
   line-height: 1;
   background: linear-gradient(135deg, #ffffff 15%, #bae6fd 60%, #38bdf8 100%);
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -0.02em;
+  transition: transform 0.35s ease, filter 0.35s ease;
+  animation: numGleam 6s ease-in-out infinite;
+}
+
+.step-card-1 .roadmap-step-num { animation-delay: 0s; }
+.step-card-2 .roadmap-step-num { animation-delay: 1.5s; }
+.step-card-3 .roadmap-step-num { animation-delay: 3s; }
+.step-card-4 .roadmap-step-num { animation-delay: 4.5s; }
+
+@keyframes numGleam {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.roadmap-step-card:hover .roadmap-step-num {
+  transform: scale(1.06);
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.7));
 }
 
 .roadmap-icon-box {
@@ -1877,15 +2152,32 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 14px rgba(0, 113, 227, 0.25);
-  transition: all 0.3s ease;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: iconLevitate 3.6s ease-in-out infinite alternate;
+}
+
+.step-card-1 .roadmap-icon-box { animation-delay: 0s; }
+.step-card-2 .roadmap-icon-box { animation-delay: 0.9s; }
+.step-card-3 .roadmap-icon-box { animation-delay: 1.8s; }
+.step-card-4 .roadmap-icon-box { animation-delay: 2.7s; }
+
+@keyframes iconLevitate {
+  0% {
+    transform: translateY(0);
+    box-shadow: 0 4px 14px rgba(0, 113, 227, 0.25);
+  }
+  100% {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(56, 189, 248, 0.45);
+  }
 }
 
 .roadmap-step-card:hover .roadmap-icon-box {
-  background: var(--color-brand-bright);
+  background: linear-gradient(135deg, #0284c7 0%, #0071e3 100%);
   color: #ffffff;
-  border-color: var(--color-brand-bright);
-  transform: scale(1.08) rotate(4deg);
-  box-shadow: 0 6px 18px rgba(0, 113, 227, 0.5);
+  border-color: #38bdf8;
+  transform: translateY(-7px) scale(1.14) rotate(6deg);
+  box-shadow: 0 10px 24px rgba(56, 189, 248, 0.55), 0 0 18px rgba(0, 113, 227, 0.5);
 }
 
 .roadmap-step-title {
@@ -1895,6 +2187,12 @@
   margin: 0;
   line-height: 1.25;
   letter-spacing: -0.01em;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.roadmap-step-card:hover .roadmap-step-title {
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
 }
 
 .roadmap-step-desc {
@@ -1903,6 +2201,11 @@
   line-height: 1.6;
   margin: 0;
   font-weight: 400;
+  transition: color 0.3s ease;
+}
+
+.roadmap-step-card:hover .roadmap-step-desc {
+  color: #f8fafc;
 }
 
 /* Backward compatibility for any remaining eunistud-step-card references */
@@ -2086,66 +2389,429 @@
 }
 
 /* ==========================================================================
-   10. RESOURCES & CALL TO ACTION BANNER (EUniStud High-Impact Banner)
+   10. RESOURCES & CALL TO ACTION BANNER (Dark Slate-Teal Gradient with Cyan Accents)
    ========================================================================== */
 .eunistud-cta-banner-section {
-  padding: clamp(48px, 5vw, 72px) 0;
+  padding: clamp(36px, 4vw, 56px) 0;
   background-color: var(--color-warm-ivory, #FAF7F2);
 }
 
 .eunistud-cta-banner {
-  background: linear-gradient(135deg, #07192e 0%, #136bc2 100%);
-  border-radius: var(--radius-shell);
-  padding: clamp(50px, 6vw, 90px) clamp(30px, 5vw, 70px);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  max-width: 1140px;
+  margin: 0 auto;
+  border-radius: 28px;
+  background: radial-gradient(circle at 8% 85%, rgba(0, 229, 255, 0.14) 0%, transparent 45%),
+              radial-gradient(circle at 92% 20%, rgba(56, 189, 248, 0.16) 0%, transparent 45%),
+              linear-gradient(135deg, #13222d 0%, #1c3545 45%, #142430 100%);
+  padding: clamp(40px, 4.2vw, 56px) clamp(30px, 4.4vw, 60px);
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
   align-items: center;
-  gap: 20px;
-  box-shadow: 0 24px 60px -10px rgba(19, 107, 194, 0.35);
+  gap: 44px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 35px rgba(0, 229, 255, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.28);
 }
 
-.eunistud-resource-card {
-  background: linear-gradient(135deg, #0a1c36 0%, #0f284d 100%);
-  border-radius: var(--radius-shell);
-  padding: 40px 48px;
+@media (max-width: 992px) {
+  .eunistud-cta-banner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 36px 24px;
+    border-radius: 22px;
+  }
+}
+
+.cta-content-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  z-index: 2;
+}
+
+.cta-eyebrow-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cta-cyan-accent {
+  color: #22bfff;
+  flex-shrink: 0;
+}
+
+.cta-headline {
+  font-size: clamp(34px, 28px + 1.8vw, 50px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+}
+
+.cta-pill-highlight {
+  display: inline-block;
+  background: #22bfff;
+  color: #07192e;
+  padding: 3px 18px 5px 18px;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(34, 191, 255, 0.45);
+  margin-left: 6px;
+  vertical-align: baseline;
+  font-weight: 800;
+}
+
+.cta-description {
+  font-size: clamp(14.5px, 14px + 0.2vw, 16px);
+  line-height: 1.6;
+  color: #cbd5e1;
+  max-width: 520px;
+  margin: 0;
+}
+
+.cta-actions-group {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.cta-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 26px;
+  border-radius: 12px;
+  background-color: #22bfff;
+  color: #07192e;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  box-shadow: 0 4px 18px rgba(34, 191, 255, 0.4);
+}
+
+.cta-btn-primary:hover {
+  background-color: #38c8ff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(34, 191, 255, 0.6);
+}
+
+.cta-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: rgba(18, 33, 44, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.cta-btn-secondary:hover {
+  background: rgba(28, 48, 64, 0.9);
+  border-color: #22bfff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 16px rgba(34, 191, 255, 0.25);
+}
+
+.cta-trust-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 30px;
+  gap: 24px;
   flex-wrap: wrap;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  margin-top: 6px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.cta-trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+@media (max-width: 640px) {
+  .cta-trust-row {
+    gap: 14px;
+    font-size: 13px;
+  }
+}
+
+/* Right Mockup Window & Ambient Decor */
+.cta-mockup-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.cta-ambient-decor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cta-decor-curve {
+  position: absolute;
+  bottom: 24px;
+  left: -40px;
+  width: 140px;
+  height: 90px;
+  overflow: visible;
+}
+
+.cta-glass-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.cta-glass-orb.orb-small {
+  width: 44px;
+  height: 44px;
+  bottom: 10px;
+  left: -18px;
+  background: radial-gradient(circle at 35% 35%, rgba(147, 197, 253, 0.55) 0%, rgba(30, 58, 76, 0.8) 55%, rgba(15, 28, 38, 0.95) 100%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+  animation: orbLevitate 4.5s ease-in-out infinite alternate;
+}
+
+.cta-glass-orb.orb-large {
+  width: 76px;
+  height: 76px;
+  bottom: -18px;
+  right: -24px;
+  background: radial-gradient(circle at 35% 35%, rgba(147, 197, 253, 0.4) 0%, rgba(30, 58, 76, 0.75) 55%, rgba(15, 28, 38, 0.95) 100%);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), inset 0 2px 5px rgba(255, 255, 255, 0.35);
+  animation: orbLevitate 6s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes orbLevitate {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-8px); }
+}
+
+.cta-roadmap-window {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 440px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45), 0 10px 24px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta-roadmap-window:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 65px rgba(0, 0, 0, 0.5), 0 12px 28px rgba(0, 0, 0, 0.28);
+}
+
+.cta-window-header {
+  background: #25363f;
+  padding: 13px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cta-window-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cta-window-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #38bdf8;
+  opacity: 0.85;
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.5);
+}
+
+.cta-window-title {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.cta-window-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  background: #fbfcfe;
+}
+
+.cta-roadmap-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 16px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid #edf2f7;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cta-roadmap-check {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e0f2fe;
+  color: #0284c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cta-roadmap-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.cta-roadmap-name {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.cta-roadmap-desc {
+  font-size: 12.5px;
+  color: #64748b;
+  font-weight: 400;
+}
+
+.cta-roadmap-status {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0284c7;
+  flex-shrink: 0;
+}
+
+/* Active Highlighted 3rd Step */
+.cta-roadmap-item.is-active {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  border-color: #0ea5e9;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.4);
+}
+
+.cta-roadmap-item.is-active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(14, 165, 233, 0.5);
+}
+
+.cta-roadmap-item.is-active .cta-roadmap-name {
+  color: #ffffff;
+}
+
+.cta-roadmap-item.is-active .cta-roadmap-desc {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cta-roadmap-step-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #0284c7;
+  font-weight: 800;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cta-roadmap-arrow {
+  color: #ffffff;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.cta-roadmap-item.is-active:hover .cta-roadmap-arrow {
+  transform: translateX(4px);
 }
 
 /* ==========================================================================
    11. FOOTER (Sleek, Compact, Dragged Upwards, Perfectly-Aligned Dark Footer)
    ========================================================================== */
 .premium-footer {
-  background-color: var(--color-bg-dark-section);
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 6% 92%, rgba(0, 229, 255, 0.18) 0%, transparent 40%),
+              radial-gradient(circle at 94% 92%, rgba(56, 189, 248, 0.22) 0%, transparent 42%),
+              linear-gradient(135deg, #0f2032 0%, #162f49 50%, #102438 100%);
   color: #ffffff;
-  padding: 26px 0 16px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  padding: 34px 0 16px 0;
+  border-top: 1px solid rgba(56, 189, 248, 0.22);
+}
+
+.footer-ambient-graphic {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .footer-inner-grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
-  gap: clamp(18px, 2.5vw, 32px);
-  padding-bottom: 16px;
+  grid-template-columns: 1.4fr 1fr 1fr 1.35fr;
+  gap: clamp(20px, 3vw, 36px);
+  padding-bottom: 20px;
   align-items: start;
 }
 
 @media (max-width: 991px) {
   .footer-inner-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 22px;
+    gap: 24px;
   }
 }
 
 @media (max-width: 580px) {
   .footer-inner-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 22px;
   }
 }
 
@@ -2153,11 +2819,11 @@
   display: inline-flex;
   border-radius: 9px;
   background-color: #ffffff;
-  padding: 6px 12px;
+  padding: 6px 14px;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
   width: fit-content;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
   transition: transform 0.2s ease;
 }
 
@@ -2165,12 +2831,43 @@
   transform: translateY(-1px);
 }
 
+.footer-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: rgba(16, 38, 64, 0.6);
+  border: 1px solid rgba(0, 229, 255, 0.38);
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 600;
+  width: fit-content;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+.footer-header-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .footer-col-header {
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 700;
   color: #ffffff;
-  margin: 0 0 10px 0;
+  margin: 0;
   letter-spacing: 0.02em;
+}
+
+.footer-header-accent-bar {
+  width: 24px;
+  height: 2.5px;
+  background: #00e5ff;
+  border-radius: 2px;
+  margin-top: 5px;
+  margin-bottom: 14px;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.65);
 }
 
 .footer-links-vertical {
@@ -2179,21 +2876,47 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 8px;
 }
 
-.footer-link-action {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.72);
-  text-decoration: none;
+.footer-link-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
   cursor: pointer;
-  transition: color 0.15s ease, transform 0.15s ease;
-  display: inline-block;
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.88);
+  transition: color 0.18s ease, transform 0.18s ease;
 }
 
-.footer-link-action:hover {
-  color: #38bdf8;
-  transform: translateX(2px);
+.footer-link-row:hover {
+  color: #00e5ff;
+  transform: translateX(3px);
+}
+
+.footer-link-cyan-icon {
+  color: #00e5ff;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.footer-link-row:hover .footer-link-cyan-icon {
+  transform: scale(1.1);
+  color: #ffffff;
+}
+
+.footer-contact-bubble {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 229, 255, 0.12);
+  border: 1.5px solid #00e5ff;
+  color: #00e5ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.25);
 }
 
 .footer-legal-bar {
@@ -2201,15 +2924,15 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
   font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.85);
   flex-wrap: wrap;
   gap: 12px;
 }
 
 .footer-legal-link {
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.85);
   background: none;
   border: none;
   padding: 0;
@@ -2222,7 +2945,7 @@
 }
 
 .footer-legal-link:hover {
-  color: #38bdf8;
+  color: #00e5ff;
   text-decoration: underline;
 }
 

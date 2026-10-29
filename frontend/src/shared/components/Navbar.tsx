@@ -90,14 +90,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
             id="nav-brand-logo"
           >
             <div className="nav-brand-logo-icon">
-              <Compass size={22} />
+              <img
+                src="/assets/global-logo-full.png"
+                alt="Global Logo"
+                className="nav-brand-logo-img"
+              />
             </div>
             <div className="nav-brand-text">
               <span className="nav-brand-title">
-                SUPER<span>CONSCIOUSNESS</span>
+                GLOBAL<span>CONSCIOUSNESS</span>
               </span>
               <span className="nav-brand-sub">
-                Educational Consultancy & Guidance
+                Educational Consultancy & Career Guidance
               </span>
             </div>
           </div>
