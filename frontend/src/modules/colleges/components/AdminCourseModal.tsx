@@ -163,7 +163,7 @@ export const AdminCourseModal: React.FC<AdminCourseModalProps> = ({
         <div
           style={{
             padding: '1.25rem 1.5rem',
-            background: 'linear-gradient(135deg, #081426 0%, #172033 100%)',
+            background: 'linear-gradient(135deg, #0B1830 0%, #172033 100%)',
             color: '#FFFFFF',
             display: 'flex',
             alignItems: 'center',

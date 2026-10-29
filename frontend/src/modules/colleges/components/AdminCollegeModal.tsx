@@ -205,7 +205,7 @@ export const AdminCollegeModal: React.FC<AdminCollegeModalProps> = ({
         <div
           style={{
             padding: '1.25rem 1.75rem',
-            background: 'linear-gradient(135deg, #081426 0%, #172033 100%)',
+            background: 'linear-gradient(135deg, #0B1830 0%, #172033 100%)',
             color: '#FFFFFF',
             display: 'flex',
             alignItems: 'center',
@@ -795,7 +795,7 @@ export const AdminCollegeModal: React.FC<AdminCollegeModalProps> = ({
             {activeTab === 'publishing' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 <div style={{ background: '#F8FAFC', padding: '1.25rem', borderRadius: '12px', border: '1px solid #EAECF0' }}>
-                  <h4 style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#081426', margin: '0 0 0.5rem 0' }}>
+                  <h4 style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#0B1830', margin: '0 0 0.5rem 0' }}>
                     Catalogue Lifecycle Status
                   </h4>
                   <p style={{ fontSize: '0.8125rem', color: '#64748B', margin: '0 0 1rem 0' }}>

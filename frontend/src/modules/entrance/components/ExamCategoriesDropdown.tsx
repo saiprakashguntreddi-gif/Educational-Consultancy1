@@ -391,7 +391,7 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
             margin: '0 0 0.35rem 0',
             fontSize: '1.45rem',
             fontWeight: 800,
-            color: '#102A43',
+            color: '#172D53',
             letterSpacing: '-0.02em',
           }}
         >
@@ -425,10 +425,10 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
               fontSize: '0.78rem',
               fontWeight: 600,
               backgroundColor: '#F5F8FC',
-              color: '#084F5E',
+              color: '#F57C00',
               padding: '0.2rem 0.65rem',
               borderRadius: '6px',
-              border: '1px solid rgba(18, 157, 185, 0.25)',
+              border: '1px solid rgba(255, 152, 0, 0.25)',
             }}
           >
             {resolvedCategories.length} Main Categories
@@ -439,10 +439,10 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
               fontSize: '0.78rem',
               fontWeight: 600,
               backgroundColor: '#F5F8FC',
-              color: '#084F5E',
+              color: '#F57C00',
               padding: '0.2rem 0.65rem',
               borderRadius: '6px',
-              border: '1px solid rgba(18, 157, 185, 0.25)',
+              border: '1px solid rgba(255, 152, 0, 0.25)',
             }}
           >
             {uniqueExamCount} Unique Exam Records
@@ -453,10 +453,10 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
               fontSize: '0.78rem',
               fontWeight: 600,
               backgroundColor: '#F5F8FC',
-              color: '#084F5E',
+              color: '#F57C00',
               padding: '0.2rem 0.65rem',
               borderRadius: '6px',
-              border: '1px solid rgba(18, 157, 185, 0.25)',
+              border: '1px solid rgba(255, 152, 0, 0.25)',
             }}
           >
             {totalListingsCount} Total Category Listings
@@ -506,14 +506,14 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
               borderRadius: '8px',
               border: '1px solid #CBD5E1',
               fontSize: '0.86rem',
-              color: '#102A43',
+              color: '#172D53',
               backgroundColor: '#FFFFFF',
               outline: 'none',
               transition: 'border-color 0.2s, box-shadow 0.2s',
             }}
             onFocus={(e) => {
-              e.currentTarget.style.borderColor = '#129DB9';
-              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(18, 157, 185, 0.15)';
+              e.currentTarget.style.borderColor = '#FF9800';
+              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(255, 152, 0, 0.15)';
             }}
             onBlur={(e) => {
               e.currentTarget.style.borderColor = '#CBD5E1';
@@ -556,20 +556,20 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
               padding: '0 0.85rem',
               fontSize: '0.8rem',
               fontWeight: 600,
-              color: '#129DB9',
+              color: '#FF9800',
               backgroundColor: '#FFFFFF',
-              border: '1px solid rgba(18, 157, 185, 0.3)',
+              border: '1px solid rgba(255, 152, 0, 0.3)',
               borderRadius: '8px',
               cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = '#F5F8FC';
-              e.currentTarget.style.borderColor = '#129DB9';
+              e.currentTarget.style.borderColor = '#FF9800';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = '#FFFFFF';
-              e.currentTarget.style.borderColor = 'rgba(18, 157, 185, 0.3)';
+              e.currentTarget.style.borderColor = 'rgba(255, 152, 0, 0.3)';
             }}
             title="Expand all categories"
           >
@@ -598,7 +598,7 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = '#F5F8FC';
-              e.currentTarget.style.color = '#102A43';
+              e.currentTarget.style.color = '#172D53';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = '#FFFFFF';
@@ -635,17 +635,17 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
               id={`category-wrapper-${category.id}`}
               style={{
                 border: isCurrentActiveFilter
-                  ? '2px solid #129DB9'
+                  ? '2px solid #FF9800'
                   : isExpanded
-                  ? '1.5px solid #40C7E5'
+                  ? '1.5px solid #FF9800'
                   : '1px solid #E2E8F0',
                 borderRadius: '12px',
                 overflow: 'hidden',
                 transition: 'border-color 0.25s ease, box-shadow 0.25s ease',
                 boxShadow: isCurrentActiveFilter
-                  ? '0 0 0 3px rgba(18, 157, 185, 0.15), 0 8px 24px -4px rgba(16, 42, 67, 0.12)'
+                  ? '0 0 0 3px rgba(255, 152, 0, 0.15), 0 8px 24px -4px rgba(16, 42, 67, 0.12)'
                   : isExpanded
-                  ? '0 4px 12px -2px rgba(18, 157, 185, 0.1)'
+                  ? '0 4px 12px -2px rgba(255, 152, 0, 0.1)'
                   : 'none',
                 backgroundColor: '#FFFFFF',
               }}
@@ -671,7 +671,7 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                   gap: '1rem',
                   padding: '1rem 1.25rem',
                   background: isCurrentActiveFilter
-                    ? 'linear-gradient(90deg, rgba(18, 157, 185, 0.08) 0%, #FFFFFF 100%)'
+                    ? 'linear-gradient(90deg, rgba(255, 152, 0, 0.08) 0%, #FFFFFF 100%)'
                     : isExpanded
                     ? 'linear-gradient(90deg, #F5F8FC 0%, #FFFFFF 100%)'
                     : '#FFFFFF',
@@ -695,8 +695,8 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                       width: '26px',
                       height: '26px',
                       borderRadius: '50%',
-                      background: isCurrentActiveFilter ? '#129DB9' : isExpanded ? '#084F5E' : '#F1F5F9',
-                      color: isCurrentActiveFilter || isExpanded ? '#FFFFFF' : '#102A43',
+                      background: isCurrentActiveFilter ? '#FF9800' : isExpanded ? '#F57C00' : '#F1F5F9',
+                      color: isCurrentActiveFilter || isExpanded ? '#FFFFFF' : '#172D53',
                       fontSize: '0.8rem',
                       fontWeight: 700,
                       display: 'flex',
@@ -715,7 +715,7 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                         style={{
                           fontSize: '1rem',
                           fontWeight: 700,
-                          color: isCurrentActiveFilter ? '#084F5E' : isExpanded ? '#102A43' : '#102A43',
+                          color: isCurrentActiveFilter ? '#F57C00' : isExpanded ? '#172D53' : '#172D53',
                           letterSpacing: '-0.01em',
                         }}
                       >
@@ -729,8 +729,8 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                           fontWeight: 600,
                           padding: '0.15rem 0.55rem',
                           borderRadius: '12px',
-                          backgroundColor: isCurrentActiveFilter ? 'rgba(18, 157, 185, 0.15)' : isExpanded ? 'rgba(18, 157, 185, 0.1)' : '#F1F5F9',
-                          color: isCurrentActiveFilter ? '#084F5E' : isExpanded ? '#084F5E' : '#64748B',
+                          backgroundColor: isCurrentActiveFilter ? 'rgba(255, 152, 0, 0.15)' : isExpanded ? 'rgba(255, 152, 0, 0.1)' : '#F1F5F9',
+                          color: isCurrentActiveFilter ? '#F57C00' : isExpanded ? '#F57C00' : '#64748B',
                           transition: 'all 0.2s ease',
                         }}
                       >
@@ -744,7 +744,7 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                             fontWeight: 700,
                             padding: '0.15rem 0.55rem',
                             borderRadius: '12px',
-                            backgroundColor: '#129DB9',
+                            backgroundColor: '#FF9800',
                             color: '#FFFFFF',
                             letterSpacing: '0.02em',
                           }}
@@ -776,8 +776,8 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                     width: '32px',
                     height: '32px',
                     borderRadius: '8px',
-                    backgroundColor: isExpanded ? 'rgba(18, 157, 185, 0.12)' : '#F8FAFC',
-                    color: isExpanded ? '#129DB9' : '#64748B',
+                    backgroundColor: isExpanded ? 'rgba(255, 152, 0, 0.12)' : '#F8FAFC',
+                    color: isExpanded ? '#FF9800' : '#64748B',
                     transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
                     transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s',
                     flexShrink: 0,
@@ -822,7 +822,7 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                             justifyContent: 'space-between',
                             padding: '0.85rem 1rem',
                             backgroundColor: isSelected ? '#F5F8FC' : '#FFFFFF',
-                            border: isSelected ? '1.5px solid #129DB9' : '1px solid #E2E8F0',
+                            border: isSelected ? '1.5px solid #FF9800' : '1px solid #E2E8F0',
                             borderRadius: '10px',
                             transition: 'all 0.2s ease',
                             boxShadow: '0 1px 2px rgba(0, 0, 0, 0.04)',
@@ -831,10 +831,10 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                           onClick={() => onSelectExam(exam)}
                           onMouseEnter={(e) => {
                             if (!isSelected) {
-                              e.currentTarget.style.borderColor = '#40C7E5';
+                              e.currentTarget.style.borderColor = '#FF9800';
                               e.currentTarget.style.transform = 'translateY(-2px)';
                               e.currentTarget.style.boxShadow =
-                                '0 4px 6px -1px rgba(18, 157, 185, 0.12), 0 2px 4px -2px rgba(18, 157, 185, 0.08)';
+                                '0 4px 6px -1px rgba(255, 152, 0, 0.12), 0 2px 4px -2px rgba(255, 152, 0, 0.08)';
                             }
                           }}
                           onMouseLeave={(e) => {
@@ -861,11 +861,11 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                                   display: 'inline-block',
                                   fontSize: '0.72rem',
                                   fontWeight: 700,
-                                  color: '#129DB9',
-                                  backgroundColor: 'rgba(18, 157, 185, 0.08)',
+                                  color: '#FF9800',
+                                  backgroundColor: 'rgba(255, 152, 0, 0.08)',
                                   padding: '0.15rem 0.5rem',
                                   borderRadius: '6px',
-                                  border: '1px solid rgba(18, 157, 185, 0.25)',
+                                  border: '1px solid rgba(255, 152, 0, 0.25)',
                                   letterSpacing: '0.03em',
                                 }}
                               >
@@ -880,11 +880,11 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                                     gap: '0.2rem',
                                     fontSize: '0.68rem',
                                     fontWeight: 600,
-                                    color: '#084F5E',
-                                    backgroundColor: 'rgba(64, 199, 229, 0.15)',
+                                    color: '#F57C00',
+                                    backgroundColor: 'rgba(255, 152, 0, 0.15)',
                                     padding: '0.15rem 0.4rem',
                                     borderRadius: '4px',
-                                    border: '1px solid #40C7E5',
+                                    border: '1px solid #FF9800',
                                   }}
                                   title="Diagnostic practice test available"
                                 >
@@ -900,7 +900,7 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                                 margin: '0 0 0.35rem 0',
                                 fontSize: '0.92rem',
                                 fontWeight: 700,
-                                color: '#102A43',
+                                color: '#172D53',
                                 lineHeight: 1.3,
                               }}
                             >
@@ -957,7 +957,7 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                                   gap: '0.3rem',
                                   background: 'none',
                                   border: 'none',
-                                  color: '#129DB9',
+                                  color: '#FF9800',
                                   fontSize: '0.78rem',
                                   fontWeight: 600,
                                   cursor: 'pointer',
@@ -976,8 +976,8 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                                   const el = document.getElementById(`exam-card-${exam.code.toLowerCase()}`);
                                   if (el) {
                                     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                    el.style.borderColor = '#129DB9';
-                                    el.style.boxShadow = '0 0 0 4px rgba(18, 157, 185, 0.25), 0 10px 25px -5px rgba(16, 42, 67, 0.1)';
+                                    el.style.borderColor = '#FF9800';
+                                    el.style.boxShadow = '0 0 0 4px rgba(255, 152, 0, 0.25), 0 10px 25px -5px rgba(16, 42, 67, 0.1)';
                                     setTimeout(() => {
                                       el.style.borderColor = '';
                                       el.style.boxShadow = '';
@@ -1038,7 +1038,7 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                                     borderRadius: '6px',
                                     backgroundColor: 'rgba(8, 79, 94, 0.08)',
                                     border: '1px solid rgba(8, 79, 94, 0.25)',
-                                    color: '#084F5E',
+                                    color: '#F57C00',
                                     fontSize: '0.72rem',
                                     fontWeight: 600,
                                     cursor: 'pointer',
@@ -1063,8 +1063,8 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                                     gap: '0.2rem',
                                     padding: '0.2rem 0.5rem',
                                     borderRadius: '6px',
-                                    backgroundColor: '#129DB9',
-                                    border: '1px solid #129DB9',
+                                    backgroundColor: '#FF9800',
+                                    border: '1px solid #FF9800',
                                     color: '#FFFFFF',
                                     fontSize: '0.72rem',
                                     fontWeight: 600,

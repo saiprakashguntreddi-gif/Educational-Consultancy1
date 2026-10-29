@@ -582,7 +582,7 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
               style={{
                 fontSize: '1.75rem',
                 fontWeight: 800,
-                color: '#081426',
+                color: '#0B1830',
                 margin: '0 0 0.35rem 0',
                 letterSpacing: '-0.02em',
               }}
@@ -626,7 +626,7 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
                 fontWeight: 600,
                 border: 'none',
                 background: activeTab === 'catalog' ? '#FFFFFF' : 'transparent',
-                color: activeTab === 'catalog' ? '#081426' : '#64748B',
+                color: activeTab === 'catalog' ? '#0B1830' : '#64748B',
                 boxShadow: activeTab === 'catalog' ? '0 1px 3px rgba(0, 0, 0, 0.08)' : 'none',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
@@ -663,7 +663,7 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
                 fontWeight: 600,
                 border: 'none',
                 background: activeTab === 'saved' ? '#FFFFFF' : 'transparent',
-                color: activeTab === 'saved' ? '#081426' : '#64748B',
+                color: activeTab === 'saved' ? '#0B1830' : '#64748B',
                 boxShadow: activeTab === 'saved' ? '0 1px 3px rgba(0, 0, 0, 0.08)' : 'none',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
@@ -700,7 +700,7 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
                 fontWeight: 600,
                 border: 'none',
                 background: activeTab === 'compare' ? '#FFFFFF' : 'transparent',
-                color: activeTab === 'compare' ? '#081426' : '#64748B',
+                color: activeTab === 'compare' ? '#0B1830' : '#64748B',
                 boxShadow: activeTab === 'compare' ? '0 1px 3px rgba(0, 0, 0, 0.08)' : 'none',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
@@ -868,7 +868,7 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#081426' }}>
+                  <span style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#0B1830' }}>
                     {pagination.total} Institutions Available
                   </span>
                   {hasActiveFilters && (
@@ -938,7 +938,7 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
                       marginBottom: '1.25rem',
                     }}
                   />
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#081426', margin: '0 0 0.4rem 0' }}>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0B1830', margin: '0 0 0.4rem 0' }}>
                     Finding institutions and programs...
                   </h3>
                   <p style={{ fontSize: '0.875rem', color: '#667085', margin: 0 }}>
@@ -1028,7 +1028,7 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
                   >
                     <Search size={28} />
                   </div>
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#081426', margin: '0 0 0.5rem 0' }}>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0B1830', margin: '0 0 0.5rem 0' }}>
                     No institutions match your current filters.
                   </h3>
                   <p style={{ fontSize: '0.875rem', color: '#667085', margin: '0 0 1.5rem 0', maxWidth: '440px', marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.5 }}>
@@ -1078,7 +1078,7 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
                   >
                     <Building size={28} />
                   </div>
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#081426', margin: '0 0 0.5rem 0' }}>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0B1830', margin: '0 0 0.5rem 0' }}>
                     College and course information is currently being prepared.
                   </h3>
                   <p style={{ fontSize: '0.875rem', color: '#667085', margin: 0, maxWidth: '440px', marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.5 }}>

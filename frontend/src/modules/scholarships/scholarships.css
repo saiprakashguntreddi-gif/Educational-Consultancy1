@@ -1,6 +1,6 @@
 /* ==========================================================================
    MODULE 8: SCHOLARSHIP DISCOVERY AND ELIGIBILITY STYLES
-   Design System: Midnight Slate (#081426) & Royal Indigo (#129DB9)
+   Design System: Midnight Slate (#0B1830) & Royal Indigo (#FF9800)
    ========================================================================== */
 
 .sch-container {
@@ -28,7 +28,7 @@
 
 /* 1. HERO HEADER CARD */
 .sch-hero-card {
-  background: linear-gradient(135deg, #102A43 0%, #084F5E 60%, #129DB9 100%);
+  background: linear-gradient(135deg, #172D53 0%, #F57C00 60%, #FF9800 100%);
   border-radius: var(--cmd-radius-xl, 20px);
   padding: 2rem 2.25rem;
   color: #FFFFFF;
@@ -45,7 +45,7 @@
   width: 260px;
   height: 260px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(18, 157, 185, 0.35) 0%, rgba(18, 157, 185, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 152, 0, 0.35) 0%, rgba(255, 152, 0, 0) 70%);
   pointer-events: none;
 }
 
@@ -156,7 +156,7 @@
   flex-direction: column;
   gap: 0.85rem;
   box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
-  border-left: 4px solid #129DB9;
+  border-left: 4px solid #FF9800;
 }
 
 @media (min-width: 880px) {
@@ -178,7 +178,7 @@
   height: 40px;
   border-radius: 12px;
   background: #EEF2FF;
-  color: #129DB9;
+  color: #FF9800;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -238,7 +238,7 @@
 }
 
 .sch-profile-params span.highlight {
-  color: #129DB9;
+  color: #FF9800;
 }
 
 .sch-profile-note {
@@ -302,8 +302,8 @@
 
 .sch-search-input:focus {
   background: #FFFFFF;
-  border-color: #129DB9;
-  box-shadow: 0 0 0 3px rgba(18, 157, 185, 0.12);
+  border-color: #FF9800;
+  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.12);
 }
 
 .sch-filter-select-group {
@@ -330,8 +330,8 @@
 
 .sch-filter-select:focus {
   background-color: #FFFFFF;
-  border-color: #129DB9;
-  box-shadow: 0 0 0 3px rgba(18, 157, 185, 0.12);
+  border-color: #FF9800;
+  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.12);
 }
 
 /* FUNCTIONAL ELIGIBILITY TABS */
@@ -367,9 +367,9 @@
 }
 
 .sch-tab-pill.active-all {
-  background: #081426;
+  background: #0B1830;
   color: #FFFFFF;
-  border-color: #081426;
+  border-color: #0B1830;
   box-shadow: 0 2px 6px rgba(8, 20, 38, 0.2);
 }
 
@@ -395,10 +395,10 @@
 }
 
 .sch-tab-pill.active-saved {
-  background: #129DB9;
+  background: #FF9800;
   color: #FFFFFF;
-  border-color: #129DB9;
-  box-shadow: 0 2px 6px rgba(18, 157, 185, 0.25);
+  border-color: #FF9800;
+  box-shadow: 0 2px 6px rgba(255, 152, 0, 0.25);
 }
 
 .sch-tab-count {
@@ -445,7 +445,7 @@
 .sch-chip-clear {
   background: none;
   border: none;
-  color: #129DB9;
+  color: #FF9800;
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
@@ -598,7 +598,7 @@
 }
 
 .sch-card-title:hover {
-  color: #129DB9;
+  color: #FF9800;
 }
 
 .sch-card-meta {
@@ -639,7 +639,7 @@
   height: 34px;
   border-radius: 10px;
   background: #EEF2FF;
-  color: #129DB9;
+  color: #FF9800;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -722,7 +722,7 @@
   gap: 0.4rem;
   background: none;
   border: none;
-  color: #129DB9;
+  color: #FF9800;
   font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
@@ -731,7 +731,7 @@
 }
 
 .sch-btn-details:hover {
-  color: #084F5E;
+  color: #F57C00;
   transform: translateX(2px);
 }
 
@@ -752,8 +752,8 @@
 
 .sch-btn-portal:hover {
   background: #FFFFFF;
-  border-color: #129DB9;
-  color: #129DB9;
+  border-color: #FF9800;
+  color: #FF9800;
 }
 
 /* 6. LOADING & EMPTY STATES */
@@ -770,7 +770,7 @@
 }
 
 .sch-spinner {
-  color: #129DB9;
+  color: #FF9800;
   animation: schSpin 1s linear infinite;
 }
 
@@ -806,7 +806,7 @@
   height: 64px;
   border-radius: 18px;
   background: #EEF2FF;
-  color: #129DB9;
+  color: #FF9800;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -831,7 +831,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  background: #129DB9;
+  background: #FF9800;
   color: #FFFFFF;
   border: none;
   padding: 0.6rem 1.35rem;
@@ -843,7 +843,7 @@
 }
 
 .sch-btn-reset:hover {
-  background: #084F5E;
+  background: #F57C00;
 }
 
 /* 7. SCHOLARSHIP DETAIL MODAL */
@@ -1245,20 +1245,20 @@
   gap: 0.5rem;
   padding: 0.65rem 1.4rem;
   border-radius: var(--cmd-radius-md, 12px);
-  background: #129DB9;
+  background: #FF9800;
   color: #FFFFFF;
   font-size: 0.86rem;
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(18, 157, 185, 0.25);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.25);
 }
 
 .sch-btn-modal-apply:hover {
-  background: #084F5E;
+  background: #F57C00;
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(18, 157, 185, 0.35);
+  box-shadow: 0 6px 16px rgba(255, 152, 0, 0.35);
 }
 
 /* 8. ADMIN SCHOLARSHIP MANAGEMENT PAGE STYLING */
@@ -1344,7 +1344,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  background: #129DB9;
+  background: #FF9800;
   color: #FFFFFF;
   border: none;
   padding: 0.6rem 1.25rem;
@@ -1353,11 +1353,11 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(18, 157, 185, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
 }
 
 .btn-scholarship-add:hover {
-  background: #084F5E;
+  background: #F57C00;
   transform: translateY(-1px);
 }
 
@@ -1398,7 +1398,7 @@
 }
 
 .scholarship-filter-tab.is-active-all {
-  background: #081426;
+  background: #0B1830;
   color: #FFFFFF;
 }
 
@@ -1508,8 +1508,8 @@
 
 .scholarship-search-field:focus {
   background: #FFFFFF;
-  border-color: #129DB9;
-  box-shadow: 0 0 0 3px rgba(18, 157, 185, 0.12);
+  border-color: #FF9800;
+  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.12);
 }
 
 .scholarship-btn-refresh {
@@ -1553,7 +1553,7 @@
   height: 60px;
   border-radius: 16px;
   background: #EEF2FF;
-  color: #129DB9;
+  color: #FF9800;
   display: flex;
   align-items: center;
   justify-content: center;

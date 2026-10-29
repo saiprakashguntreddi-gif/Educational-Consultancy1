@@ -142,8 +142,8 @@ export const ContactGuardianSection: React.FC<ContactGuardianSectionProps> = ({
                 width: '40px',
                 height: '40px',
                 borderRadius: '10px',
-                background: 'rgba(18, 157, 185, 0.1)',
-                color: '#129DB9',
+                background: 'rgba(255, 152, 0, 0.1)',
+                color: '#FF9800',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -156,7 +156,7 @@ export const ContactGuardianSection: React.FC<ContactGuardianSectionProps> = ({
                 style={{
                   fontSize: '1.15rem',
                   fontWeight: 700,
-                  color: '#102A43',
+                  color: '#172D53',
                   margin: 0,
                 }}
               >
@@ -773,14 +773,14 @@ export const ContactGuardianSection: React.FC<ContactGuardianSectionProps> = ({
                 style={{
                   padding: '0.65rem 1.5rem',
                   borderRadius: '8px',
-                  background: '#129DB9',
+                  background: '#FF9800',
                   border: 'none',
                   color: '#FFFFFF',
                   fontSize: '0.86rem',
                   fontWeight: 600,
                   cursor: isSaving ? 'not-allowed' : 'pointer',
                   opacity: isSaving ? 0.75 : 1,
-                  boxShadow: '0 2px 4px rgba(18, 157, 185, 0.25)',
+                  boxShadow: '0 2px 4px rgba(255, 152, 0, 0.25)',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.45rem',

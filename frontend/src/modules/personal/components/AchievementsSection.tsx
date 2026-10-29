@@ -207,7 +207,7 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
                 style={{
                   fontSize: '1.15rem',
                   fontWeight: 700,
-                  color: '#102A43',
+                  color: '#172D53',
                   margin: 0,
                 }}
               >
@@ -242,13 +242,13 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
               gap: '0.45rem',
               padding: '0.55rem 1rem',
               borderRadius: '8px',
-              background: '#129DB9',
+              background: '#FF9800',
               border: 'none',
               color: '#FFFFFF',
               fontSize: '0.84rem',
               fontWeight: 600,
               cursor: 'pointer',
-              boxShadow: '0 1px 3px rgba(18, 157, 185, 0.3)',
+              boxShadow: '0 1px 3px rgba(255, 152, 0, 0.3)',
               transition: 'opacity 0.15s ease',
             }}
             onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
@@ -510,7 +510,7 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
                 style={{
                   padding: '0.6rem 1.4rem',
                   borderRadius: '8px',
-                  background: '#129DB9',
+                  background: '#FF9800',
                   border: 'none',
                   color: '#FFFFFF',
                   fontSize: '0.86rem',
@@ -574,7 +574,7 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
             >
               <Award size={28} />
             </div>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#102A43', margin: '0 0 0.35rem' }}>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#172D53', margin: '0 0 0.35rem' }}>
               No achievements recorded yet
             </h3>
             <p style={{ fontSize: '0.86rem', color: '#64748B', maxWidth: '440px', margin: '0 auto 1.25rem', lineHeight: 1.5 }}>
@@ -588,7 +588,7 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
                 gap: '0.45rem',
                 padding: '0.6rem 1.25rem',
                 borderRadius: '8px',
-                background: '#129DB9',
+                background: '#FF9800',
                 border: 'none',
                 color: '#FFFFFF',
                 fontSize: '0.86rem',

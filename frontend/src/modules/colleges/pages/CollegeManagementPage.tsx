@@ -303,7 +303,7 @@ export const CollegeManagementPage: React.FC<CollegeManagementPageProps> = () =>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: '#5B4FE9', marginBottom: '0.25rem' }}>
               <ShieldCheck size={14} /> Admin / Content Management Suite
             </div>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#081426', margin: '0 0 0.35rem 0' }}>
+            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0B1830', margin: '0 0 0.35rem 0' }}>
               College & Course Management
             </h1>
             <p style={{ fontSize: '0.9375rem', color: '#667085', margin: 0 }}>
@@ -345,7 +345,7 @@ export const CollegeManagementPage: React.FC<CollegeManagementPageProps> = () =>
             <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>
               Total in Catalogue
             </div>
-            <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#081426', marginTop: '0.25rem' }}>
+            <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0B1830', marginTop: '0.25rem' }}>
               {statusCounts.total}
             </div>
           </div>
@@ -524,7 +524,7 @@ export const CollegeManagementPage: React.FC<CollegeManagementPageProps> = () =>
                   marginBottom: '1rem',
                 }}
               />
-              <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#081426' }}>
+              <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#0B1830' }}>
                 Loading catalogue records...
               </div>
             </div>
@@ -542,7 +542,7 @@ export const CollegeManagementPage: React.FC<CollegeManagementPageProps> = () =>
           ) : colleges.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '4rem 1rem', color: '#64748B' }}>
               <Building size={36} color="#94A3B8" style={{ margin: '0 auto 0.75rem auto' }} />
-              <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: '#081426', margin: '0 0 0.5rem 0' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: '#0B1830', margin: '0 0 0.5rem 0' }}>
                 No colleges match your current filters.
               </h3>
               <p style={{ fontSize: '0.875rem', margin: '0 0 1.25rem 0' }}>
@@ -582,7 +582,7 @@ export const CollegeManagementPage: React.FC<CollegeManagementPageProps> = () =>
                     return (
                       <tr key={inst.id} style={{ borderBottom: '1px solid #F1F5F9', transition: 'background 0.15s' }}>
                         <td style={{ padding: '1rem 1.25rem' }}>
-                          <div style={{ fontWeight: 700, color: '#081426', fontSize: '0.9375rem', marginBottom: '0.15rem' }}>
+                          <div style={{ fontWeight: 700, color: '#0B1830', fontSize: '0.9375rem', marginBottom: '0.15rem' }}>
                             {inst.name}
                           </div>
                           <div style={{ fontSize: '0.75rem', color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

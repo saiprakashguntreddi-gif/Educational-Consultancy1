@@ -43,7 +43,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         alignItems: 'center',
         justifyContent: 'center',
         padding: '3rem 1.25rem',
-        background: 'linear-gradient(180deg, #FAF7F2 0%, #F4EFEA 100%)',
+        background: 'linear-gradient(180deg, #F5F5F5 0%, #F4EFEA 100%)',
         boxSizing: 'border-box',
       }}
     >
@@ -53,10 +53,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           width: '100%',
           maxWidth: '440px',
           padding: '2.5rem',
-          background: '#FFFDFB',
+          background: '#FFFFFF',
           borderRadius: '20px',
           boxShadow: '0 16px 40px -8px rgba(16, 42, 67, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04)',
-          border: '1px solid #E8E2D8',
+          border: '1px solid #E5E7EB',
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -65,13 +65,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               width: '54px',
               height: '54px',
               borderRadius: '16px',
-              background: 'linear-gradient(135deg, rgba(18, 157, 185, 0.15) 0%, rgba(64, 199, 229, 0.22) 100%)',
+              background: 'linear-gradient(135deg, rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.22) 100%)',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#129DB9',
+              color: '#FF9800',
               marginBottom: '1rem',
-              boxShadow: '0 4px 14px rgba(18, 157, 185, 0.16)',
+              boxShadow: '0 4px 14px rgba(255, 152, 0, 0.16)',
             }}
           >
             <LogIn size={26} />
@@ -80,7 +80,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             style={{
               fontSize: '1.75rem',
               fontWeight: 800,
-              color: '#102A43',
+              color: '#172D53',
               marginBottom: '0.4rem',
               letterSpacing: '-0.02em',
             }}
@@ -110,16 +110,16 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.4rem',
-                color: '#084F5E',
+                color: '#F57C00',
                 fontWeight: 700,
                 fontSize: '0.92rem',
                 marginBottom: '0.35rem',
               }}
             >
-              <CheckCircle2 size={17} color="#129DB9" />
+              <CheckCircle2 size={17} color="#FF9800" />
               <span>Already Signed In</span>
             </div>
-            <p style={{ margin: '0 0 1rem', color: '#102A43', fontSize: '0.88rem', wordBreak: 'break-all' }}>
+            <p style={{ margin: '0 0 1rem', color: '#172D53', fontSize: '0.88rem', wordBreak: 'break-all' }}>
               Logged in as <strong>{user.email}</strong> ({user.role})
             </p>
             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
@@ -171,7 +171,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 display: 'block',
                 fontSize: '0.8rem',
                 fontWeight: 700,
-                color: '#102A43',
+                color: '#172D53',
                 marginBottom: '0.45rem',
                 letterSpacing: '0.04em',
                 textTransform: 'uppercase',
@@ -207,7 +207,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 style={{
                   fontSize: '0.8rem',
                   fontWeight: 700,
-                  color: '#102A43',
+                  color: '#172D53',
                   marginBottom: 0,
                   letterSpacing: '0.04em',
                   textTransform: 'uppercase',
@@ -222,7 +222,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: '#129DB9',
+                    color: '#FF9800',
                     cursor: 'pointer',
                     fontSize: '0.82rem',
                     fontWeight: 600,
@@ -285,9 +285,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               borderRadius: '10px',
               fontSize: '0.98rem',
               fontWeight: 700,
-              background: '#129DB9',
+              background: '#FF9800',
               color: '#FFFFFF',
-              boxShadow: '0 4px 14px rgba(18, 157, 185, 0.35)',
+              boxShadow: '0 4px 14px rgba(255, 152, 0, 0.35)',
               cursor: isSubmitting ? 'not-allowed' : 'pointer',
             }}
             disabled={isSubmitting}
@@ -303,7 +303,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             style={{
               background: 'none',
               border: 'none',
-              color: '#129DB9',
+              color: '#FF9800',
               cursor: 'pointer',
               fontWeight: 700,
               padding: 0,

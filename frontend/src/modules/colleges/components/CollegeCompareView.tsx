@@ -51,7 +51,7 @@ export const CollegeCompareView: React.FC<CollegeCompareViewProps> = ({
             marginBottom: '1rem',
           }}
         />
-        <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#081426', margin: '0 0 0.5rem 0' }}>
+        <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#0B1830', margin: '0 0 0.5rem 0' }}>
           Loading comparison matrix...
         </h3>
         <p style={{ fontSize: '0.875rem', color: '#667085', margin: 0 }}>
@@ -88,7 +88,7 @@ export const CollegeCompareView: React.FC<CollegeCompareViewProps> = ({
         >
           <Scale size={32} />
         </div>
-        <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#081426', margin: '0 0 0.5rem 0' }}>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0B1830', margin: '0 0 0.5rem 0' }}>
           Select institutions to compare them.
         </h3>
         <p style={{ fontSize: '0.9375rem', color: '#667085', maxWidth: '460px', margin: '0 auto 1.5rem auto', lineHeight: 1.5 }}>
@@ -255,7 +255,7 @@ export const CollegeCompareView: React.FC<CollegeCompareViewProps> = ({
                           style={{
                             fontSize: '1rem',
                             fontWeight: 700,
-                            color: '#081426',
+                            color: '#0B1830',
                             margin: 0,
                             lineHeight: 1.3,
                             cursor: 'pointer',
@@ -318,7 +318,7 @@ export const CollegeCompareView: React.FC<CollegeCompareViewProps> = ({
             <tbody>
               {/* Row: Location */}
               <tr style={{ borderBottom: '1px solid #F1F5F9' }}>
-                <td style={{ padding: '1rem', fontWeight: 600, color: '#081426', background: '#FAFAFA' }}>
+                <td style={{ padding: '1rem', fontWeight: 600, color: '#0B1830', background: '#FAFAFA' }}>
                   Location
                 </td>
                 {institutions.map((inst) => (
@@ -330,7 +330,7 @@ export const CollegeCompareView: React.FC<CollegeCompareViewProps> = ({
 
               {/* Row: Institution Type & Established */}
               <tr style={{ borderBottom: '1px solid #F1F5F9' }}>
-                <td style={{ padding: '1rem', fontWeight: 600, color: '#081426', background: '#FAFAFA' }}>
+                <td style={{ padding: '1rem', fontWeight: 600, color: '#0B1830', background: '#FAFAFA' }}>
                   Institution Type
                 </td>
                 {institutions.map((inst) => (
@@ -346,7 +346,7 @@ export const CollegeCompareView: React.FC<CollegeCompareViewProps> = ({
 
               {/* Row: Rankings */}
               <tr style={{ borderBottom: '1px solid #F1F5F9' }}>
-                <td style={{ padding: '1rem', fontWeight: 600, color: '#081426', background: '#FAFAFA' }}>
+                <td style={{ padding: '1rem', fontWeight: 600, color: '#0B1830', background: '#FAFAFA' }}>
                   Rankings
                 </td>
                 {institutions.map((inst) => (
@@ -377,13 +377,13 @@ export const CollegeCompareView: React.FC<CollegeCompareViewProps> = ({
 
               {/* Row: Annual Tuition Fees */}
               <tr style={{ borderBottom: '1px solid #F1F5F9' }}>
-                <td style={{ padding: '1rem', fontWeight: 600, color: '#081426', background: '#FAFAFA' }}>
+                <td style={{ padding: '1rem', fontWeight: 600, color: '#0B1830', background: '#FAFAFA' }}>
                   Annual Fees
                 </td>
                 {institutions.map((inst) => (
                   <td key={inst.id} style={{ padding: '1rem', color: '#334155' }}>
                     {inst.minAnnualFee ? (
-                      <div style={{ fontWeight: 600, color: '#081426' }}>
+                      <div style={{ fontWeight: 600, color: '#0B1830' }}>
                         {inst.feeCurrency || '$'}{inst.minAnnualFee.toLocaleString()}
                         {inst.maxAnnualFee && inst.maxAnnualFee !== inst.minAnnualFee
                           ? ` - ${inst.feeCurrency || '$'}${inst.maxAnnualFee.toLocaleString()}`
@@ -399,7 +399,7 @@ export const CollegeCompareView: React.FC<CollegeCompareViewProps> = ({
 
               {/* Row: Scholarships */}
               <tr style={{ borderBottom: '1px solid #F1F5F9' }}>
-                <td style={{ padding: '1rem', fontWeight: 600, color: '#081426', background: '#FAFAFA' }}>
+                <td style={{ padding: '1rem', fontWeight: 600, color: '#0B1830', background: '#FAFAFA' }}>
                   Scholarships
                 </td>
                 {institutions.map((inst) => (
@@ -424,7 +424,7 @@ export const CollegeCompareView: React.FC<CollegeCompareViewProps> = ({
 
               {/* Row: Entrance Exams */}
               <tr style={{ borderBottom: '1px solid #F1F5F9' }}>
-                <td style={{ padding: '1rem', fontWeight: 600, color: '#081426', background: '#FAFAFA' }}>
+                <td style={{ padding: '1rem', fontWeight: 600, color: '#0B1830', background: '#FAFAFA' }}>
                   Entrance Exams
                 </td>
                 {institutions.map((inst) => (
@@ -456,12 +456,12 @@ export const CollegeCompareView: React.FC<CollegeCompareViewProps> = ({
 
               {/* Row: Programs & Offerings */}
               <tr style={{ borderBottom: '1px solid #F1F5F9' }}>
-                <td style={{ padding: '1rem', fontWeight: 600, color: '#081426', background: '#FAFAFA' }}>
+                <td style={{ padding: '1rem', fontWeight: 600, color: '#0B1830', background: '#FAFAFA' }}>
                   Available Programs
                 </td>
                 {institutions.map((inst) => (
                   <td key={inst.id} style={{ padding: '1rem', color: '#334155' }}>
-                    <div style={{ fontWeight: 600, color: '#081426', marginBottom: '0.35rem' }}>
+                    <div style={{ fontWeight: 600, color: '#0B1830', marginBottom: '0.35rem' }}>
                       {inst.coursesCount} Programs Listed
                     </div>
                     {inst.popularPrograms && inst.popularPrograms.length > 0 ? (
@@ -479,7 +479,7 @@ export const CollegeCompareView: React.FC<CollegeCompareViewProps> = ({
 
               {/* Row: Campus Facilities */}
               <tr style={{ borderBottom: '1px solid #F1F5F9' }}>
-                <td style={{ padding: '1rem', fontWeight: 600, color: '#081426', background: '#FAFAFA' }}>
+                <td style={{ padding: '1rem', fontWeight: 600, color: '#0B1830', background: '#FAFAFA' }}>
                   Campus Facilities
                 </td>
                 {institutions.map((inst) => (
@@ -511,7 +511,7 @@ export const CollegeCompareView: React.FC<CollegeCompareViewProps> = ({
 
               {/* Row: Placements */}
               <tr style={{ borderBottom: '1px solid #F1F5F9' }}>
-                <td style={{ padding: '1rem', fontWeight: 600, color: '#081426', background: '#FAFAFA' }}>
+                <td style={{ padding: '1rem', fontWeight: 600, color: '#0B1830', background: '#FAFAFA' }}>
                   Placement Info
                 </td>
                 {institutions.map((inst) => (
@@ -527,7 +527,7 @@ export const CollegeCompareView: React.FC<CollegeCompareViewProps> = ({
 
               {/* Row: Admission Deadlines */}
               <tr style={{ borderBottom: '1px solid #F1F5F9' }}>
-                <td style={{ padding: '1rem', fontWeight: 600, color: '#081426', background: '#FAFAFA' }}>
+                <td style={{ padding: '1rem', fontWeight: 600, color: '#0B1830', background: '#FAFAFA' }}>
                   Deadlines
                 </td>
                 {institutions.map((inst) => (
@@ -543,7 +543,7 @@ export const CollegeCompareView: React.FC<CollegeCompareViewProps> = ({
 
               {/* Row: Official Website */}
               <tr>
-                <td style={{ padding: '1rem', fontWeight: 600, color: '#081426', background: '#FAFAFA' }}>
+                <td style={{ padding: '1rem', fontWeight: 600, color: '#0B1830', background: '#FAFAFA' }}>
                   Official Website
                 </td>
                 {institutions.map((inst) => (

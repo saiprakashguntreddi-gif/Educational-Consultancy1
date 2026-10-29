@@ -81,7 +81,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
           style={{
             padding: '1.5rem 1.75rem',
             borderBottom: '1px solid #EAECF0',
-            background: 'linear-gradient(135deg, #081426 0%, #172033 100%)',
+            background: 'linear-gradient(135deg, #0B1830 0%, #172033 100%)',
             color: '#FFFFFF',
             position: 'relative',
           }}
@@ -234,9 +234,9 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                   borderRadius: '8px',
                   fontSize: '0.8125rem',
                   fontWeight: 600,
-                  border: isInstitutionCompared ? '1px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.25)',
-                  background: isInstitutionCompared ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.1)',
-                  color: isInstitutionCompared ? '#38BDF8' : '#FFFFFF',
+                  border: isInstitutionCompared ? '1px solid #FF9800' : '1px solid rgba(255, 255, 255, 0.25)',
+                  background: isInstitutionCompared ? 'rgba(255, 152, 0, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+                  color: isInstitutionCompared ? '#FF9800' : '#FFFFFF',
                   cursor: 'pointer',
                   transition: 'all 0.15s ease',
                 }}
@@ -300,7 +300,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
                 <Clock size={14} color="#5B4FE9" /> DURATION
               </div>
-              <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#081426', marginTop: '0.25rem' }}>
+              <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#0B1830', marginTop: '0.25rem' }}>
                 {course.durationText || (course.durationYears ? `${course.durationYears} Years` : 'Information not currently available.')}
               </div>
             </div>
@@ -309,7 +309,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
                 <DollarSign size={14} color="#059669" /> ANNUAL TUITION FEE
               </div>
-              <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#081426', marginTop: '0.25rem' }}>
+              <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#0B1830', marginTop: '0.25rem' }}>
                 {course.feeRange ? (
                   course.feeRange
                 ) : course.annualTuitionFee ? (
@@ -324,7 +324,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
                 <Award size={14} color="#D97706" /> SCHOLARSHIP
               </div>
-              <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#081426', marginTop: '0.25rem' }}>
+              <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#0B1830', marginTop: '0.25rem' }}>
                 {course.scholarshipAvailable ? (
                   <span style={{ color: '#059669', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
                     <CheckCircle size={14} /> Available
@@ -339,7 +339,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
                 <Calendar size={14} color="#4F46E5" /> APPLICATION DEADLINE
               </div>
-              <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#081426', marginTop: '0.25rem' }}>
+              <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#0B1830', marginTop: '0.25rem' }}>
                 {course.applicationDeadline || (
                   <span style={{ color: '#94A3B8', fontWeight: 500 }}>Information not currently available.</span>
                 )}
@@ -365,7 +365,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
               style={{
                 fontSize: '0.875rem',
                 fontWeight: 700,
-                color: '#081426',
+                color: '#0B1830',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
                 marginBottom: '0.5rem',
@@ -394,7 +394,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
               style={{
                 fontSize: '0.875rem',
                 fontWeight: 700,
-                color: '#081426',
+                color: '#0B1830',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
                 marginBottom: '0.5rem',
@@ -433,7 +433,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
               style={{
                 fontSize: '0.875rem',
                 fontWeight: 700,
-                color: '#081426',
+                color: '#0B1830',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
                 marginBottom: '0.5rem',
@@ -477,7 +477,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
               style={{
                 fontSize: '0.875rem',
                 fontWeight: 700,
-                color: '#081426',
+                color: '#0B1830',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
                 marginBottom: '0.5rem',

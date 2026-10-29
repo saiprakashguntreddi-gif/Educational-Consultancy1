@@ -300,7 +300,7 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            background: '#102A43',
+            background: '#172D53',
             color: '#FFFFFF',
             flexWrap: 'wrap',
             gap: '0.75rem',
@@ -311,7 +311,7 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
               <span style={{ fontSize: '0.75rem', fontWeight: 700, background: 'rgba(255,255,255,0.15)', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
                 {testData.examName}
               </span>
-              <span style={{ fontSize: '0.75rem', color: '#40C7E5' }}>
+              <span style={{ fontSize: '0.75rem', color: '#FF9800' }}>
                 Diagnostic Mock Test
               </span>
             </div>
@@ -329,14 +329,14 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.45rem',
-                  background: isTimeCritical ? '#EF4444' : '#084F5E',
+                  background: isTimeCritical ? '#EF4444' : '#F57C00',
                   color: '#FFFFFF',
                   padding: '0.45rem 0.85rem',
                   borderRadius: '8px',
                   fontWeight: 700,
                   fontSize: '0.95rem',
                   fontVariantNumeric: 'tabular-nums',
-                  border: isTimeCritical ? '1px solid #F87171' : '1px solid rgba(64, 199, 229, 0.4)',
+                  border: isTimeCritical ? '1px solid #F87171' : '1px solid rgba(255, 152, 0, 0.4)',
                   boxShadow: isTimeCritical ? '0 0 10px rgba(239, 68, 68, 0.5)' : 'none',
                 }}
               >
@@ -391,7 +391,7 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
             {/* Score Summary Banner */}
             <div
               style={{
-                background: 'linear-gradient(135deg, #102A43 0%, #084F5E 100%)',
+                background: 'linear-gradient(135deg, #172D53 0%, #F57C00 100%)',
                 color: '#FFFFFF',
                 borderRadius: '12px',
                 padding: '1.5rem',
@@ -403,7 +403,7 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
               }}
             >
               <div>
-                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#40C7E5', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#FF9800', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                   Diagnostic Result Completed
                 </span>
                 <h3 style={{ fontSize: '1.6rem', fontWeight: 800, margin: '0.2rem 0 0.35rem' }}>
@@ -423,7 +423,7 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
                   textAlign: 'center',
                 }}
               >
-                <div style={{ fontSize: '1.8rem', fontWeight: 900, color: result.percentage >= 60 ? '#40C7E5' : '#FFB547' }}>
+                <div style={{ fontSize: '1.8rem', fontWeight: 900, color: result.percentage >= 60 ? '#FF9800' : '#FFB547' }}>
                   {result.percentage}%
                 </div>
                 <div style={{ fontSize: '0.75rem', color: '#F5F8FC' }}>Overall Performance</div>
@@ -432,7 +432,7 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
 
             {/* Question Breakdown Heading */}
             <div>
-              <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#102A43', margin: '0 0 0.85rem' }}>
+              <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#172D53', margin: '0 0 0.85rem' }}>
                 Question-by-Question Analysis & Explanations
               </h4>
 
@@ -525,7 +525,7 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
 
                     {/* Verified Explanation */}
                     <div style={{ background: '#FFFFFF', borderRadius: '6px', padding: '0.75rem 0.85rem', border: '1px solid #E2E8F0' }}>
-                      <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#129DB9', marginBottom: '0.2rem' }}>
+                      <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#FF9800', marginBottom: '0.2rem' }}>
                         Explanation & Concept:
                       </div>
                       <p style={{ fontSize: '0.84rem', color: '#475569', margin: 0, lineHeight: 1.5 }}>
@@ -543,7 +543,7 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
                 id="close-mock-results-btn"
                 onClick={onClose}
                 style={{
-                  background: '#129DB9',
+                  background: '#FF9800',
                   color: '#FFFFFF',
                   border: 'none',
                   padding: '0.65rem 1.5rem',
@@ -591,9 +591,9 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
                         width: '28px',
                         height: '28px',
                         borderRadius: '6px',
-                        border: isCurrent ? '2px solid #129DB9' : '1px solid #CBD5E1',
-                        background: isCurrent ? '#129DB9' : isAnswered ? 'rgba(18, 157, 185, 0.15)' : '#FFFFFF',
-                        color: isCurrent ? '#FFFFFF' : isAnswered ? '#084F5E' : '#475569',
+                        border: isCurrent ? '2px solid #FF9800' : '1px solid #CBD5E1',
+                        background: isCurrent ? '#FF9800' : isAnswered ? 'rgba(255, 152, 0, 0.15)' : '#FFFFFF',
+                        color: isCurrent ? '#FFFFFF' : isAnswered ? '#F57C00' : '#475569',
                         fontSize: '0.78rem',
                         fontWeight: 700,
                         cursor: 'pointer',
@@ -637,8 +637,8 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.65rem' }}>
                     <span
                       style={{
-                        background: 'rgba(18, 157, 185, 0.1)',
-                        color: '#129DB9',
+                        background: 'rgba(255, 152, 0, 0.1)',
+                        color: '#FF9800',
                         fontSize: '0.78rem',
                         fontWeight: 700,
                         padding: '0.2rem 0.6rem',
@@ -657,7 +657,7 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
                     style={{
                       fontSize: '1.05rem',
                       fontWeight: 600,
-                      color: '#102A43',
+                      color: '#172D53',
                       lineHeight: 1.6,
                       marginBottom: '1.5rem',
                       padding: '1rem',
@@ -679,8 +679,8 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
                           id={`option-${currentQuestion.id}-${optIdx}`}
                           onClick={() => handleSelectOption(currentQuestion.id, optIdx)}
                           style={{
-                            background: isSelected ? 'rgba(18, 157, 185, 0.08)' : '#FFFFFF',
-                            border: isSelected ? '2px solid #129DB9' : '1px solid #CBD5E1',
+                            background: isSelected ? 'rgba(255, 152, 0, 0.08)' : '#FFFFFF',
+                            border: isSelected ? '2px solid #FF9800' : '1px solid #CBD5E1',
                             borderRadius: '10px',
                             padding: '0.85rem 1.15rem',
                             cursor: 'pointer',
@@ -695,8 +695,8 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
                               width: '26px',
                               height: '26px',
                               borderRadius: '50%',
-                              border: isSelected ? '2px solid #129DB9' : '1px solid #94A3B8',
-                              background: isSelected ? '#129DB9' : '#FFFFFF',
+                              border: isSelected ? '2px solid #FF9800' : '1px solid #94A3B8',
+                              background: isSelected ? '#FF9800' : '#FFFFFF',
                               color: isSelected ? '#FFFFFF' : '#475569',
                               display: 'flex',
                               alignItems: 'center',
@@ -708,7 +708,7 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
                           >
                             {String.fromCharCode(65 + optIdx)}
                           </div>
-                          <span style={{ fontSize: '0.94rem', color: '#102A43', lineHeight: 1.4 }}>
+                          <span style={{ fontSize: '0.94rem', color: '#172D53', lineHeight: 1.4 }}>
                             {opt}
                           </span>
                         </div>
@@ -743,7 +743,7 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
                     gap: '0.35rem',
                     background: '#FFFFFF',
                     border: '1px solid #CBD5E1',
-                    color: currentIndex === 0 ? '#94A3B8' : '#102A43',
+                    color: currentIndex === 0 ? '#94A3B8' : '#172D53',
                     padding: '0.55rem 1rem',
                     borderRadius: '8px',
                     fontSize: '0.86rem',
@@ -767,7 +767,7 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
                     gap: '0.35rem',
                     background: '#FFFFFF',
                     border: '1px solid #CBD5E1',
-                    color: currentIndex === testData.questions.length - 1 ? '#94A3B8' : '#102A43',
+                    color: currentIndex === testData.questions.length - 1 ? '#94A3B8' : '#172D53',
                     padding: '0.55rem 1rem',
                     borderRadius: '8px',
                     fontSize: '0.86rem',
@@ -790,7 +790,7 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '0.45rem',
-                      background: '#129DB9',
+                      background: '#FF9800',
                       color: '#FFFFFF',
                       border: 'none',
                       padding: '0.6rem 1.4rem',
@@ -829,7 +829,7 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
                       disabled={isSubmitting}
                       onClick={handleSubmitAnswers}
                       style={{
-                        background: '#129DB9',
+                        background: '#FF9800',
                         color: '#FFFFFF',
                         border: 'none',
                         padding: '0.5rem 1.1rem',

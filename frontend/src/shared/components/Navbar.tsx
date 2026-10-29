@@ -177,7 +177,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
                   title="Student Dashboard"
                   id="nav-dashboard-btn"
                 >
-                  <LayoutDashboard size={15} color="#40C7E5" />
+                  <LayoutDashboard size={15} color="#FF9800" />
                   <span>Student Dashboard</span>
                 </button>
               )}
@@ -190,7 +190,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
                   id="nav-suite-btn"
                   title="Platform Administration Console"
                 >
-                  <ShieldCheck size={15} color="#FFB547" />
+                  <ShieldCheck size={15} color="#FF9800" />
                   <span>Admin Dashboard</span>
                 </button>
               )}

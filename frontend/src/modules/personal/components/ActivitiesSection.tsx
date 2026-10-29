@@ -189,8 +189,8 @@ export const ActivitiesSection: React.FC<ActivitiesSectionProps> = ({
               width: '40px',
               height: '40px',
               borderRadius: '10px',
-              background: 'rgba(18, 157, 185, 0.1)',
-              color: '#129DB9',
+              background: 'rgba(255, 152, 0, 0.1)',
+              color: '#FF9800',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -204,7 +204,7 @@ export const ActivitiesSection: React.FC<ActivitiesSectionProps> = ({
                 style={{
                   fontSize: '1.15rem',
                   fontWeight: 700,
-                  color: '#102A43',
+                  color: '#172D53',
                   margin: 0,
                 }}
               >
@@ -216,8 +216,8 @@ export const ActivitiesSection: React.FC<ActivitiesSectionProps> = ({
                   fontWeight: 700,
                   padding: '0.15rem 0.55rem',
                   borderRadius: '999px',
-                  background: safeActivities.length > 0 ? 'rgba(18, 157, 185, 0.15)' : '#F1F5F9',
-                  color: safeActivities.length > 0 ? '#084F5E' : '#64748B',
+                  background: safeActivities.length > 0 ? 'rgba(255, 152, 0, 0.15)' : '#F1F5F9',
+                  color: safeActivities.length > 0 ? '#F57C00' : '#64748B',
                 }}
               >
                 {safeActivities.length} {safeActivities.length === 1 ? 'Entry' : 'Entries'}
@@ -239,17 +239,17 @@ export const ActivitiesSection: React.FC<ActivitiesSectionProps> = ({
               gap: '0.45rem',
               padding: '0.55rem 1rem',
               borderRadius: '8px',
-              background: '#129DB9',
+              background: '#FF9800',
               border: 'none',
               color: '#FFFFFF',
               fontSize: '0.84rem',
               fontWeight: 600,
               cursor: 'pointer',
-              boxShadow: '0 1px 3px rgba(18, 157, 185, 0.3)',
+              boxShadow: '0 1px 3px rgba(255, 152, 0, 0.3)',
               transition: 'background 0.15s ease',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = '#084F5E')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = '#129DB9')}
+            onMouseEnter={(e) => (e.currentTarget.style.background = '#F57C00')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = '#FF9800')}
           >
             <Plus size={16} />
             <span>Add Activity</span>
@@ -507,7 +507,7 @@ export const ActivitiesSection: React.FC<ActivitiesSectionProps> = ({
                 style={{
                   padding: '0.6rem 1.4rem',
                   borderRadius: '8px',
-                  background: '#129DB9',
+                  background: '#FF9800',
                   border: 'none',
                   color: '#FFFFFF',
                   fontSize: '0.86rem',
@@ -561,8 +561,8 @@ export const ActivitiesSection: React.FC<ActivitiesSectionProps> = ({
                 width: '54px',
                 height: '54px',
                 borderRadius: '50%',
-                background: 'rgba(18, 157, 185, 0.1)',
-                color: '#129DB9',
+                background: 'rgba(255, 152, 0, 0.1)',
+                color: '#FF9800',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -571,7 +571,7 @@ export const ActivitiesSection: React.FC<ActivitiesSectionProps> = ({
             >
               <Compass size={28} />
             </div>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#102A43', margin: '0 0 0.35rem' }}>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#172D53', margin: '0 0 0.35rem' }}>
               No extracurricular activities recorded yet
             </h3>
             <p style={{ fontSize: '0.86rem', color: '#64748B', maxWidth: '440px', margin: '0 auto 1.25rem', lineHeight: 1.5 }}>
@@ -585,7 +585,7 @@ export const ActivitiesSection: React.FC<ActivitiesSectionProps> = ({
                 gap: '0.45rem',
                 padding: '0.6rem 1.25rem',
                 borderRadius: '8px',
-                background: '#129DB9',
+                background: '#FF9800',
                 border: 'none',
                 color: '#FFFFFF',
                 fontSize: '0.86rem',

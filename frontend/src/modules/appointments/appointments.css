@@ -1,6 +1,6 @@
 /* ==========================================================================
    MODULE 12: APPOINTMENTS, WEBINARS & SHORTLISTS STYLES
-   Design System: Midnight Slate (#081426) & Royal Indigo (#5B4FE9)
+   Design System: Midnight Slate (#0B1830) & Royal Indigo (#5B4FE9)
    ========================================================================== */
 
 .app-container {
@@ -27,7 +27,7 @@
 
 /* TOP HERO & SUB-NAV */
 .app-header-card {
-  background: linear-gradient(135deg, #102A43 0%, #084F5E 60%, #129DB9 100%);
+  background: linear-gradient(135deg, #172D53 0%, #F57C00 60%, #FF9800 100%);
   border-radius: var(--cmd-radius-xl, 20px);
   padding: 2rem 2.5rem;
   color: #FFFFFF;
@@ -44,7 +44,7 @@
   width: 260px;
   height: 260px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(64, 199, 229, 0.35) 0%, rgba(64, 199, 229, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 152, 0, 0.35) 0%, rgba(255, 152, 0, 0) 70%);
   pointer-events: none;
 }
 

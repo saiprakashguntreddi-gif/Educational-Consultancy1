@@ -142,7 +142,7 @@ export const AdminCoursesDrawer: React.FC<AdminCoursesDrawerProps> = ({
         <div
           style={{
             padding: '1.25rem 1.75rem',
-            background: 'linear-gradient(135deg, #081426 0%, #172033 100%)',
+            background: 'linear-gradient(135deg, #0B1830 0%, #172033 100%)',
             color: '#FFFFFF',
             display: 'flex',
             alignItems: 'center',
@@ -329,7 +329,7 @@ export const AdminCoursesDrawer: React.FC<AdminCoursesDrawerProps> = ({
                       </span>
                     </div>
 
-                    <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#081426', margin: '0 0 0.35rem 0' }}>
+                    <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#0B1830', margin: '0 0 0.35rem 0' }}>
                       {course.name}
                     </h4>
 
@@ -342,9 +342,9 @@ export const AdminCoursesDrawer: React.FC<AdminCoursesDrawerProps> = ({
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.875rem', fontSize: '0.75rem', color: '#64748B' }}>
                       {course.durationText && <span>Duration: {course.durationText}</span>}
                       {course.feeRange ? (
-                        <span style={{ fontWeight: 600, color: '#081426' }}>Fee: {course.feeRange}</span>
+                        <span style={{ fontWeight: 600, color: '#0B1830' }}>Fee: {course.feeRange}</span>
                       ) : course.annualTuitionFee ? (
-                        <span style={{ fontWeight: 600, color: '#081426' }}>
+                        <span style={{ fontWeight: 600, color: '#0B1830' }}>
                           Fee: {course.feeCurrency || '$'}{course.annualTuitionFee.toLocaleString()}/yr
                         </span>
                       ) : null}

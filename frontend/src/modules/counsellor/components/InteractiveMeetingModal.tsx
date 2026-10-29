@@ -109,7 +109,7 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
               border: '1px solid #334155',
               fontSize: '0.82rem',
               fontWeight: 600,
-              color: '#38BDF8',
+              color: '#FF9800',
             }}
           >
             <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#22C55E', display: 'inline-block', animation: 'pulse 1.5s infinite' }} />
@@ -289,7 +289,7 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
                 flex: 1,
                 padding: '0.75rem',
                 backgroundColor: activeSidePanel === 'notes' ? '#0F172A' : 'transparent',
-                color: activeSidePanel === 'notes' ? '#38BDF8' : '#94A3B8',
+                color: activeSidePanel === 'notes' ? '#FF9800' : '#94A3B8',
                 border: 'none',
                 fontWeight: 600,
                 fontSize: '0.82rem',
@@ -304,7 +304,7 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
                 flex: 1,
                 padding: '0.75rem',
                 backgroundColor: activeSidePanel === 'info' ? '#0F172A' : 'transparent',
-                color: activeSidePanel === 'info' ? '#38BDF8' : '#94A3B8',
+                color: activeSidePanel === 'info' ? '#FF9800' : '#94A3B8',
                 border: 'none',
                 fontWeight: 600,
                 fontSize: '0.82rem',
@@ -349,7 +349,7 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
                 </div>
                 <div>
                   <span style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block' }}>Student Profile ID</span>
-                  <span style={{ fontSize: '0.78rem', color: '#38BDF8' }}>{appointment?.studentProfileId || 'Verified Roster'}</span>
+                  <span style={{ fontSize: '0.78rem', color: '#FF9800' }}>{appointment?.studentProfileId || 'Verified Roster'}</span>
                 </div>
                 <div>
                   <span style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block' }}>Initial Notes</span>

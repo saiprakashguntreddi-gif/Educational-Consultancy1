@@ -58,7 +58,7 @@ export const SavedCollegesView: React.FC<SavedCollegesViewProps> = ({
             marginBottom: '1rem',
           }}
         />
-        <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#081426', margin: '0 0 0.5rem 0' }}>
+        <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#0B1830', margin: '0 0 0.5rem 0' }}>
           Loading your shortlist...
         </h3>
         <p style={{ fontSize: '0.875rem', color: '#667085', margin: 0 }}>
@@ -97,7 +97,7 @@ export const SavedCollegesView: React.FC<SavedCollegesViewProps> = ({
         >
           <Bookmark size={32} />
         </div>
-        <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#081426', margin: '0 0 0.5rem 0' }}>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0B1830', margin: '0 0 0.5rem 0' }}>
           You haven't saved any institutions yet.
         </h3>
         <p style={{ fontSize: '0.9375rem', color: '#667085', maxWidth: '460px', margin: '0 auto 1.5rem auto', lineHeight: 1.5 }}>
@@ -251,7 +251,7 @@ export const SavedCollegesView: React.FC<SavedCollegesViewProps> = ({
                         style={{
                           fontSize: '1.0625rem',
                           fontWeight: 700,
-                          color: '#081426',
+                          color: '#0B1830',
                           margin: 0,
                           lineHeight: 1.3,
                           cursor: 'pointer',
@@ -439,7 +439,7 @@ export const SavedCollegesView: React.FC<SavedCollegesViewProps> = ({
                       style={{
                         fontSize: '1.0625rem',
                         fontWeight: 700,
-                        color: '#081426',
+                        color: '#0B1830',
                         margin: '0.25rem 0 0.5rem 0',
                         lineHeight: 1.3,
                         cursor: 'pointer',
@@ -462,7 +462,7 @@ export const SavedCollegesView: React.FC<SavedCollegesViewProps> = ({
                         </span>
                       )}
                       {(crs.feeRange || crs.annualTuitionFee) && (
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', color: '#081426', fontWeight: 600 }}>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', color: '#0B1830', fontWeight: 600 }}>
                           <DollarSign size={12} color="#059669" />
                           {crs.feeRange || `${crs.feeCurrency || '$'}${crs.annualTuitionFee?.toLocaleString()}/yr`}
                         </span>

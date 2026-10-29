@@ -95,7 +95,7 @@ const EnrolmentLockedView: React.FC<EnrolmentLockedViewProps> = ({
             gap: '0.4rem',
             background: 'none',
             border: 'none',
-            color: '#129DB9',
+            color: '#FF9800',
             fontSize: '0.88rem',
             fontWeight: 600,
             cursor: 'pointer',
@@ -743,7 +743,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
         onClick={() => setMobileSidebarOpen(false)}
       />
 
-      {/* LEFT: FIXED SOPHISTICATED DARK NAVY SIDEBAR (#081426) */}
+      {/* LEFT: FIXED SOPHISTICATED DARK NAVY SIDEBAR (#0B1830) */}
       <aside className={`cmd-sidebar ${mobileSidebarOpen ? 'open' : ''}`}>
         {/* Sidebar Brand Wordmark */}
         <div
@@ -1088,7 +1088,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
                 }}
                 style={{ width: '100%', textAlign: 'left', padding: '0.5rem 0.65rem', background: 'none', border: 'none', fontSize: '0.84rem', color: '#172033', cursor: 'pointer', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
               >
-                <User size={15} color="#129DB9" /> My Profile
+                <User size={15} color="#FF9800" /> My Profile
               </button>
             </div>
 
@@ -1810,7 +1810,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
                     gap: '0.4rem',
                     background: 'none',
                     border: 'none',
-                    color: '#129DB9',
+                    color: '#FF9800',
                     fontSize: '0.88rem',
                     fontWeight: 600,
                     cursor: 'pointer',
@@ -1944,7 +1944,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
                     gap: '0.4rem',
                     background: 'none',
                     border: 'none',
-                    color: '#129DB9',
+                    color: '#FF9800',
                     fontSize: '0.88rem',
                     fontWeight: 600,
                     cursor: 'pointer',
@@ -2029,7 +2029,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
                     gap: '0.4rem',
                     background: 'none',
                     border: 'none',
-                    color: '#129DB9',
+                    color: '#FF9800',
                     fontSize: '0.88rem',
                     fontWeight: 600,
                     cursor: 'pointer',
@@ -2123,7 +2123,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
                       gap: '0.4rem',
                       background: 'none',
                       border: 'none',
-                      color: '#129DB9',
+                      color: '#FF9800',
                       fontSize: '0.88rem',
                       fontWeight: 600,
                       cursor: 'pointer',
@@ -2170,7 +2170,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
                       gap: '0.4rem',
                       background: 'none',
                       border: 'none',
-                      color: '#129DB9',
+                      color: '#FF9800',
                       fontSize: '0.88rem',
                       fontWeight: 600,
                       cursor: 'pointer',
@@ -2217,7 +2217,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
                       gap: '0.4rem',
                       background: 'none',
                       border: 'none',
-                      color: '#129DB9',
+                      color: '#FF9800',
                       fontSize: '0.88rem',
                       fontWeight: 600,
                       cursor: 'pointer',
@@ -2264,7 +2264,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
                       gap: '0.4rem',
                       background: 'none',
                       border: 'none',
-                      color: '#129DB9',
+                      color: '#FF9800',
                       fontSize: '0.88rem',
                       fontWeight: 600,
                       cursor: 'pointer',
@@ -2311,7 +2311,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
                       gap: '0.4rem',
                       background: 'none',
                       border: 'none',
-                      color: '#129DB9',
+                      color: '#FF9800',
                       fontSize: '0.88rem',
                       fontWeight: 600,
                       cursor: 'pointer',
@@ -2405,7 +2405,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
               <X size={18} />
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(18, 157, 185, 0.1)', color: '#129DB9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(255, 152, 0, 0.1)', color: '#FF9800', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Compass size={22} />
               </div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#172033', margin: 0 }}>
@@ -2437,7 +2437,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
               <X size={18} />
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(18, 157, 185, 0.1)', color: '#129DB9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(255, 152, 0, 0.1)', color: '#FF9800', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Settings size={22} />
               </div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#172033', margin: 0 }}>
@@ -2446,7 +2446,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
             </div>
             <div style={{ fontSize: '0.88rem', color: '#667085', marginBottom: '1.25rem' }}>
               <div>Authenticated Email: <strong style={{ color: '#172033' }}>{user?.email}</strong></div>
-              <div style={{ marginTop: '0.35rem' }}>Role: <strong style={{ color: '#129DB9' }}>{user?.role}</strong></div>
+              <div style={{ marginTop: '0.35rem' }}>Role: <strong style={{ color: '#FF9800' }}>{user?.role}</strong></div>
             </div>
             <button
               className="cmd-btn-primary"
@@ -2466,7 +2466,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
               <X size={18} />
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(18, 157, 185, 0.1)', color: '#129DB9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(255, 152, 0, 0.1)', color: '#FF9800', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Bell size={22} />
               </div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#172033', margin: 0 }}>

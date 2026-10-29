@@ -35,8 +35,8 @@
 
 .sbs-trigger-btn:focus,
 .sbs-trigger-btn.sbs-open {
-  border-color: #129DB9;
-  box-shadow: 0 0 0 3px rgba(18, 157, 185, 0.15);
+  border-color: #FF9800;
+  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.15);
 }
 
 .sbs-trigger-btn:disabled {
@@ -100,7 +100,7 @@
 
 .sbs-chevron-icon.sbs-rotated {
   transform: rotate(180deg);
-  color: #129DB9;
+  color: #FF9800;
 }
 
 /* Dropdown Menu */
@@ -160,8 +160,8 @@
 }
 
 .sbs-search-input:focus {
-  border-color: #129DB9;
-  box-shadow: 0 0 0 2px rgba(18, 157, 185, 0.12);
+  border-color: #FF9800;
+  box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.12);
 }
 
 .sbs-search-clear-btn {
@@ -194,7 +194,7 @@
 .sbs-custom-btn {
   background: none;
   border: none;
-  color: #129DB9;
+  color: #FF9800;
   font-size: 0.72rem;
   font-weight: 600;
   cursor: pointer;
@@ -218,7 +218,7 @@
 .sbs-custom-drawer-label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #084F5E;
+  color: #F57C00;
 }
 
 .sbs-custom-form {
@@ -237,11 +237,11 @@
 }
 
 .sbs-custom-input:focus {
-  border-color: #129DB9;
+  border-color: #FF9800;
 }
 
 .sbs-custom-apply-btn {
-  background-color: #129DB9;
+  background-color: #FF9800;
   color: #FFFFFF;
   border: none;
   border-radius: 6px;
@@ -310,7 +310,7 @@
 
 .sbs-option-item.sbs-selected {
   background-color: #EEF2FF;
-  color: #084F5E;
+  color: #F57C00;
   font-weight: 600;
 }
 
@@ -320,7 +320,7 @@
 }
 
 .sbs-check-icon {
-  color: #129DB9;
+  color: #FF9800;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -342,7 +342,7 @@
 .sbs-empty-action-btn {
   margin-top: 8px;
   background-color: #EEF2FF;
-  color: #084F5E;
+  color: #F57C00;
   border: 1px solid #C7D2FE;
   border-radius: 6px;
   padding: 5px 12px;

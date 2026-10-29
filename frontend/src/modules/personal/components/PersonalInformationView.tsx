@@ -341,13 +341,13 @@ export const PersonalInformationView: React.FC<PersonalInformationViewProps> = (
             width: '42px',
             height: '42px',
             border: '3px solid #E2E8F0',
-            borderTopColor: '#129DB9',
+            borderTopColor: '#FF9800',
             borderRadius: '50%',
             margin: '0 auto 1.25rem',
             animation: 'spin 0.7s linear infinite',
           }}
         />
-        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#102A43', margin: '0 0 0.35rem' }}>
+        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#172D53', margin: '0 0 0.35rem' }}>
           Loading Personal Information...
         </h3>
         <p style={{ fontSize: '0.86rem', color: '#64748B' }}>
@@ -372,7 +372,7 @@ export const PersonalInformationView: React.FC<PersonalInformationViewProps> = (
       {/* PAGE HEADER */}
       <div
         style={{
-          background: 'linear-gradient(135deg, #102A43 0%, #084F5E 100%)',
+          background: 'linear-gradient(135deg, #172D53 0%, #F57C00 100%)',
           borderRadius: '18px',
           padding: '2.25rem 2rem',
           color: '#FFFFFF',
@@ -393,7 +393,7 @@ export const PersonalInformationView: React.FC<PersonalInformationViewProps> = (
             width: '240px',
             height: '240px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(64, 199, 229, 0.25) 0%, rgba(64, 199, 229, 0) 70%)',
+            background: 'radial-gradient(circle, rgba(255, 152, 0, 0.25) 0%, rgba(255, 152, 0, 0) 70%)',
             pointerEvents: 'none',
           }}
         />
@@ -405,11 +405,11 @@ export const PersonalInformationView: React.FC<PersonalInformationViewProps> = (
                 width: '46px',
                 height: '46px',
                 borderRadius: '12px',
-                background: 'linear-gradient(135deg, #129DB9 0%, #40C7E5 100%)',
+                background: 'linear-gradient(135deg, #FF9800 0%, #FF9800 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 4px 12px rgba(18, 157, 185, 0.35)',
+                boxShadow: '0 4px 12px rgba(255, 152, 0, 0.35)',
               }}
             >
               <IdCard size={24} color="#FFFFFF" />

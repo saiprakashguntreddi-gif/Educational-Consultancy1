@@ -2,39 +2,39 @@
    SUPERCONSCIOUSNESS — STUDENT COMMAND CENTER DESIGN SYSTEM
    Theme: Premium Educational Technology & Career Guidance Platform
    Palette:
-     1. Deep Navy:    #102A43 (Headings, sidebar, footer, structural accents)
-     2. Teal Blue:     #129DB9 (Primary brand accent, buttons, active tabs/nav)
-     3. Bright Cyan:   #40C7E5 (Progress indicators, icons, interactive highlights)
-     4. Dark Teal:     #084F5E (Secondary buttons, hover states, cards)
+     1. Deep Navy:    #172D53 (Headings, sidebar, footer, structural accents)
+     2. Teal Blue:     #FF9800 (Primary brand accent, buttons, active tabs/nav)
+     3. Bright Cyan:   #FF9800 (Progress indicators, icons, interactive highlights)
+     4. Dark Teal:     #F57C00 (Secondary buttons, hover states, cards)
      5. Premium Gold:  #FFB547 (Achievements, badges, verified highlights)
      6. Soft White:    #F5F8FC (Page background, clean visual separation)
    ========================================================================== */
 
 :root {
-  --cmd-navy-primary: #102A43;
-  --cmd-navy-secondary: #084F5E;
-  --cmd-navy-elevated: #133854;
-  --cmd-navy-hover: #1D3D5D;
-  --cmd-bg: #FAF7F2;
-  --cmd-card: #FFFDFB;
-  --cmd-card-hover: #F4EFEA;
-  --cmd-accent: #129DB9;
-  --cmd-accent-hover: #084F5E;
-  --cmd-accent-subtle: rgba(18, 157, 185, 0.08);
-  --cmd-accent-glow: rgba(18, 157, 185, 0.16);
-  --cmd-cyan: #40C7E5;
-  --cmd-gold: #FFB547;
-  --cmd-text-main: #102A43;
-  --cmd-text-muted: #486581;
-  --cmd-text-light: #627D98;
-  --cmd-border: #E8E2D8;
-  --cmd-border-subtle: #F0ECE4;
-  --cmd-success: #084F5E;
-  --cmd-success-subtle: #E6F7FA;
-  --cmd-success-text: #084F5E;
-  --cmd-warning: #B7791F;
-  --cmd-warning-subtle: rgba(255, 181, 71, 0.14);
-  --cmd-error: #DC2626;
+  --cmd-navy-primary: #172D53;
+  --cmd-navy-secondary: #0B1830;
+  --cmd-navy-elevated: #1e3a6a;
+  --cmd-navy-hover: #23447c;
+  --cmd-bg: #F5F5F5;
+  --cmd-card: #FFFFFF;
+  --cmd-card-hover: #F9FAFB;
+  --cmd-accent: #FF9800;
+  --cmd-accent-hover: #F57C00;
+  --cmd-accent-subtle: rgba(255, 152, 0, 0.08);
+  --cmd-accent-glow: rgba(255, 152, 0, 0.16);
+  --cmd-cyan: #FF9800;
+  --cmd-gold: #FF9800;
+  --cmd-text-main: #202124;
+  --cmd-text-muted: #626B78;
+  --cmd-text-light: #80868B;
+  --cmd-border: #E5E7EB;
+  --cmd-border-subtle: #F3F4F6;
+  --cmd-success: #198754;
+  --cmd-success-subtle: #E8F5E9;
+  --cmd-success-text: #198754;
+  --cmd-warning: #FF9800;
+  --cmd-warning-subtle: rgba(255, 152, 0, 0.14);
+  --cmd-error: #B51F2A;
   --cmd-error-subtle: #FEE2E2;
   --cmd-sidebar-width: 280px;
   --cmd-header-height: 68px;
@@ -72,7 +72,7 @@
 }
 
 /* ==========================================================================
-   SIDEBAR (DARK NAVY #081426)
+   SIDEBAR (DARK NAVY #0B1830)
    ========================================================================== */
 
 .cmd-sidebar {
@@ -152,7 +152,7 @@
   color: #FFFFFF;
   font-size: 0.95rem;
   flex-shrink: 0;
-  box-shadow: 0 2px 10px rgba(14, 165, 233, 0.4);
+  box-shadow: 0 2px 10px rgba(255, 152, 0, 0.4);
 }
 
 .cmd-brand-subtitle {
@@ -208,7 +208,7 @@
 }
 
 .cmd-nav-item.active {
-  background: rgba(18, 157, 185, 0.15);
+  background: rgba(255, 152, 0, 0.15);
   color: #FFFFFF;
   font-weight: 600;
 }
@@ -222,8 +222,8 @@
   height: 70%;
   width: 3.5px;
   border-radius: 0 3px 3px 0;
-  background-color: #40C7E5;
-  box-shadow: 0 0 10px rgba(64, 199, 229, 0.8);
+  background-color: #FF9800;
+  box-shadow: 0 0 10px rgba(255, 152, 0, 0.8);
 }
 
 .cmd-nav-item-icon {
@@ -241,7 +241,7 @@
 }
 
 .cmd-nav-item.active .cmd-nav-item-icon {
-  color: #40C7E5;
+  color: #FF9800;
 }
 
 .cmd-nav-item-badge {
@@ -424,7 +424,7 @@
   right: 7px;
   width: 7px;
   height: 7px;
-  background-color: #129DB9;
+  background-color: #FF9800;
   border-radius: 50%;
 }
 
@@ -450,7 +450,7 @@
   width: 28px;
   height: 28px;
   border-radius: 6px;
-  background: linear-gradient(135deg, #129DB9 0%, #084F5E 100%);
+  background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
   color: #FFFFFF;
   display: flex;
   align-items: center;
@@ -468,7 +468,7 @@
 .cmd-user-name {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #102A43;
+  color: #172D53;
   max-width: 140px;
   white-space: nowrap;
   overflow: hidden;
@@ -478,7 +478,7 @@
 
 .cmd-user-role-badge {
   font-size: 0.62rem;
-  color: #129DB9;
+  color: #FF9800;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -695,7 +695,7 @@
   transition: all 0.16s ease;
   text-decoration: none;
   align-self: flex-start;
-  box-shadow: 0 2px 6px rgba(18, 157, 185, 0.25);
+  box-shadow: 0 2px 6px rgba(255, 152, 0, 0.25);
 }
 
 .cmd-btn-primary:hover {
@@ -707,10 +707,10 @@
 /* Next Best Action Card (Standout subtle card) */
 .cmd-next-step-card {
   background: linear-gradient(145deg, #FFFFFF 0%, #F5FBFD 100%);
-  border: 1px solid rgba(18, 157, 185, 0.22);
+  border: 1px solid rgba(255, 152, 0, 0.22);
   border-radius: var(--cmd-radius-lg);
   padding: 1.6rem 1.75rem;
-  box-shadow: 0 2px 10px rgba(18, 157, 185, 0.05);
+  box-shadow: 0 2px 10px rgba(255, 152, 0, 0.05);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -834,7 +834,7 @@
   background-color: #FFFFFF;
   border-color: var(--cmd-accent);
   color: var(--cmd-accent);
-  box-shadow: 0 0 0 4px rgba(18, 157, 185, 0.2);
+  box-shadow: 0 0 0 4px rgba(255, 152, 0, 0.2);
 }
 
 .cmd-journey-step.upcoming .cmd-step-node {
@@ -940,7 +940,7 @@
 
 .cmd-quick-card:hover .cmd-quick-icon-box {
   background: var(--cmd-accent-subtle);
-  border-color: rgba(18, 157, 185, 0.25);
+  border-color: rgba(255, 152, 0, 0.25);
 }
 
 .cmd-quick-text {
@@ -1103,7 +1103,7 @@
   width: 320px;
   height: 320px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(64, 199, 229, 0.25) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 152, 0, 0.25) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -1203,7 +1203,7 @@
 
 .dash-edit-pencil-btn:hover {
   background: var(--cmd-accent-subtle);
-  border-color: rgba(18, 157, 185, 0.35);
+  border-color: rgba(255, 152, 0, 0.35);
   transform: scale(1.05);
 }
 
@@ -1281,7 +1281,7 @@
 .dash-input:focus,
 .dash-select:focus {
   border-color: var(--cmd-accent);
-  box-shadow: 0 0 0 3px rgba(18, 157, 185, 0.15);
+  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.15);
 }
 
 .dash-btn-cancel {
@@ -1312,7 +1312,7 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.15s ease;
-  box-shadow: 0 2px 6px rgba(18, 157, 185, 0.25);
+  box-shadow: 0 2px 6px rgba(255, 152, 0, 0.25);
 }
 
 .dash-btn-save:hover {

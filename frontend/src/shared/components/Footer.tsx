@@ -76,22 +76,22 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         >
           <defs>
             <linearGradient id="waveGradLeft" x1="0%" y1="100%" x2="50%" y2="0%">
-              <stop offset="0%" stopColor="#00e5ff" stopOpacity="0.48" />
-              <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="#102438" stopOpacity="0" />
+              <stop offset="0%" stopColor="#FF9800" stopOpacity="0.48" />
+              <stop offset="60%" stopColor="#F57C00" stopOpacity="0.25" />
+              <stop offset="100%" stopColor="#0B1830" stopOpacity="0" />
             </linearGradient>
             <linearGradient id="waveGradLeftInner" x1="0%" y1="100%" x2="40%" y2="20%">
-              <stop offset="0%" stopColor="#00e5ff" stopOpacity="0.32" />
-              <stop offset="100%" stopColor="#102438" stopOpacity="0" />
+              <stop offset="0%" stopColor="#FF9800" stopOpacity="0.32" />
+              <stop offset="100%" stopColor="#0B1830" stopOpacity="0" />
             </linearGradient>
             <linearGradient id="waveGradRight" x1="100%" y1="100%" x2="55%" y2="0%">
-              <stop offset="0%" stopColor="#00e5ff" stopOpacity="0.48" />
-              <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.22" />
-              <stop offset="100%" stopColor="#102438" stopOpacity="0" />
+              <stop offset="0%" stopColor="#FF9800" stopOpacity="0.48" />
+              <stop offset="60%" stopColor="#F57C00" stopOpacity="0.22" />
+              <stop offset="100%" stopColor="#0B1830" stopOpacity="0" />
             </linearGradient>
             <linearGradient id="waveGradRightInner" x1="100%" y1="75%" x2="70%" y2="10%">
-              <stop offset="0%" stopColor="#00e5ff" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#102438" stopOpacity="0" />
+              <stop offset="0%" stopColor="#FF9800" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#0B1830" stopOpacity="0" />
             </linearGradient>
           </defs>
 
@@ -116,7 +116,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           />
 
           {/* Top-Left 6x6 Cyan Dot Grid */}
-          <g fill="#00e5ff" opacity="0.36">
+          <g fill="#FF9800" opacity="0.36">
             {[0, 1, 2, 3, 4, 5].map((r) =>
               [0, 1, 2, 3, 4, 5].map((c) => (
                 <circle key={`tl-${r}-${c}`} cx={28 + c * 10} cy={28 + r * 10} r="1.5" />
@@ -125,7 +125,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           </g>
 
           {/* Bottom-Right 6x6 Cyan Dot Grid */}
-          <g fill="#00e5ff" opacity="0.36">
+          <g fill="#FF9800" opacity="0.36">
             {[0, 1, 2, 3, 4, 5].map((r) =>
               [0, 1, 2, 3, 4, 5].map((c) => (
                 <circle key={`br-${r}-${c}`} cx={1370 + c * 10} cy={200 + r * 10} r="1.5" />
@@ -141,28 +141,34 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <div className="footer-brand-badge" onClick={() => scrollTo('home')} style={{ cursor: 'pointer' }}>
                 <div
                   style={{
-                    width: '28px',
-                    height: '28px',
-                    borderRadius: '7px',
-                    background: 'var(--color-brand-dark)',
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '8px',
+                    background: '#172D53',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: '#ffffff',
                     flexShrink: 0,
+                    overflow: 'hidden',
+                    padding: '2px',
                   }}
                 >
-                  <Compass size={17} />
+                  <img
+                    src="/assets/global-logo-full.png"
+                    alt="Global Consciousness Logo"
+                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  />
                 </div>
                 <span
                   style={{
                     fontSize: '1rem',
                     fontWeight: 800,
-                    color: 'var(--color-ink)',
+                    color: '#172D53',
                     letterSpacing: '-0.02em',
                   }}
                 >
-                  SUPER<span style={{ color: 'var(--color-brand-dark)' }}>CONSCIOUSNESS</span>
+                  GLOBAL<span style={{ color: '#FF9800' }}>CONSCIOUSNESS</span>
                 </span>
               </div>
 
@@ -171,7 +177,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               </p>
 
               <div className="footer-verified-badge">
-                <ShieldCheck size={14} color="#00e5ff" />
+                <ShieldCheck size={14} color="#FF9800" />
                 <span>Verified Student Guidance System</span>
               </div>
             </div>
@@ -258,10 +264,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     <Mail size={14} />
                   </div>
                   <a
-                    href="mailto:guidance@superconsciousness.edu"
+                    href="mailto:guidance@globalconsciousness.edu"
                     style={{ color: '#ffffff', textDecoration: 'none', fontSize: '13px', fontWeight: 500 }}
                   >
-                    guidance@superconsciousness.edu
+                    guidance@globalconsciousness.edu
                   </a>
                 </li>
                 <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -335,9 +341,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <div className="legal-modal-header">
               <div className="legal-modal-title-row">
                 <div className="legal-modal-icon-badge">
-                  {activeLegalModal === 'privacy' && <Lock size={20} color="#0071e3" />}
-                  {activeLegalModal === 'terms' && <FileText size={20} color="#0071e3" />}
-                  {activeLegalModal === 'protection' && <ShieldCheck size={20} color="#10b981" />}
+                  {activeLegalModal === 'privacy' && <Lock size={20} color="#FF9800" />}
+                  {activeLegalModal === 'terms' && <FileText size={20} color="#FF9800" />}
+                  {activeLegalModal === 'protection' && <ShieldCheck size={20} color="#198754" />}
                 </div>
                 <div>
                   <h3 className="legal-modal-title">
@@ -346,7 +352,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     {activeLegalModal === 'protection' && 'Student Data Protection & Compliance Standards'}
                   </h3>
                   <span className="legal-modal-subtitle">
-                    Superconsciousness Educational Guidance System • Effective Academic Year 2026
+                    Global Consciousness Educational Guidance System • Effective Academic Year 2026
                   </span>
                 </div>
               </div>
@@ -392,7 +398,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   <div className="legal-section-block">
                     <h4>1. Scope of Data Collection</h4>
                     <p>
-                      Superconsciousness collects student academic transcripts, test performance records, competency assessment inputs, and target institution preferences strictly to formulate verified education roadmaps and facilitate counsellor advisory.
+                      Global Consciousness collects student academic transcripts, test performance records, competency assessment inputs, and target institution preferences strictly to formulate verified education roadmaps and facilitate counsellor advisory.
                     </p>
                   </div>
 
@@ -424,7 +430,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   <div className="legal-section-block">
                     <h4>1. Advisory Nature of Guidance</h4>
                     <p>
-                      Superconsciousness provides structured diagnostic assessments, pathway recommendations, and counsellor mentorship. Final admissions, exam scores, and visa decisions remain subject to independent university boards and consular authorities.
+                      Global Consciousness provides structured diagnostic assessments, pathway recommendations, and counsellor mentorship. Final admissions, exam scores, and visa decisions remain subject to independent university boards and consular authorities.
                     </p>
                   </div>
 
@@ -445,7 +451,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   <div className="legal-section-block">
                     <h4>4. Intellectual Property</h4>
                     <p>
-                      All diagnostic competency frameworks, 8-pathway career assessment methodologies, and proprietary scoring algorithms are the exclusive intellectual property of Superconsciousness.
+                      All diagnostic competency frameworks, 8-pathway career assessment methodologies, and proprietary scoring algorithms are the exclusive intellectual property of Global Consciousness.
                     </p>
                   </div>
                 </div>
@@ -487,7 +493,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             {/* Modal Footer */}
             <div className="legal-modal-footer">
               <div className="legal-modal-status-badge">
-                <CheckCircle2 size={16} color="#10b981" />
+                <CheckCircle2 size={16} color="#198754" />
                 <span>Legally Binding Educational Service Agreement</span>
               </div>
               <button

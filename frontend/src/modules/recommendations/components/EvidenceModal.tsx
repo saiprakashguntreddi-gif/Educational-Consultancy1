@@ -186,7 +186,7 @@ export const EvidenceModal: React.FC<EvidenceModalProps> = ({
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '0.75rem' }}>
               <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '0.75rem 1rem', borderRadius: '10px' }}>
                 <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>Your Aggregate Score</div>
-                <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38BDF8', marginTop: '0.2rem' }}>
+                <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#FF9800', marginTop: '0.2rem' }}>
                   {academicComparison.studentPercentage}%
                 </div>
                 <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.1rem' }}>
