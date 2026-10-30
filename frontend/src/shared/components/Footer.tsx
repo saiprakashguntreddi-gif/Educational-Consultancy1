@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Compass,
-  Home,
-  Layers,
-  Users,
-  Settings,
-  Phone,
-  UserCheck,
-  UserPlus,
-  Mail,
-  Clock,
   ShieldCheck,
   X,
   FileText,
@@ -65,255 +55,169 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
   return (
     <>
-      <footer className="premium-footer" id="site-footer">
-        {/* Ambient background waves & glowing dot matrices */}
-        <svg
-          className="footer-ambient-graphic"
-          viewBox="0 0 1440 280"
-          preserveAspectRatio="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <defs>
-            <linearGradient id="waveGradLeft" x1="0%" y1="100%" x2="50%" y2="0%">
-              <stop offset="0%" stopColor="#FF9800" stopOpacity="0.48" />
-              <stop offset="60%" stopColor="#F57C00" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="#0B1830" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="waveGradLeftInner" x1="0%" y1="100%" x2="40%" y2="20%">
-              <stop offset="0%" stopColor="#FF9800" stopOpacity="0.32" />
-              <stop offset="100%" stopColor="#0B1830" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="waveGradRight" x1="100%" y1="100%" x2="55%" y2="0%">
-              <stop offset="0%" stopColor="#FF9800" stopOpacity="0.48" />
-              <stop offset="60%" stopColor="#F57C00" stopOpacity="0.22" />
-              <stop offset="100%" stopColor="#0B1830" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="waveGradRightInner" x1="100%" y1="75%" x2="70%" y2="10%">
-              <stop offset="0%" stopColor="#FF9800" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#0B1830" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-
-          {/* Left organic flowing wave curves */}
-          <path
-            d="M-40,280 C60,190 150,140 240,180 C330,220 380,265 470,280 L-40,280 Z"
-            fill="url(#waveGradLeft)"
-          />
-          <path
-            d="M-20,280 C50,225 110,185 180,215 C240,245 280,270 340,280 L-20,280 Z"
-            fill="url(#waveGradLeftInner)"
-          />
-
-          {/* Right organic flowing wave curves */}
-          <path
-            d="M1480,280 C1380,165 1270,125 1160,175 C1060,220 1000,265 920,280 L1480,280 Z"
-            fill="url(#waveGradRight)"
-          />
-          <path
-            d="M1480,280 C1390,195 1310,165 1220,210 C1160,240 1120,268 1040,280 L1480,280 Z"
-            fill="url(#waveGradRightInner)"
-          />
-
-          {/* Top-Left 6x6 Cyan Dot Grid */}
-          <g fill="#FF9800" opacity="0.36">
-            {[0, 1, 2, 3, 4, 5].map((r) =>
-              [0, 1, 2, 3, 4, 5].map((c) => (
-                <circle key={`tl-${r}-${c}`} cx={28 + c * 10} cy={28 + r * 10} r="1.5" />
-              ))
-            )}
-          </g>
-
-          {/* Bottom-Right 6x6 Cyan Dot Grid */}
-          <g fill="#FF9800" opacity="0.36">
-            {[0, 1, 2, 3, 4, 5].map((r) =>
-              [0, 1, 2, 3, 4, 5].map((c) => (
-                <circle key={`br-${r}-${c}`} cx={1370 + c * 10} cy={200 + r * 10} r="1.5" />
-              ))
-            )}
-          </g>
-        </svg>
-
-        <div className="landing-container" style={{ position: 'relative', zIndex: 2 }}>
-          <div className="footer-inner-grid">
+      <footer className="clean-footer" id="site-footer">
+        <div className="landing-container">
+          <div className="clean-footer-grid">
             {/* 1. Brand Column */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div className="footer-brand-badge" onClick={() => scrollTo('home')} style={{ cursor: 'pointer' }}>
-                <div
-                  style={{
-                    width: '42px',
-                    height: '42px',
-                    borderRadius: '10px',
-                    background: '#ffffff',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#ffffff',
-                    flexShrink: 0,
-                    overflow: 'hidden',
-                    padding: '2px',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-                  }}
-                >
-                  <img
-                    src="/assets/global-logo-full.png"
-                    alt="Global Consultancy Logo"
-                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                  />
+            <div className="clean-footer-col clean-footer-brand-col">
+              <div
+                className="clean-footer-logo-row"
+                onClick={() => scrollTo('home')}
+                role="button"
+                tabIndex={0}
+              >
+                <div className="clean-footer-logo-badge">
+                  <span>G</span>
                 </div>
-                <span
-                  style={{
-                    fontSize: '1rem',
-                    fontWeight: 800,
-                    color: '#172D53',
-                    letterSpacing: '-0.02em',
-                  }}
-                >
-                  GLOBAL <span style={{ color: '#FF9800' }}>CONSULTANCY</span>
+                <span className="clean-footer-brand-name">
+                  Global<span className="brand-orange">Consciousness</span>
                 </span>
               </div>
 
-              <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.76)', lineHeight: 1.55, maxWidth: '340px', margin: 0 }}>
-                Integrated Educational Consultancy and Student Guidance Platform.
+              <p className="clean-footer-desc">
+                Integrated educational consultancy and student guidance platform.
               </p>
 
-              <div className="footer-verified-badge">
-                <ShieldCheck size={14} color="#FF9800" />
+              <div className="clean-footer-verified">
+                <ShieldCheck size={16} className="clean-footer-shield" />
                 <span>Verified Student Guidance System</span>
               </div>
             </div>
 
             {/* 2. Platform Column */}
-            <div>
-              <div className="footer-header-group">
-                <h4 className="footer-col-header">Platform</h4>
-                <div className="footer-header-accent-bar" />
-              </div>
-              <ul className="footer-links-vertical">
+            <div className="clean-footer-col">
+              <h4 className="clean-footer-title">Platform</h4>
+              <ul className="clean-footer-list">
                 <li>
-                  <div className="footer-link-row" onClick={() => scrollTo('home')} id="footer-home-link">
-                    <Home size={15} className="footer-link-cyan-icon" />
-                    <span>Home</span>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => scrollTo('home')}
+                    className="clean-footer-link"
+                    id="footer-home-link"
+                  >
+                    Home
+                  </button>
                 </li>
                 <li>
-                  <div className="footer-link-row" onClick={() => scrollTo('services')} id="footer-services-link">
-                    <Layers size={15} className="footer-link-cyan-icon" />
-                    <span>Services</span>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => scrollTo('services')}
+                    className="clean-footer-link"
+                    id="footer-services-link"
+                  >
+                    Services
+                  </button>
                 </li>
                 <li>
-                  <div className="footer-link-row" onClick={() => scrollTo('about')} id="footer-about-link">
-                    <Users size={15} className="footer-link-cyan-icon" />
-                    <span>About</span>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => scrollTo('about')}
+                    className="clean-footer-link"
+                    id="footer-about-link"
+                  >
+                    About
+                  </button>
                 </li>
                 <li>
-                  <div className="footer-link-row" onClick={() => scrollTo('how-it-works')} id="footer-how-it-works-link">
-                    <Settings size={15} className="footer-link-cyan-icon" />
-                    <span>How It Works</span>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => scrollTo('how-it-works')}
+                    className="clean-footer-link"
+                    id="footer-how-it-works-link"
+                  >
+                    How It Works
+                  </button>
                 </li>
                 <li>
-                  <div className="footer-link-row" onClick={() => scrollTo('contact')} id="footer-contact-link">
-                    <Phone size={15} className="footer-link-cyan-icon" />
-                    <span>Contact</span>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => scrollTo('contact')}
+                    className="clean-footer-link"
+                    id="footer-contact-link"
+                  >
+                    Contact
+                  </button>
                 </li>
               </ul>
             </div>
 
             {/* 3. Account Column */}
-            <div>
-              <div className="footer-header-group">
-                <h4 className="footer-col-header">Account</h4>
-                <div className="footer-header-accent-bar" />
-              </div>
-              <ul className="footer-links-vertical">
+            <div className="clean-footer-col">
+              <h4 className="clean-footer-title">Account</h4>
+              <ul className="clean-footer-list">
                 <li>
-                  <div
-                    className="footer-link-row"
+                  <button
+                    type="button"
+                    className="clean-footer-link"
                     onClick={() => handleAccountClick('login')}
                     id="footer-login-link"
                   >
-                    <UserCheck size={15} className="footer-link-cyan-icon" />
-                    <span>Login</span>
-                  </div>
+                    Login
+                  </button>
                 </li>
                 <li>
-                  <div
-                    className="footer-link-row"
+                  <button
+                    type="button"
+                    className="clean-footer-link"
                     onClick={() => handleAccountClick('register')}
                     id="footer-register-link"
                   >
-                    <UserPlus size={15} className="footer-link-cyan-icon" />
-                    <span>Register</span>
-                  </div>
+                    Register
+                  </button>
                 </li>
               </ul>
             </div>
 
-            {/* 4. Contact & Advisory Column */}
-            <div id="contact">
-              <div className="footer-header-group">
-                <h4 className="footer-col-header">Contact & Advisory</h4>
-                <div className="footer-header-accent-bar" />
+            {/* 4. Contact Column */}
+            <div className="clean-footer-col clean-footer-contact-col" id="contact">
+              <h4 className="clean-footer-title">Contact</h4>
+
+              <div className="clean-footer-contact-group">
+                <span className="clean-footer-contact-label">Email</span>
+                <a
+                  href="mailto:guidance@globalconsciousness.edu"
+                  className="clean-footer-contact-val"
+                >
+                  guidance@globalconsciousness.edu
+                </a>
               </div>
-              <ul className="footer-links-vertical" style={{ gap: '10px' }}>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div className="footer-contact-bubble">
-                    <Mail size={14} />
-                  </div>
-                  <a
-                    href="mailto:guidance@globalconsciousness.edu"
-                    style={{ color: '#ffffff', textDecoration: 'none', fontSize: '13px', fontWeight: 500 }}
-                  >
-                    guidance@globalconsciousness.edu
-                  </a>
-                </li>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div className="footer-contact-bubble">
-                    <Clock size={14} />
-                  </div>
-                  <span style={{ color: 'rgba(255, 255, 255, 0.82)', fontSize: '12.5px', fontWeight: 500 }}>
-                    Advisory Hours: Mon – Fri, 9:00 AM – 6:00 PM
-                  </span>
-                </li>
-                <li style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.58)', lineHeight: 1.5, marginTop: '2px', maxWidth: '320px' }}>
-                  Structured student intakes and profiles are reviewed directly through the verified counsellor advisory portal.
-                </li>
-              </ul>
+
+              <div className="clean-footer-contact-group">
+                <span className="clean-footer-contact-label">Advisory hours</span>
+                <span className="clean-footer-contact-val">Mon – Fri, 9:00 AM – 6:00 PM</span>
+              </div>
+
+              <p className="clean-footer-contact-note">
+                Student profiles are reviewed through our verified counsellor portal.
+              </p>
             </div>
           </div>
 
-          {/* Footer Bottom Bar */}
-          <div className="footer-legal-bar">
-            <div>
-              &copy; 2026 Global Consultancy. All rights reserved.
+          {/* Bottom Legal Bar */}
+          <div className="clean-footer-bottom-bar">
+            <div className="clean-footer-copyright">
+              &copy; 2026 Global Consciousness. All rights reserved.
             </div>
-            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center', color: 'rgba(255, 255, 255, 0.75)', fontSize: '12.5px' }}>
-              <span style={{ color: 'rgba(255, 255, 255, 0.35)' }}>|</span>
+            <div className="clean-footer-legal-links">
               <button
                 type="button"
-                className="footer-legal-link"
+                className="clean-footer-legal-btn"
                 onClick={() => setActiveLegalModal('privacy')}
                 id="footer-privacy-btn"
               >
                 Privacy Policy
               </button>
-              <span style={{ color: 'rgba(255, 255, 255, 0.35)' }}>|</span>
               <button
                 type="button"
-                className="footer-legal-link"
+                className="clean-footer-legal-btn"
                 onClick={() => setActiveLegalModal('terms')}
                 id="footer-terms-btn"
               >
                 Terms of Service
               </button>
-              <span style={{ color: 'rgba(255, 255, 255, 0.35)' }}>|</span>
               <button
                 type="button"
-                className="footer-legal-link"
+                className="clean-footer-legal-btn"
                 onClick={() => setActiveLegalModal('protection')}
                 id="footer-protection-btn"
               >
@@ -353,7 +257,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     {activeLegalModal === 'protection' && 'Student Data Protection & Compliance Standards'}
                   </h3>
                   <span className="legal-modal-subtitle">
-                    Global Consultancy Educational Guidance System • Effective Academic Year 2026
+                    Global Consciousness Educational Guidance System • Effective Academic Year 2026
                   </span>
                 </div>
               </div>
@@ -399,7 +303,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   <div className="legal-section-block">
                     <h4>1. Scope of Data Collection</h4>
                     <p>
-                      Global Consultancy collects student academic transcripts, test performance records, competency assessment inputs, and target institution preferences strictly to formulate verified education roadmaps and facilitate counsellor advisory.
+                      Global Consciousness collects student academic transcripts, test performance records, competency assessment inputs, and target institution preferences strictly to formulate verified education roadmaps and facilitate counsellor advisory.
                     </p>
                   </div>
 
@@ -431,7 +335,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   <div className="legal-section-block">
                     <h4>1. Advisory Nature of Guidance</h4>
                     <p>
-                      Global Consultancy provides structured diagnostic assessments, pathway recommendations, and counsellor mentorship. Final admissions, exam scores, and visa decisions remain subject to independent university boards and consular authorities.
+                      Global Consciousness provides structured diagnostic assessments, pathway recommendations, and counsellor mentorship. Final admissions, exam scores, and visa decisions remain subject to independent university boards and consular authorities.
                     </p>
                   </div>
 
@@ -452,7 +356,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   <div className="legal-section-block">
                     <h4>4. Intellectual Property</h4>
                     <p>
-                      All diagnostic competency frameworks, 8-pathway career assessment methodologies, and proprietary scoring algorithms are the exclusive intellectual property of Global Consultancy.
+                      All diagnostic competency frameworks, 8-pathway career assessment methodologies, and proprietary scoring algorithms are the exclusive intellectual property of Global Consciousness.
                     </p>
                   </div>
                 </div>

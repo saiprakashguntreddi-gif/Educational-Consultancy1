@@ -142,7 +142,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </h1>
 
             <p className="t-body text-ink-dim">
-              Global Consultancy bridges the gap between student aspirations and top educational institutions worldwide. Explore premier university pathways, assess academic competencies, and secure verified admissions with structured mentor guidance.
+              Global Consciousness bridges the gap between student aspirations and top educational institutions worldwide. Explore premier university pathways, assess academic competencies, and secure verified admissions with structured mentor guidance.
             </p>
 
             <div className="hero-actions">
@@ -311,94 +311,102 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </section>
 
       {/* =====================================================================
-          4. ABOUT SECTION (Two-Column with Checkmark List)
+          4. ABOUT SECTION (Exact Image 2 Specification with Transparent 4K Image)
           ===================================================================== */}
-      <section className="eunistud-section" id="about">
+      <section className="about-modern-section" id="about">
         <div className="landing-container">
-          <div className="eunistud-about-grid">
-            {/* Left: Full-Height London Campus Image with Credibility Badges */}
-            <div className="eunistud-about-image-wrap">
-              <img
-                src="/assets/about-london-students.jpg"
-                alt="International university students walking near Westminster London with Big Ben"
-                className="eunistud-about-img"
-              />
-              <div className="eunistud-about-top-badge">
-                <span className="eunistud-about-pulse-dot" />
-                <span>Global Campus Network</span>
+          <div className="about-layout-grid">
+            {/* Left: Eyebrow, Bold Headline, and Transparent 4K Students Visual Showcase */}
+            <div className="about-showcase-left">
+              <div className="about-eyebrow-row">
+                <span className="about-eyebrow-dash" />
+                <span className="about-eyebrow-text">ABOUT GLOBAL CONSCIOUSNESS</span>
               </div>
-              <div className="eunistud-about-floating-card">
-                <div className="eunistud-about-floating-icon">
-                  <ShieldCheck size={20} />
+
+              <h2 className="about-main-headline">
+                Education decisions should be{' '}
+                <span className="text-highlight-orange">informed,</span> not overwhelming.
+              </h2>
+
+              <div className="about-visual-container">
+                {/* Floating Top Pill */}
+                <div className="about-float-pill">
+                  <span className="about-pill-dot" />
+                  <span>Global Campus Network</span>
                 </div>
-                <div>
-                  <div className="eunistud-about-floating-title">100% Verified Pathways</div>
-                  <div className="eunistud-about-floating-subtitle">Calibrated admissions & exam advisory</div>
+
+                {/* 4K Transparent Students Image Cutout */}
+                <img
+                  src="/assets/about-students-transparent.png"
+                  alt="Global Consciousness university students"
+                  className="about-students-img"
+                />
+
+                {/* Floating Dark Card at Bottom */}
+                <div className="about-float-card">
+                  <div className="about-card-icon-orange">
+                    <ShieldCheck size={20} />
+                  </div>
+                  <div className="about-card-text">
+                    <div className="about-card-title">100% Verified Pathways</div>
+                    <div className="about-card-sub">Calibrated admissions &amp; exam advisory</div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Right: Perfectly Aligned Content & Value Proposition */}
-            <div className="eunistud-about-content">
-              <div className="eunistud-eyebrow-row">
-                <span className="eunistud-eyebrow-line" />
-                <h4 className="t-eyebrow text-brand-dark">About Global Consultancy</h4>
-              </div>
-
-              <h2 className="eunistud-about-heading">
-                Education decisions should be informed, not overwhelming.
-              </h2>
-              <p className="eunistud-about-lead">
-                Every student has unique strengths, academic backgrounds, and aspirations.
-                Global Consultancy replaces fragmented advice and hearsay with a structured, verified student guidance framework.
+            {/* Right: Narrative Lead, Underlined Action Link, and Numbered Steps (01, 02, 03) */}
+            <div className="about-details-right">
+              <p className="about-intro-paragraph">
+                Every student has unique strengths, backgrounds and aspirations. We replace fragmented advice and hearsay with a structured, verified guidance framework, so every choice is made with clarity.
               </p>
 
-              <div className="eunistud-checklist">
-                <div className="eunistud-checklist-item">
-                  <div className="eunistud-check-bubble">
-                    <Check size={15} strokeWidth={2.8} />
-                  </div>
-                  <div className="eunistud-check-body">
-                    <h4 className="eunistud-check-title">Understand your individual strengths</h4>
-                    <p className="eunistud-check-desc">
-                      Clarify academic competencies, curriculum board strengths (CBSE, ICSE, IB, Cambridge, State), and career inclinations.
+              <div className="about-action-link-wrap">
+                <button
+                  type="button"
+                  onClick={() => handleExplore('dashboard')}
+                  className="about-link-with-underline"
+                  id="about-discover-link"
+                >
+                  <span>Discover our advisory process</span>
+                  <ArrowRight size={16} className="about-link-arrow" />
+                </button>
+              </div>
+
+              <div className="about-numbered-list">
+                {/* Step 01 */}
+                <div className="about-num-item">
+                  <span className="about-num-index">01</span>
+                  <div className="about-num-content">
+                    <h3 className="about-num-title">Understand your strengths</h3>
+                    <p className="about-num-desc">
+                      Clarify academic competencies, curriculum board strengths (CBSE, ICSE, IB, Cambridge, State) and career inclinations.
                     </p>
                   </div>
                 </div>
 
-                <div className="eunistud-checklist-item">
-                  <div className="eunistud-check-bubble">
-                    <Check size={15} strokeWidth={2.8} />
-                  </div>
-                  <div className="eunistud-check-body">
-                    <h4 className="eunistud-check-title">Explore calibrated pathways</h4>
-                    <p className="eunistud-check-desc">
-                      Discover premier colleges, degree programs, and calibrated study pathways to your verified student profile.
+                {/* Step 02 */}
+                <div className="about-num-item">
+                  <span className="about-num-index">02</span>
+                  <div className="about-num-content">
+                    <h3 className="about-num-title">Explore calibrated pathways</h3>
+                    <p className="about-num-desc">
+                      Discover premier colleges, degree programmes and study pathways matched to your verified student profile.
                     </p>
                   </div>
                 </div>
 
-                <div className="eunistud-checklist-item">
-                  <div className="eunistud-check-bubble">
-                    <Check size={15} strokeWidth={2.8} />
-                  </div>
-                  <div className="eunistud-check-body">
-                    <h4 className="eunistud-check-title">Make confident, informed decisions</h4>
-                    <p className="eunistud-check-desc">
-                      Plan every milestone backed by real admission data, diagnostic mock testing, and certified counsellor oversight.
+                {/* Step 03 */}
+                <div className="about-num-item">
+                  <span className="about-num-index">03</span>
+                  <div className="about-num-content">
+                    <h3 className="about-num-title">Decide with confidence</h3>
+                    <p className="about-num-desc">
+                      Plan every milestone backed by real admission data, diagnostic mock tests and certified counsellor oversight.
                     </p>
                   </div>
                 </div>
               </div>
-
-              <button
-                onClick={() => handleExplore('dashboard')}
-                className="btn btn-primary eunistud-about-btn"
-                id="about-discover-btn"
-              >
-                <span>Discover Our Advisory Process</span>
-                <ArrowRight size={16} />
-              </button>
             </div>
           </div>
         </div>
@@ -550,96 +558,149 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </section>
 
       {/* =====================================================================
-          6. STRUCTURED ADVISORY ROADMAP (College Students Moving Background)
+          6. STRUCTURED ADVISORY ROADMAP (Exact Image 2 Specification)
           ===================================================================== */}
-      <section className="eunistud-dark-section" id="how-it-works">
-        {/* Animated Background: College Campus with Students & Ambient Glow */}
-        <div className="roadmap-bg-media">
-          <img
-            src="/assets/campus-students-quad.jpg"
-            alt="University campus with students"
-            className="roadmap-bg-img"
-          />
-          <div className="roadmap-dark-overlay" />
-          {/* Dynamic Ambient Glowing Orbs */}
-          <div className="roadmap-orb roadmap-orb-1" />
-          <div className="roadmap-orb roadmap-orb-2" />
-          <div className="roadmap-orb roadmap-orb-3" />
-        </div>
-
+      <section className="roadmap-blueprint-section" id="how-it-works">
         <div className="landing-container roadmap-container-relative">
-          {/* Centered Section Header with Badge (Matching Image 2 Layout) */}
+          {/* Centered Section Header with Badge */}
           <div className="roadmap-center-header">
-            <span className="roadmap-badge">
-              STRUCTURED ADVISORY ROADMAP
-            </span>
-            <h2 className="t-h2 text-white">Your Journey, One Step at a Time</h2>
-            <p className="t-body roadmap-subtext">
-              Four connected stages designed to take you from initial academic discovery to confident, verified university admissions.
+            <div className="roadmap-badge">
+              <span className="roadmap-badge-dot" />
+              <span>STRUCTURED ADVISORY ROADMAP</span>
+            </div>
+            <h2 className="roadmap-main-title">
+              Your Roadmap to <span className="roadmap-title-highlight">Admission</span>
+            </h2>
+            <p className="roadmap-subtext">
+              Four connected stages that take you from first discovery to a confident, verified university admission.
             </p>
           </div>
 
           {/* 4 Connected Cards in Single Horizontal Row */}
           <div className="roadmap-cards-grid">
             {/* Step 01: Discover */}
-            <div className="roadmap-step-card step-card-1" id="step-discover" onClick={() => handleExplore('dashboard')} style={{ cursor: 'pointer' }}>
-              <div className="roadmap-card-shine" />
+            <div 
+              className="roadmap-step-card step-card-white" 
+              id="step-discover" 
+              onClick={() => handleExplore('dashboard')}
+            >
               <div className="roadmap-card-top">
-                <span className="roadmap-step-num">01.</span>
-                <div className="roadmap-icon-box">
+                <div className="roadmap-icon-badge">
                   <Compass size={20} />
                 </div>
+                <span className="roadmap-step-label">STEP 01</span>
               </div>
-              <h3 className="roadmap-step-title">Discover</h3>
+              <h3 className="roadmap-step-heading">Discover</h3>
               <p className="roadmap-step-desc">
-                Build your verified student profile and discover matched academic pathways, curriculum boards, and global institutions.
+                Build your verified student profile and discover matched academic pathways, curriculum boards and global institutions.
               </p>
+              <div className="roadmap-progress-track">
+                <div className="roadmap-progress-fill fill-step-1" />
+              </div>
+
+              {/* Arched Connector 1 -> 2 (Top Arch) */}
+              <div className="roadmap-bridge bridge-top">
+                <svg viewBox="0 0 100 44" preserveAspectRatio="none" className="bridge-svg">
+                  <path d="M 0,42 C 28,4 72,4 100,42" fill="none" stroke="#F38D22" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+              </div>
             </div>
 
             {/* Step 02: Understand */}
-            <div className="roadmap-step-card step-card-2" id="step-understand" onClick={() => handleExplore('dashboard')} style={{ cursor: 'pointer' }}>
-              <div className="roadmap-card-shine" />
+            <div 
+              className="roadmap-step-card step-card-white" 
+              id="step-understand" 
+              onClick={() => handleExplore('dashboard')}
+            >
               <div className="roadmap-card-top">
-                <span className="roadmap-step-num">02.</span>
-                <div className="roadmap-icon-box">
+                <div className="roadmap-icon-badge">
                   <BookOpen size={20} />
                 </div>
+                <span className="roadmap-step-label">STEP 02</span>
               </div>
-              <h3 className="roadmap-step-title">Understand</h3>
+              <h3 className="roadmap-step-heading">Understand</h3>
               <p className="roadmap-step-desc">
-                Analyze your strengths, academic inclinations, and career interests through structured diagnostic evaluations.
+                Analyse your strengths, academic inclinations and career interests through structured diagnostic evaluations.
               </p>
+              <div className="roadmap-progress-track">
+                <div className="roadmap-progress-fill fill-step-2" />
+              </div>
+
+              {/* Loop Connector 2 -> 3 (Bottom Loop) */}
+              <div className="roadmap-bridge bridge-bottom">
+                <svg viewBox="0 0 100 44" preserveAspectRatio="none" className="bridge-svg">
+                  <path d="M 0,2 C 28,40 72,40 100,2" fill="none" stroke="#F38D22" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+              </div>
             </div>
 
             {/* Step 03: Plan */}
-            <div className="roadmap-step-card step-card-3" id="step-plan" onClick={() => handleExplore('dashboard')} style={{ cursor: 'pointer' }}>
-              <div className="roadmap-card-shine" />
+            <div 
+              className="roadmap-step-card step-card-white" 
+              id="step-plan" 
+              onClick={() => handleExplore('dashboard')}
+            >
               <div className="roadmap-card-top">
-                <span className="roadmap-step-num">03.</span>
-                <div className="roadmap-icon-box">
+                <div className="roadmap-icon-badge">
                   <Target size={20} />
                 </div>
+                <span className="roadmap-step-label">STEP 03</span>
               </div>
-              <h3 className="roadmap-step-title">Plan</h3>
+              <h3 className="roadmap-step-heading">Plan</h3>
               <p className="roadmap-step-desc">
-                Create a personalised exam preparation roadmap with clear milestone schedules, target scores, and prerequisites.
+                Get a personalised exam-preparation roadmap with clear milestones, target scores and prerequisites.
               </p>
+              <div className="roadmap-progress-track">
+                <div className="roadmap-progress-fill fill-step-3" />
+              </div>
+
+              {/* Arched Connector 3 -> 4 (Top Arch) */}
+              <div className="roadmap-bridge bridge-top">
+                <svg viewBox="0 0 100 44" preserveAspectRatio="none" className="bridge-svg">
+                  <path d="M 0,42 C 28,4 72,4 100,42" fill="none" stroke="#F38D22" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+              </div>
             </div>
 
             {/* Step 04: Move Forward */}
-            <div className="roadmap-step-card step-card-4 is-highlighted" id="step-move-forward" onClick={() => handleExplore('dashboard')} style={{ cursor: 'pointer' }}>
-              <div className="roadmap-card-shine" />
+            <div 
+              className="roadmap-step-card step-card-orange" 
+              id="step-move-forward" 
+              onClick={() => handleExplore('dashboard')}
+            >
               <div className="roadmap-card-top">
-                <span className="roadmap-step-num">04.</span>
-                <div className="roadmap-icon-box">
+                <div className="roadmap-icon-badge dark-badge">
                   <GraduationCap size={20} />
                 </div>
+                <span className="roadmap-step-label dark-label">STEP 04</span>
               </div>
-              <h3 className="roadmap-step-title">Move Forward</h3>
-              <p className="roadmap-step-desc">
-                Engage directly with expert educational counsellors to finalize admissions, verify documents, and secure your offer.
+              <h3 className="roadmap-step-heading dark-heading">Move Forward</h3>
+              <p className="roadmap-step-desc dark-desc">
+                Work directly with expert counsellors to finalise admissions, verify documents and secure your offer.
               </p>
+              <div className="roadmap-progress-track dark-track">
+                <div className="roadmap-progress-fill fill-step-4" />
+              </div>
             </div>
+          </div>
+
+          {/* Action CTAs underneath the cards (matching Image 2) */}
+          <div className="roadmap-cta-group">
+            <button 
+              type="button"
+              className="roadmap-btn-primary" 
+              onClick={() => handleExplore('dashboard')}
+            >
+              <span>Start Your Journey</span>
+              <ArrowRight size={16} />
+            </button>
+            <button 
+              type="button"
+              className="roadmap-btn-secondary" 
+              onClick={() => handleExplore('appointments')}
+            >
+              Book a free counselling session
+            </button>
           </div>
         </div>
       </section>
@@ -755,129 +816,137 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </section>
 
       {/* =====================================================================
-          9. CALL TO ACTION SECTION (Compact Banner with 3D Books & Neon Waves)
+          9. CALL TO ACTION SECTION (Exact Image 2 Specification)
           ===================================================================== */}
-      <section className="eunistud-cta-banner-section" id="get-started">
+      <section className="cta-modern-dark-section" id="get-started">
         <div className="landing-container">
-          <div className="eunistud-cta-banner">
+          <div className="cta-modern-grid">
             {/* Left Content Column */}
-            <div className="cta-content-column">
-              {/* Top Eyebrow */}
-              <div className="cta-eyebrow-badge">
-                <GraduationCap size={15} className="cta-cyan-accent" />
-                <span>YOUR FUTURE, WITH CLARITY</span>
+            <div className="cta-modern-left">
+              {/* Eyebrow */}
+              <div className="cta-modern-eyebrow">
+                STUDENT GUIDANCE PROGRAM
               </div>
 
-              {/* Main Headline */}
-              <h2 className="cta-headline">
+              {/* Main Headline with "next step?" in Orange */}
+              <h2 className="cta-modern-headline">
                 Ready to understand<br />
-                your <span className="cta-pill-highlight">next step?</span>
+                your <span className="cta-modern-orange">next step?</span>
               </h2>
 
               {/* Description */}
-              <p className="cta-description">
-                Start your student journey with Global Consultancy. Complete your initial profile intake and receive structured, verified guidance from expert mentors.
+              <p className="cta-modern-desc">
+                Start your student journey with Global Consciousness. Complete your profile intake and receive structured, verified guidance from expert mentors.
               </p>
 
               {/* Action Buttons */}
-              <div className="cta-actions-group">
+              <div className="cta-modern-actions">
                 <button
+                  type="button"
                   onClick={handleGetStarted}
-                  className="cta-btn-primary"
+                  className="cta-modern-btn-primary"
                   id="cta-get-started-btn"
                 >
                   <span>Open Student Portal</span>
-                  <ArrowRight size={17} />
+                  <ArrowRight size={16} />
                 </button>
 
                 <button
+                  type="button"
                   onClick={() => handleExplore('counsellors')}
-                  className="cta-btn-secondary"
+                  className="cta-modern-btn-secondary"
                   id="cta-talk-to-us-btn"
                 >
-                  <Phone size={15} className="cta-cyan-accent" />
+                  <Phone size={15} />
                   <span>Talk to an Advisor</span>
                 </button>
               </div>
 
-              {/* Trust Features Row */}
-              <div className="cta-trust-row">
-                <div className="cta-trust-item">
-                  <CheckCircle2 size={16} strokeWidth={2.4} className="cta-cyan-accent" />
-                  <span>Personalised guidance</span>
+              {/* 3 Micro-Columns at Bottom */}
+              <div className="cta-modern-features-grid">
+                <div className="cta-feature-col">
+                  <h4 className="cta-feature-title">Personalised</h4>
+                  <p className="cta-feature-sub">Guidance built on your goals</p>
                 </div>
-                <div className="cta-trust-item">
-                  <CheckCircle2 size={16} strokeWidth={2.4} className="cta-cyan-accent" />
-                  <span>Verified mentors</span>
+                <div className="cta-feature-col">
+                  <h4 className="cta-feature-title">Verified mentors</h4>
+                  <p className="cta-feature-sub">Vetted subject experts</p>
                 </div>
-                <div className="cta-trust-item">
-                  <CheckCircle2 size={16} strokeWidth={2.4} className="cta-cyan-accent" />
-                  <span>Clear next steps</span>
+                <div className="cta-feature-col">
+                  <h4 className="cta-feature-title">Clear next steps</h4>
+                  <p className="cta-feature-sub">A written action plan</p>
                 </div>
               </div>
             </div>
 
-            {/* Right Mockup Window Column */}
-            <div className="cta-mockup-wrapper">
-              <div className="cta-ambient-decor" aria-hidden="true">
-                <svg className="cta-decor-curve" viewBox="0 0 150 100" fill="none">
-                  <path
-                    d="M 15 90 C 25 40, 70 18, 140 18"
-                    stroke="rgba(255, 255, 255, 0.45)"
-                    strokeWidth="2.5"
-                    strokeDasharray="5 5"
-                  />
-                </svg>
-                <div className="cta-glass-orb orb-small" />
-                <div className="cta-glass-orb orb-large" />
-              </div>
-
-              <div className="cta-roadmap-window">
-                <div className="cta-window-header">
-                  <div className="cta-window-controls">
-                    <span className="cta-window-dot" />
-                    <span className="cta-window-dot" />
-                    <span className="cta-window-dot" />
+            {/* Right Card Column: Guidance Roadmap */}
+            <div className="cta-modern-right">
+              <div className="cta-roadmap-card">
+                {/* Card Header */}
+                <div className="cta-card-header">
+                  <div className="cta-card-header-left">
+                    <span className="cta-card-eyebrow">YOUR PROGRESS</span>
+                    <h3 className="cta-card-title">Guidance roadmap</h3>
                   </div>
-                  <span className="cta-window-title">Your guidance roadmap</span>
+                  <span className="cta-card-counter">2 of 3</span>
                 </div>
 
-                <div className="cta-window-body">
-                  <div className="cta-roadmap-item is-completed">
-                    <div className="cta-roadmap-check">
-                      <Check size={14} strokeWidth={3} />
+                {/* Vertical Stepper */}
+                <div className="cta-stepper">
+                  {/* Step 1 */}
+                  <div className="cta-step-item">
+                    <div className="cta-step-node-col">
+                      <div className="cta-step-circle is-done">
+                        <Check size={14} strokeWidth={3} />
+                      </div>
+                      <div className="cta-step-line is-done" />
                     </div>
-                    <div className="cta-roadmap-info">
-                      <span className="cta-roadmap-name">Profile intake</span>
-                      <span className="cta-roadmap-desc">Goals, interests, background</span>
+                    <div className="cta-step-info">
+                      <h4 className="cta-step-name">Profile intake</h4>
+                      <p className="cta-step-sub">Goals, interests, background</p>
                     </div>
-                    <span className="cta-roadmap-status">Done</span>
+                    <span className="cta-step-badge-green">Completed</span>
                   </div>
 
-                  <div className="cta-roadmap-item is-completed">
-                    <div className="cta-roadmap-check">
-                      <Check size={14} strokeWidth={3} />
+                  {/* Step 2 */}
+                  <div className="cta-step-item">
+                    <div className="cta-step-node-col">
+                      <div className="cta-step-circle is-done">
+                        <Check size={14} strokeWidth={3} />
+                      </div>
+                      <div className="cta-step-line is-pending" />
                     </div>
-                    <div className="cta-roadmap-info">
-                      <span className="cta-roadmap-name">Mentor match</span>
-                      <span className="cta-roadmap-desc">Paired with a verified expert</span>
+                    <div className="cta-step-info">
+                      <h4 className="cta-step-name">Mentor match</h4>
+                      <p className="cta-step-sub">Paired with a verified expert</p>
                     </div>
-                    <span className="cta-roadmap-status">Done</span>
+                    <span className="cta-step-badge-green">Completed</span>
                   </div>
 
-                  <div
-                    className="cta-roadmap-item is-active"
-                    onClick={handleGetStarted}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <div className="cta-roadmap-step-badge">3</div>
-                    <div className="cta-roadmap-info">
-                      <span className="cta-roadmap-name">Your next step</span>
-                      <span className="cta-roadmap-desc">A clear, personal action plan</span>
+                  {/* Step 3 */}
+                  <div className="cta-step-item">
+                    <div className="cta-step-node-col">
+                      <div className="cta-step-circle is-current">
+                        <span>3</span>
+                      </div>
                     </div>
-                    <ArrowRight size={18} className="cta-roadmap-arrow" />
+                    <div className="cta-step-info">
+                      <h4 className="cta-step-name">Your next step</h4>
+                      <p className="cta-step-sub">A clear, personal action plan</p>
+                    </div>
                   </div>
                 </div>
+
+                {/* Action button inside card */}
+                <button
+                  type="button"
+                  onClick={handleGetStarted}
+                  className="cta-card-action-btn"
+                  id="cta-continue-action-btn"
+                >
+                  <span>Continue to action plan</span>
+                  <ArrowRight size={16} />
+                </button>
               </div>
             </div>
           </div>

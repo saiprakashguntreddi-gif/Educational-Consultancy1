@@ -755,17 +755,17 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
               window.location.href = '/';
             }
           }}
-          title="Go to Global Consultancy Website"
+          title="Go to Superconsciousness Website"
           style={{ cursor: 'pointer' }}
         >
-          <div className="cmd-brand-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ width: '30px', height: '30px', borderRadius: '7px', background: '#FFFFFF', overflow: 'hidden', padding: '1.5px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <img src="/assets/global-logo-full.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          <div className="cmd-brand-title">
+            <div className="cmd-brand-icon-box">
+              <Compass size={16} />
             </div>
-            <span style={{ fontSize: '0.98rem', fontWeight: 800, letterSpacing: '-0.01em', color: '#FFFFFF' }}>GLOBAL <span style={{ color: '#FF9800' }}>CONSULTANCY</span></span>
+            <span>SUPERCONSCIOUSNESS</span>
           </div>
           <span className="cmd-brand-subtitle">
-            EDUCATIONAL CONSULTANCY & CAREER GUIDANCE
+            EDUCATIONAL CONSULTANCY & GUIDANCE
           </span>
         </div>
 
@@ -2475,7 +2475,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
               <div style={{ padding: '0.75rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid #EAECF0' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#172033' }}>Welcome to Global Consultancy</div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#172033' }}>Welcome to Superconsciousness</div>
                 <div style={{ fontSize: '0.78rem', color: '#667085', marginTop: '0.15rem' }}>Your student command center is active. Complete your profile to unlock university recommendations.</div>
               </div>
             </div>

@@ -98,7 +98,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
             </div>
             <div className="nav-brand-text">
               <span className="nav-brand-title">
-                GLOBAL <span>CONSULTANCY</span>
+                GLOBAL<span>CONSCIOUSNESS</span>
               </span>
               <span className="nav-brand-sub">
                 Educational Consultancy & Career Guidance
