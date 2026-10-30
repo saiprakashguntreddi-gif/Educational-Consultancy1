@@ -75,7 +75,7 @@ export class EmailService {
       </head>
       <body>
         <div class="container">
-          <div class="logo">Superconsciousness</div>
+          <div class="logo">Global Consultancy</div>
           <h1>Reset Your Password</h1>
           <p>Hello,</p>
           <p>We received a request to reset the password for your account associated with <strong>${email}</strong>.</p>
@@ -114,13 +114,15 @@ If you did not request this, please ignore this email.
 
     try {
       const transporter = this.getTransporter();
-      await transporter.sendMail({
-        from: process.env.EMAIL_FROM || '"Superconsciousness Platform" <no-reply@superconsciousness.internal>',
+      const sendInfo = await transporter.sendMail({
+        from: process.env.EMAIL_FROM || '"Global Consultancy" <krantishantveer@gmail.com>',
         to: email,
-        subject: 'Reset your Superconsciousness password',
+        subject: 'Reset your Global Consultancy password',
         text: textContent,
         html: htmlContent,
       });
+
+      console.log(`[PASSWORD RESET EMAIL SUCCESS] Real reset email delivered to ${email}! MessageId: ${sendInfo.messageId}`);
 
       return {
         sent: true,

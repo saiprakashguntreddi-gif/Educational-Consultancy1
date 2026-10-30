@@ -199,11 +199,22 @@ export class AuthService {
    * Initiate password reset by generating a secure token and sending email
    */
   public static async forgotPassword(input: ForgotPasswordInput): Promise<{ message: string; previewLink?: string }> {
-    const user = await prisma.user.findUnique({
-      where: { email: input.email },
+    const rawEmail = (input.email || '').trim();
+    const normalizedEmail = rawEmail.toLowerCase();
+
+    console.log(`[FORGOT PASSWORD] Lookup request for email: "${rawEmail}"`);
+
+    const user = await prisma.user.findFirst({
+      where: {
+        email: {
+          equals: normalizedEmail,
+          mode: 'insensitive',
+        },
+      },
     });
 
     if (!user) {
+      console.warn(`[FORGOT PASSWORD] No user found with email: "${rawEmail}" (normalized: "${normalizedEmail}"). Returning generic notice.`);
       return {
         message: 'If an account exists with that email address, a password reset link has been sent.',
       };
@@ -227,6 +238,7 @@ export class AuthService {
     const clientOrigin = config.cors.origin || 'http://localhost:3000';
     const resetLink = `${clientOrigin}/?view=reset-password&token=${encodeURIComponent(resetToken)}`;
 
+    console.log(`[FORGOT PASSWORD] Account found for "${user.email}". Sending real reset email via SMTP...`);
     const emailResult = await EmailService.sendPasswordResetEmail(user.email, resetLink);
 
     await prisma.auditLog.create({
