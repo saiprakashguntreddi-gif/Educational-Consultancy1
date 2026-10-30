@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../../shared/context/AuthContext';
-import { UserPlus, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { UserPlus, AlertCircle, Eye, EyeOff, CheckCircle2, ShieldCheck, ArrowRight } from 'lucide-react';
 
 interface RegisterPageProps {
   onSuccess: () => void;
   onNavigateToLogin: () => void;
+  onNavigateToDashboard?: () => void;
 }
 
-export const RegisterPage: React.FC<RegisterPageProps> = ({ onSuccess, onNavigateToLogin }) => {
+export const RegisterPage: React.FC<RegisterPageProps> = ({
+  onSuccess,
+  onNavigateToLogin,
+  onNavigateToDashboard,
+}) => {
   const { register } = useAuth();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -18,6 +23,10 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onSuccess, onNavigat
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Success Modal State
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [registeredInfo, setRegisteredInfo] = useState<{ name: string; email: string } | null>(null);
 
   // Password requirement checks
   const hasMinLength = password.length >= 8;
@@ -57,7 +66,11 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onSuccess, onNavigat
     setIsSubmitting(true);
     try {
       await register(email.trim().toLowerCase(), password, fullName.trim());
-      onSuccess();
+      setRegisteredInfo({
+        name: fullName.trim() || 'Student',
+        email: email.trim().toLowerCase(),
+      });
+      setShowSuccessModal(true);
     } catch (err: any) {
       setError(err.message || 'Registration failed. Please check inputs.');
     } finally {
@@ -73,7 +86,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onSuccess, onNavigat
         alignItems: 'center',
         justifyContent: 'center',
         padding: '3rem 1.25rem',
-        background: 'linear-gradient(180deg, #F5F5F5 0%, #F4EFEA 100%)',
+        background: 'linear-gradient(180deg, #F5F5F5 0%, #FAFAFA 100%)',
         boxSizing: 'border-box',
       }}
     >
@@ -103,9 +116,9 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onSuccess, onNavigat
           }}>
             <UserPlus size={24} />
           </div>
-          <h2 style={{ fontSize: '1.6rem', marginBottom: '0.4rem' }}>Create Account</h2>
+          <h2 style={{ fontSize: '1.6rem', color: '#172D53', marginBottom: '0.4rem', fontWeight: 800 }}>Create Account</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-            Get started with Superconsciousness guidance platform
+            Get started with Global Consultancy guidance platform
           </p>
         </div>
 
@@ -196,20 +209,20 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onSuccess, onNavigat
               fontSize: '0.75rem',
               color: 'var(--text-muted)',
               padding: '0.45rem 0.65rem',
-              background: 'rgba(255, 255, 255, 0.04)',
+              background: '#F9FAFB',
               borderRadius: '6px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              border: '1px solid #E5E7EB',
             }}>
-              <span style={{ color: hasMinLength ? '#10B981' : undefined, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <span style={{ color: hasMinLength ? '#198754' : undefined, fontWeight: hasMinLength ? 600 : 400, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 {hasMinLength ? '✓' : '•'} 8+ characters
               </span>
-              <span style={{ color: hasUpper ? '#10B981' : undefined, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <span style={{ color: hasUpper ? '#198754' : undefined, fontWeight: hasUpper ? 600 : 400, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 {hasUpper ? '✓' : '•'} 1 uppercase (A-Z)
               </span>
-              <span style={{ color: hasLower ? '#10B981' : undefined, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <span style={{ color: hasLower ? '#198754' : undefined, fontWeight: hasLower ? 600 : 400, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 {hasLower ? '✓' : '•'} 1 lowercase (a-z)
               </span>
-              <span style={{ color: hasNumber ? '#10B981' : undefined, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <span style={{ color: hasNumber ? '#198754' : undefined, fontWeight: hasNumber ? 600 : 400, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 {hasNumber ? '✓' : '•'} 1 number (0-9)
               </span>
             </div>
@@ -254,7 +267,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onSuccess, onNavigat
           <button
             type="submit"
             className="btn btn-primary"
-            style={{ width: '100%', marginTop: '1.25rem', padding: '0.8rem' }}
+            style={{ width: '100%', marginTop: '1.25rem', padding: '0.8rem', background: '#FF9800', color: '#FFFFFF', fontWeight: 700 }}
             disabled={isSubmitting}
           >
             {isSubmitting ? 'Creating Account...' : 'Register Account'}
@@ -265,12 +278,187 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onSuccess, onNavigat
           Already have an account?{' '}
           <button
             onClick={onNavigateToLogin}
-            style={{ background: 'none', border: 'none', color: '#818cf8', cursor: 'pointer', fontWeight: 600 }}
+            style={{ background: 'none', border: 'none', color: '#FF9800', cursor: 'pointer', fontWeight: 700 }}
           >
             Sign in
           </button>
         </div>
       </div>
+
+      {/* Registration Success Modal Popup */}
+      {showSuccessModal && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
+            background: 'rgba(11, 24, 48, 0.75)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1.25rem',
+          }}
+        >
+          <div
+            style={{
+              background: '#FFFFFF',
+              borderRadius: '24px',
+              maxWidth: '460px',
+              width: '100%',
+              padding: '2.5rem 2rem',
+              textAlign: 'center',
+              boxShadow: '0 25px 60px -10px rgba(11, 24, 48, 0.45), 0 10px 24px rgba(0, 0, 0, 0.1)',
+              border: '1px solid #E5E7EB',
+              position: 'relative',
+            }}
+          >
+            {/* Animated Celebration Icon */}
+            <div
+              style={{
+                width: '76px',
+                height: '76px',
+                borderRadius: '50%',
+                background: 'rgba(25, 135, 84, 0.12)',
+                border: '2px solid rgba(25, 135, 84, 0.35)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#198754',
+                marginBottom: '1.25rem',
+                boxShadow: '0 8px 24px rgba(25, 135, 84, 0.2)',
+              }}
+            >
+              <CheckCircle2 size={42} strokeWidth={2.5} />
+            </div>
+
+            <h3
+              style={{
+                fontSize: '1.65rem',
+                fontWeight: 800,
+                color: '#172D53',
+                marginBottom: '0.6rem',
+                letterSpacing: '-0.02em',
+              }}
+            >
+              Account Registered Successfully!
+            </h3>
+
+            <p
+              style={{
+                fontSize: '0.95rem',
+                color: '#626B78',
+                lineHeight: 1.6,
+                margin: '0 0 1.5rem',
+              }}
+            >
+              Welcome to <strong style={{ color: '#172D53' }}>Global Consultancy</strong>
+              {registeredInfo?.name ? <>, <strong style={{ color: '#FF9800' }}>{registeredInfo.name}</strong></> : ''}!
+              Your account has been created and verified.
+            </p>
+
+            {/* Account Info Box */}
+            <div
+              style={{
+                background: '#F5F5F5',
+                border: '1px solid #E5E7EB',
+                borderRadius: '12px',
+                padding: '0.85rem 1rem',
+                marginBottom: '1.75rem',
+                textAlign: 'left',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.4rem',
+                fontSize: '0.86rem',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: '#626B78', fontWeight: 600 }}>Registered Email:</span>
+                <span style={{ color: '#172D53', fontWeight: 700 }}>{registeredInfo?.email || email}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: '#626B78', fontWeight: 600 }}>Account Status:</span>
+                <span style={{ color: '#198754', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <ShieldCheck size={14} /> Active & Verified
+                </span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  onSuccess();
+                }}
+                className="btn btn-primary"
+                id="btn-register-continue-intake"
+                style={{
+                  width: '100%',
+                  padding: '0.9rem',
+                  fontSize: '1rem',
+                  fontWeight: 700,
+                  borderRadius: '12px',
+                  background: '#FF9800',
+                  color: '#FFFFFF',
+                  boxShadow: '0 4px 16px rgba(255, 152, 0, 0.4)',
+                  cursor: 'pointer',
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  transition: 'background 0.2s ease',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = '#F57C00')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = '#FF9800')}
+              >
+                <span>Continue to Student Intake</span>
+                <ArrowRight size={18} />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  if (onNavigateToDashboard) {
+                    onNavigateToDashboard();
+                  } else {
+                    onSuccess();
+                  }
+                }}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  borderRadius: '12px',
+                  background: '#FFFFFF',
+                  color: '#172D53',
+                  border: '1.5px solid #E5E7EB',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.15s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#172D53';
+                  e.currentTarget.style.background = '#F5F5F5';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = '#E5E7EB';
+                  e.currentTarget.style.background = '#FFFFFF';
+                }}
+              >
+                Go to Student Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

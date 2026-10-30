@@ -99,6 +99,7 @@ const AppContent: React.FC = () => {
           <RegisterPage
             onSuccess={() => handleNavigate('profile-intake')}
             onNavigateToLogin={() => handleNavigate('login')}
+            onNavigateToDashboard={() => handleNavigate('dashboard')}
           />
         );
       case 'dashboard':

@@ -455,13 +455,33 @@
 }
 
 .nav-brand-sub {
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   color: rgba(255, 255, 255, 0.78);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.025em;
   text-transform: uppercase;
   font-weight: 600;
   white-space: nowrap;
   line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .nav-brand-logo-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 11px;
+  }
+  .nav-brand-title {
+    font-size: 1.1rem;
+  }
+  .nav-brand-sub {
+    font-size: 0.54rem;
+    letter-spacing: 0.015em;
+  }
 }
 
 .nav-menu-links {

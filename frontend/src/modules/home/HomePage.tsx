@@ -2,18 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../shared/context/AuthContext';
 import {
   Compass,
-  CheckCircle2,
   GraduationCap,
   Check,
   ArrowRight,
   BookOpen,
   Target,
   Phone,
-  PhoneCall,
   Coins,
   Award,
   ShieldCheck,
-  Users,
 } from 'lucide-react';
 
 interface HomePageProps {

@@ -755,18 +755,24 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
               window.location.href = '/';
             }
           }}
-          title="Go to Superconsciousness Website"
+          title="Go to Global Consultancy Website"
           style={{ cursor: 'pointer' }}
         >
-          <div className="cmd-brand-title">
-            <div className="cmd-brand-icon-box">
-              <Compass size={16} />
-            </div>
-            <span>SUPERCONSCIOUSNESS</span>
+          <div className="cmd-brand-logo-wrap">
+            <img
+              src="/assets/global-logo-full.png"
+              alt="Global Consultancy Logo"
+              className="cmd-brand-logo-img"
+            />
           </div>
-          <span className="cmd-brand-subtitle">
-            EDUCATIONAL CONSULTANCY & GUIDANCE
-          </span>
+          <div className="cmd-brand-text-wrap">
+            <div className="cmd-brand-title">
+              GLOBAL <span>CONSULTANCY</span>
+            </div>
+            <div className="cmd-brand-subtitle">
+              EDUCATIONAL CONSULTANCY & CAREER GUIDANCE
+            </div>
+          </div>
         </div>
 
         {/* Sidebar Navigation Items */}
@@ -839,11 +845,6 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
                     <IdCard size={15} />
                   </span>
                   <span>Personal Information</span>
-                  {!profile?.isEnrolled && (
-                    <span className="cmd-nav-item-badge" style={{ background: 'rgba(100, 116, 139, 0.2)', color: '#94A3B8', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                      <Lock size={10} /> Locked
-                    </span>
-                  )}
                 </button>
               </div>
             )}
@@ -2097,47 +2098,31 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
               VIEW 6: MODULE 5 — PERSONAL INFORMATION
              ========================================================== */}
           {activeMenu === 'personal' && (
-            !profile?.isEnrolled ? (
-              <EnrolmentLockedView
-                moduleName="Personal Information"
-                moduleDescription="Extended personal records, passport details, and parent/guardian documentation are managed upon official enrolment."
-                verificationStatus={profile?.verificationStatus}
-                hasProfile={Boolean(profile)}
-                hasPreferences={Boolean(preferences)}
-                hasEducation={Boolean(education)}
-                onNavigateToProfile={() => { setActiveMenu('basic'); setIsEditingBasic(true); }}
-                onNavigateToPreferences={() => { setActiveMenu('preferences'); setIsEditingPreferences(true); }}
-                onNavigateToEducation={() => { setActiveMenu('education'); setIsEditingEducation(true); }}
-                onNavigateToAppointments={() => setActiveMenu('appointments')}
-                onBackToDashboard={() => setActiveMenu('dashboard')}
-              />
-            ) : (
-              <div>
-                <div style={{ marginBottom: '1.25rem' }}>
-                  <button
-                    id="personal-back-to-dash-btn"
-                    onClick={() => setActiveMenu('dashboard')}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.4rem',
-                      background: 'none',
-                      border: 'none',
-                      color: '#FF9800',
-                      fontSize: '0.88rem',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      padding: 0,
-                    }}
-                  >
-                    <ArrowLeft size={16} />
-                    <span>Back to Dashboard</span>
-                  </button>
-                </div>
-
-                <PersonalInformationView onBackToDashboard={() => setActiveMenu('dashboard')} />
+            <div>
+              <div style={{ marginBottom: '1.25rem' }}>
+                <button
+                  id="personal-back-to-dash-btn"
+                  onClick={() => setActiveMenu('dashboard')}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    background: 'none',
+                    border: 'none',
+                    color: '#FF9800',
+                    fontSize: '0.88rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    padding: 0,
+                  }}
+                >
+                  <ArrowLeft size={16} />
+                  <span>Back to Dashboard</span>
+                </button>
               </div>
-            )
+
+              <PersonalInformationView onBackToDashboard={() => setActiveMenu('dashboard')} />
+            </div>
           )}
 
           {/* ==========================================================
