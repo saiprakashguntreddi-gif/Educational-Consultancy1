@@ -10,6 +10,7 @@ import {
   TrendingUp,
   ArrowLeft,
 } from 'lucide-react';
+import { useAuth } from '../../../shared/context/AuthContext';
 import { EntranceService } from '../services/entrance.service';
 import {
   EntranceExamRecord,
@@ -24,12 +25,15 @@ import { ExamDiscoveryView } from './ExamDiscoveryView';
 import { ExamDetailModal } from './ExamDetailModal';
 import { MyExamPlanCard } from './MyExamPlanCard';
 import { TimedMockTestModal } from './TimedMockTestModal';
+import { ExamLogo } from './ExamLogo';
 
 interface EntranceExamsViewProps {
   onBackToDashboard?: () => void;
 }
 
 const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDashboard }) => {
+  const { user } = useAuth();
+
   // Navigation Tabs: 'catalog' | 'plan' | 'mocks'
   const [activeTab, setActiveTab] = useState<'catalog' | 'plan' | 'mocks'>('catalog');
 
@@ -48,13 +52,19 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
 
   // Add to plan prompt modal
   const [examToAdd, setExamToAdd] = useState<EntranceExamRecord | null>(null);
+  const [isSavingPlan, setIsSavingPlan] = useState(false);
+  const [modalValidationErrors, setModalValidationErrors] = useState<{ [key: string]: string }>({});
   const [addPlanForm, setAddPlanForm] = useState<{
     status: ExamPlanStatus;
+    targetCollege: string;
+    targetCourse: string;
     targetDate: string;
     targetScore: string;
     notes: string;
   }>({
     status: 'PLANNED',
+    targetCollege: '',
+    targetCourse: '',
     targetDate: '',
     targetScore: '',
     notes: '',
@@ -135,20 +145,31 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
 
   // Handle Add to Plan
   const handleInitiateAddToPlan = (exam: EntranceExamRecord) => {
+    if (!user) {
+      setFeedback({
+        type: 'error',
+        message: 'Please sign in to your student account to save exams to your personal plan.',
+      });
+      return;
+    }
+
     const existing = planItems.find((p) => p.examId === exam.id);
     if (existing) {
       // If already in plan, switch to plan tab and highlight
       setActiveTab('plan');
       setFeedback({
         type: 'success',
-        message: `${exam.name} is already in your personal plan. You can update your target date and scores below.`,
+        message: `${exam.name} is already in your personal plan. You can view or update your target college, course, and scores below.`,
       });
       return;
     }
 
+    setModalValidationErrors({});
     setExamToAdd(exam);
     setAddPlanForm({
       status: 'PLANNED',
+      targetCollege: '',
+      targetCourse: '',
       targetDate: '',
       targetScore: '',
       notes: '',
@@ -157,34 +178,64 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
 
   const handleConfirmAddToPlan = async () => {
     if (!examToAdd) return;
+
+    if (!user) {
+      setModalValidationErrors({
+        general: 'Please log in to your student account to save this exam plan.',
+      });
+      return;
+    }
+
+    // Validate required fields
+    const errors: { [key: string]: string } = {};
+    if (!addPlanForm.targetCollege.trim()) {
+      errors.targetCollege = 'Target College / University is required.';
+    }
+    if (!addPlanForm.targetCourse.trim()) {
+      errors.targetCourse = 'Target Degree / Course is required.';
+    }
+    if (!addPlanForm.status) {
+      errors.status = 'Status is required.';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setModalValidationErrors(errors);
+      return;
+    }
+
+    setIsSavingPlan(true);
+    setModalValidationErrors({});
+
     try {
       const res = await EntranceService.savePlanItem({
         examId: examToAdd.id,
         status: addPlanForm.status,
+        targetCollege: addPlanForm.targetCollege.trim(),
+        targetCourse: addPlanForm.targetCourse.trim(),
         targetDate: addPlanForm.targetDate || undefined,
-        targetScore: addPlanForm.targetScore || undefined,
-        notes: addPlanForm.notes || undefined,
+        targetScore: addPlanForm.targetScore.trim() || undefined,
+        notes: addPlanForm.notes.trim() || undefined,
       });
 
       if (res.success && res.data) {
         setFeedback({
           type: 'success',
-          message: `${examToAdd.name} was successfully added to your personal exam plan.`,
+          message: `🎉 Successfully saved ${examToAdd.name} for ${addPlanForm.targetCollege.trim()} to your personal exam plan.`,
         });
         setExamToAdd(null);
         await loadEntranceData();
         setActiveTab('plan');
       } else {
-        setFeedback({
-          type: 'error',
-          message: res.message || 'Failed to save exam to plan.',
+        setModalValidationErrors({
+          general: res.message || 'Failed to save exam to plan. Please check your connection and retry.',
         });
       }
     } catch (err: any) {
-      setFeedback({
-        type: 'error',
-        message: err.message || 'An error occurred while saving exam.',
+      setModalValidationErrors({
+        general: err.message || 'An error occurred while saving the exam to your plan.',
       });
+    } finally {
+      setIsSavingPlan(false);
     }
   };
 
@@ -557,6 +608,7 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
                   >
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.4rem' }}>
+                        <ExamLogo examCode={examCode} size={20} />
                         <span style={{ fontSize: '0.74rem', fontWeight: 800, background: 'rgba(255, 152, 0, 0.12)', color: '#F57C00', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
                           {examCode}
                         </span>
@@ -759,7 +811,7 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
             padding: '1rem',
           }}
           onClick={(e) => {
-            if (e.target === e.currentTarget) setExamToAdd(null);
+            if (e.target === e.currentTarget && !isSavingPlan) setExamToAdd(null);
           }}
         >
           <div
@@ -767,43 +819,145 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
             style={{
               background: '#FFFFFF',
               borderRadius: '16px',
-              maxWidth: '520px',
+              maxWidth: '540px',
               width: '100%',
               padding: '1.75rem',
               boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+              maxHeight: '92vh',
+              overflowY: 'auto',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
               <div>
                 <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#F57C00', background: 'rgba(255, 152, 0, 0.12)', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
                   {examToAdd.code}
                 </span>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#172D53', margin: '0.3rem 0 0' }}>
-                  Add to My Exam Plan
-                </h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.35rem' }}>
+                  <ExamLogo examCode={examToAdd.code} size={22} />
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#172D53', margin: 0 }}>
+                    {examToAdd.name}
+                  </h3>
+                </div>
               </div>
               <button
+                id="close-add-plan-modal"
+                disabled={isSavingPlan}
                 onClick={() => setExamToAdd(null)}
-                style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '0.2rem' }}
+                style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '0.2rem', fontSize: '1.25rem' }}
               >
                 &times;
               </button>
             </div>
 
             <p style={{ fontSize: '0.86rem', color: '#627D98', lineHeight: 1.5, margin: '0 0 1.25rem' }}>
-              Track your preparation milestones, registration deadlines, and test scores for <strong>{examToAdd.name}</strong>.
+              Track your preparation milestones, target college, target degree, and goal test scores for <strong>{examToAdd.name}</strong>.
             </p>
 
+            {/* Error Banner */}
+            {modalValidationErrors.general && (
+              <div
+                id="add-plan-modal-error"
+                style={{
+                  background: '#FEF2F2',
+                  border: '1px solid #FCA5A5',
+                  color: '#DC2626',
+                  borderRadius: '8px',
+                  padding: '0.65rem 0.85rem',
+                  fontSize: '0.84rem',
+                  marginBottom: '1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                }}
+              >
+                <AlertCircle size={15} />
+                <span>{modalValidationErrors.general}</span>
+              </div>
+            )}
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '1.5rem' }}>
+              {/* Target College */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#172D53', marginBottom: '0.35rem' }}>
-                  Current Status
+                  Target College / University <span style={{ color: '#DC2626' }}>*</span>
+                </label>
+                <input
+                  id="add-plan-college-input"
+                  type="text"
+                  placeholder="e.g. Stanford University, BITS Pilani, Harvard, IIT Bombay"
+                  value={addPlanForm.targetCollege}
+                  onChange={(e) => {
+                    setAddPlanForm({ ...addPlanForm, targetCollege: e.target.value });
+                    if (modalValidationErrors.targetCollege) {
+                      setModalValidationErrors((prev) => {
+                        const copy = { ...prev };
+                        delete copy.targetCollege;
+                        return copy;
+                      });
+                    }
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '0.6rem 0.75rem',
+                    borderRadius: '6px',
+                    border: modalValidationErrors.targetCollege ? '1.5px solid #DC2626' : '1px solid #CBD5E1',
+                    fontSize: '0.86rem',
+                    boxSizing: 'border-box',
+                  }}
+                />
+                {modalValidationErrors.targetCollege && (
+                  <span style={{ display: 'block', color: '#DC2626', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+                    {modalValidationErrors.targetCollege}
+                  </span>
+                )}
+              </div>
+
+              {/* Target Course */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#172D53', marginBottom: '0.35rem' }}>
+                  Target Degree / Course <span style={{ color: '#DC2626' }}>*</span>
+                </label>
+                <input
+                  id="add-plan-course-input"
+                  type="text"
+                  placeholder="e.g. B.Tech Computer Science, Economics & Finance, Pre-Med"
+                  value={addPlanForm.targetCourse}
+                  onChange={(e) => {
+                    setAddPlanForm({ ...addPlanForm, targetCourse: e.target.value });
+                    if (modalValidationErrors.targetCourse) {
+                      setModalValidationErrors((prev) => {
+                        const copy = { ...prev };
+                        delete copy.targetCourse;
+                        return copy;
+                      });
+                    }
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '0.6rem 0.75rem',
+                    borderRadius: '6px',
+                    border: modalValidationErrors.targetCourse ? '1.5px solid #DC2626' : '1px solid #CBD5E1',
+                    fontSize: '0.86rem',
+                    boxSizing: 'border-box',
+                  }}
+                />
+                {modalValidationErrors.targetCourse && (
+                  <span style={{ display: 'block', color: '#DC2626', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+                    {modalValidationErrors.targetCourse}
+                  </span>
+                )}
+              </div>
+
+              {/* Status */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#172D53', marginBottom: '0.35rem' }}>
+                  Current Status <span style={{ color: '#DC2626' }}>*</span>
                 </label>
                 <select
                   id="add-plan-status-select"
                   value={addPlanForm.status}
                   onChange={(e) => setAddPlanForm({ ...addPlanForm, status: e.target.value as ExamPlanStatus })}
-                  style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.86rem' }}
+                  style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.86rem', boxSizing: 'border-box' }}
                 >
                   <option value="PLANNED">Planned (Exploring & Scheduling)</option>
                   <option value="PREPARING">Preparing (Actively Studying)</option>
@@ -812,6 +966,7 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
                 </select>
               </div>
 
+              {/* Target Date */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#172D53', marginBottom: '0.35rem' }}>
                   Target Exam Date (Optional)
@@ -821,10 +976,11 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
                   type="date"
                   value={addPlanForm.targetDate}
                   onChange={(e) => setAddPlanForm({ ...addPlanForm, targetDate: e.target.value })}
-                  style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.86rem' }}
+                  style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.86rem', boxSizing: 'border-box' }}
                 />
               </div>
 
+              {/* Target Score */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#172D53', marginBottom: '0.35rem' }}>
                   Target Score (Optional)
@@ -832,16 +988,17 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
                 <input
                   id="add-plan-target-score-input"
                   type="text"
-                  placeholder="e.g. 1500+ or 7.5 Band"
+                  placeholder="e.g. 1500+ or 7.5 Band or 99th Percentile"
                   value={addPlanForm.targetScore}
                   onChange={(e) => setAddPlanForm({ ...addPlanForm, targetScore: e.target.value })}
-                  style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.86rem' }}
+                  style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.86rem', boxSizing: 'border-box' }}
                 />
               </div>
 
+              {/* Notes */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#172D53', marginBottom: '0.35rem' }}>
-                  Study Notes (Optional)
+                  Study Notes & Strategy (Optional)
                 </label>
                 <textarea
                   id="add-plan-notes-input"
@@ -849,7 +1006,7 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
                   placeholder="e.g. Focusing on vocabulary & timed practice..."
                   value={addPlanForm.notes}
                   onChange={(e) => setAddPlanForm({ ...addPlanForm, notes: e.target.value })}
-                  style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.86rem', resize: 'vertical' }}
+                  style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.86rem', resize: 'vertical', boxSizing: 'border-box' }}
                 />
               </div>
             </div>
@@ -857,6 +1014,8 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.65rem' }}>
               <button
                 id="cancel-add-plan-btn"
+                type="button"
+                disabled={isSavingPlan}
                 onClick={() => setExamToAdd(null)}
                 style={{ background: '#F1F5F9', border: 'none', color: '#475569', padding: '0.6rem 1.15rem', borderRadius: '8px', fontSize: '0.86rem', fontWeight: 600, cursor: 'pointer' }}
               >
@@ -864,12 +1023,29 @@ const EntranceExamsViewInner: React.FC<EntranceExamsViewProps> = ({ onBackToDash
               </button>
               <button
                 id="confirm-add-plan-btn"
+                type="button"
+                disabled={isSavingPlan}
                 onClick={handleConfirmAddToPlan}
-                style={{ background: '#FF9800', border: 'none', color: '#FFFFFF', padding: '0.6rem 1.35rem', borderRadius: '8px', fontSize: '0.86rem', fontWeight: 700, cursor: 'pointer', transition: 'background 0.15s ease' }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = '#F57C00')}
-                onMouseLeave={(e) => (e.currentTarget.style.background = '#FF9800')}
+                style={{
+                  background: '#FF9800',
+                  border: 'none',
+                  color: '#FFFFFF',
+                  padding: '0.6rem 1.35rem',
+                  borderRadius: '8px',
+                  fontSize: '0.86rem',
+                  fontWeight: 700,
+                  cursor: isSavingPlan ? 'not-allowed' : 'pointer',
+                  opacity: isSavingPlan ? 0.75 : 1,
+                  transition: 'background 0.15s ease',
+                }}
+                onMouseEnter={(e) => {
+                  if (!isSavingPlan) e.currentTarget.style.background = '#F57C00';
+                }}
+                onMouseLeave={(e) => {
+                  if (!isSavingPlan) e.currentTarget.style.background = '#FF9800';
+                }}
               >
-                Save to My Plan
+                {isSavingPlan ? 'Saving to My Plan...' : 'Save to My Plan'}
               </button>
             </div>
           </div>

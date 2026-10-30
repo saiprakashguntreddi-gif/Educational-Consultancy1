@@ -4,13 +4,14 @@ import {
   ChevronUp,
   ExternalLink,
   BookOpen,
-  Plus,
   PlayCircle,
   Clock,
   Search,
   Award,
+  Bookmark,
 } from 'lucide-react';
 import { EntranceExamRecord, ExamCategoryGroup } from '../entrance.types';
+import { ExamLogo } from './ExamLogo';
 
 export interface ExamCategoriesDropdownProps {
   categories?: ExamCategoryGroup[];
@@ -188,6 +189,90 @@ const EXAM_DISPLAY_NAMES: Record<string, string> = {
   NEET: 'NEET UG (National Eligibility cum Entrance Test)',
 };
 
+/**
+ * Formats an exam code and raw name into official title format:
+ * e.g. "SAT — Scholastic Assessment Test"
+ */
+export const formatExamDisplayName = (code: string, rawName: string): string => {
+  if (!rawName && !code) return 'Entrance Exam';
+  const nameToUse = rawName || code;
+
+  // Extract parentheses if present: "SAT (Scholastic Assessment Test)" -> "SAT — Scholastic Assessment Test"
+  const match = nameToUse.match(/^([^(]+)\s*\(([^)]+)\)$/);
+  if (match) {
+    const short = match[1].trim();
+    const full = match[2].trim();
+    return `${short} — ${full}`;
+  }
+  if (nameToUse.includes('—')) return nameToUse;
+  if (nameToUse.includes(' - ')) return nameToUse.replace(' - ', ' — ');
+
+  const officialNames: Record<string, string> = {
+    SAT: 'Scholastic Assessment Test',
+    ACT: 'American College Testing',
+    JEE_MAIN: 'Joint Entrance Examination Main',
+    JEE_ADVANCED: 'Joint Entrance Examination Advanced',
+    CUET_UG: 'Common University Entrance Test Undergraduate',
+    CUET_PG: 'Common University Entrance Test Postgraduate',
+    GAOKAO: 'National College Entrance Examination',
+    ENEM: 'Exame Nacional do Ensino Médio',
+    BITSAT: 'BITS Admission Test',
+    VITEEE: 'VIT Engineering Entrance Examination',
+    COMEDK_UGET: 'Consortium of Medical, Engineering and Dental Colleges of Karnataka',
+    KCET: 'Karnataka Common Entrance Test',
+    WBJEE: 'West Bengal Joint Entrance Examination',
+    MHT_CET: 'Maharashtra Common Entrance Test',
+    IPMAT: 'Integrated Programme in Management Aptitude Test',
+    GATE: 'Graduate Aptitude Test in Engineering',
+    GRE: 'Graduate Record Examination',
+    GMAT: 'Graduate Management Admission Test Focus Edition',
+    CAT: 'Common Admission Test',
+    XAT: 'Xavier Aptitude Test',
+    MAT: 'Management Aptitude Test',
+    CMAT: 'Common Management Admission Test',
+    NMAT: 'NMAT by GMAC',
+    IELTS: 'International English Language Testing System',
+    TOEFL: 'Test of English as a Foreign Language',
+    PTE: 'Pearson Test of English Academic',
+    DUOLINGO: 'Duolingo English Test',
+    NEET: 'National Eligibility cum Entrance Test',
+    UCEED: 'Undergraduate Common Entrance Examination for Design',
+    CEED: 'Common Entrance Examination for Design',
+    NATA: 'National Aptitude Test in Architecture',
+    NIFT: 'National Institute of Fashion Technology Entrance Exam',
+    NID_DAT: 'Design Aptitude Test',
+    IIT_JAM: 'Joint Admission test for Masters',
+    NIMCET: 'NIT MCA Common Entrance Test',
+    NDA: 'National Defence Academy Examination',
+    CDS: 'Combined Defence Services Examination',
+    AFCAT: 'Air Force Common Admission Test',
+    CAPF: 'Central Armed Police Forces Examination',
+    UPSC_CSE: 'Civil Services Examination',
+    SSC_CGL: 'Combined Graduate Level Examination',
+    IBPS_PO: 'Probationary Officer Examination',
+    SBI_PO: 'State Bank of India PO Examination',
+    RRB_NTPC: 'Non-Technical Popular Categories Examination',
+    NCHM_JEE: 'National Council for Hotel Management Joint Entrance Exam',
+    TOEIC: 'Test of English for International Communication',
+    OET: 'Occupational English Test',
+    JLPT: 'Japanese-Language Proficiency Test',
+    TOPIK: 'Test of Proficiency in Korean',
+    DELE: 'Diplomas de Español como Lengua Extranjera',
+    DELF: 'Diplôme d\'Études en Langue Française',
+    GOETHE: 'Goethe-Zertifikat German Examination',
+    HSK: 'Hanyu Shuiping Kaoshi Chinese Proficiency Test',
+  };
+
+  const cleanCode = (code || '').replace(/_/g, ' ');
+  const lookupKey = (code || '').toUpperCase();
+  const matchedFull = officialNames[lookupKey];
+  if (matchedFull) {
+    return `${cleanCode} — ${matchedFull}`;
+  }
+
+  return nameToUse;
+};
+
 export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
   categories: initialCategories,
   allExams,
@@ -251,7 +336,7 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
             prepResources: [],
             recommendedBooks: [],
             testDayTips: [],
-            hasMockTest: false,
+            hasMockTest: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           });
@@ -801,16 +886,10 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                     animation: 'fadeIn 0.2s ease-out',
                   }}
                 >
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                      gap: '0.75rem',
-                      marginTop: '0.5rem',
-                    }}
-                  >
+                  <div className="entrance-2col-grid">
                     {category.exams.map((exam) => {
                       const isSelected = selectedExamId === exam.id || selectedExamId === exam.code;
+                      const displayName = formatExamDisplayName(exam.code, exam.name);
 
                       return (
                         <div
@@ -820,12 +899,12 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'space-between',
-                            padding: '0.85rem 1rem',
+                            padding: '1rem 1.15rem',
                             backgroundColor: isSelected ? '#F5F8FC' : '#FFFFFF',
                             border: isSelected ? '1.5px solid #FF9800' : '1px solid #E2E8F0',
-                            borderRadius: '10px',
+                            borderRadius: '12px',
                             transition: 'all 0.2s ease',
-                            boxShadow: '0 1px 2px rgba(0, 0, 0, 0.04)',
+                            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
                             cursor: 'pointer',
                           }}
                           onClick={() => onSelectExam(exam)}
@@ -834,143 +913,46 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                               e.currentTarget.style.borderColor = '#FF9800';
                               e.currentTarget.style.transform = 'translateY(-2px)';
                               e.currentTarget.style.boxShadow =
-                                '0 4px 6px -1px rgba(255, 152, 0, 0.12), 0 2px 4px -2px rgba(255, 152, 0, 0.08)';
+                                '0 6px 14px -2px rgba(255, 152, 0, 0.12), 0 2px 6px -2px rgba(0, 0, 0, 0.05)';
                             }
                           }}
                           onMouseLeave={(e) => {
                             if (!isSelected) {
                               e.currentTarget.style.borderColor = '#E2E8F0';
                               e.currentTarget.style.transform = 'translateY(0)';
-                              e.currentTarget.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.04)';
+                              e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.04)';
                             }
                           }}
                         >
                           <div>
-                            {/* Exam Code Badge & Destinations */}
+                            {/* Exam Header: Logo + Combined Name & Official Full Name + Official Website Link */}
                             <div
                               style={{
                                 display: 'flex',
-                                alignItems: 'center',
+                                alignItems: 'flex-start',
                                 justifyContent: 'space-between',
-                                gap: '0.5rem',
-                                marginBottom: '0.4rem',
+                                gap: '0.75rem',
+                                marginBottom: '0.5rem',
                               }}
                             >
-                              <span
-                                style={{
-                                  display: 'inline-block',
-                                  fontSize: '0.72rem',
-                                  fontWeight: 700,
-                                  color: '#FF9800',
-                                  backgroundColor: 'rgba(255, 152, 0, 0.08)',
-                                  padding: '0.15rem 0.5rem',
-                                  borderRadius: '6px',
-                                  border: '1px solid rgba(255, 152, 0, 0.25)',
-                                  letterSpacing: '0.03em',
-                                }}
-                              >
-                                {exam.code}
-                              </span>
-
-                              {exam.hasMockTest && (
-                                <span
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flex: 1, minWidth: 0 }}>
+                                <div style={{ flexShrink: 0 }}>
+                                  <ExamLogo examCode={exam.code} size={22} />
+                                </div>
+                                <h4
                                   style={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '0.2rem',
-                                    fontSize: '0.68rem',
-                                    fontWeight: 600,
-                                    color: '#F57C00',
-                                    backgroundColor: 'rgba(255, 152, 0, 0.15)',
-                                    padding: '0.15rem 0.4rem',
-                                    borderRadius: '4px',
-                                    border: '1px solid #FF9800',
+                                    margin: 0,
+                                    fontSize: '0.94rem',
+                                    fontWeight: 700,
+                                    color: '#172D53',
+                                    lineHeight: 1.35,
+                                    wordBreak: 'break-word',
                                   }}
-                                  title="Diagnostic practice test available"
                                 >
-                                  <PlayCircle size={11} />
-                                  <span>Mock</span>
-                                </span>
-                              )}
-                            </div>
+                                  {displayName}
+                                </h4>
+                              </div>
 
-                            {/* Full Exam Name */}
-                            <h4
-                              style={{
-                                margin: '0 0 0.35rem 0',
-                                fontSize: '0.92rem',
-                                fontWeight: 700,
-                                color: '#172D53',
-                                lineHeight: 1.3,
-                              }}
-                            >
-                              {exam.name}
-                            </h4>
-
-                            {/* Score range or duration snippet */}
-                            <div
-                              style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.6rem',
-                                fontSize: '0.75rem',
-                                color: '#64748B',
-                                marginBottom: '0.6rem',
-                                flexWrap: 'wrap',
-                              }}
-                            >
-                              {exam.totalDurationMinutes > 0 && (
-                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                                  <Clock size={12} />
-                                  {exam.totalDurationMinutes} mins
-                                </span>
-                              )}
-                              {exam.scoreRange && (
-                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                                  <Award size={12} />
-                                  {exam.scoreRange}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Action Link Footer */}
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                              paddingTop: '0.5rem',
-                              borderTop: '1px solid #F1F5F9',
-                              marginTop: '0.25rem',
-                            }}
-                          >
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  onSelectExam(exam);
-                                }}
-                                style={{
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '0.3rem',
-                                  background: 'none',
-                                  border: 'none',
-                                  color: '#FF9800',
-                                  fontSize: '0.78rem',
-                                  fontWeight: 600,
-                                  cursor: 'pointer',
-                                  padding: 0,
-                                }}
-                              >
-                                <BookOpen size={13} />
-                                <span>View Details</span>
-                              </button>
-
-                              
-
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                               {exam.officialWebsiteUrl && (
                                 <a
                                   href={exam.officialWebsiteUrl}
@@ -980,21 +962,101 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                                   style={{
                                     display: 'inline-flex',
                                     alignItems: 'center',
-                                    padding: '0.2rem 0.4rem',
-                                    borderRadius: '4px',
-                                    color: '#64748B',
+                                    gap: '0.25rem',
+                                    padding: '0.25rem 0.6rem',
+                                    borderRadius: '6px',
+                                    color: '#F57C00',
+                                    backgroundColor: 'rgba(255, 152, 0, 0.08)',
+                                    border: '1px solid rgba(255, 152, 0, 0.3)',
                                     textDecoration: 'none',
-                                    fontSize: '0.72rem',
+                                    fontSize: '0.74rem',
+                                    fontWeight: 600,
+                                    whiteSpace: 'nowrap',
+                                    flexShrink: 0,
+                                    transition: 'all 0.15s ease',
                                   }}
-                                  title="Official Website"
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#FF9800';
+                                    e.currentTarget.style.color = '#FFFFFF';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'rgba(255, 152, 0, 0.08)';
+                                    e.currentTarget.style.color = '#F57C00';
+                                  }}
+                                  title={`Open official ${exam.code} website in new tab`}
                                 >
+                                  <span>Official Website</span>
                                   <ExternalLink size={12} />
                                 </a>
                               )}
+                            </div>
 
+                            {/* Score range & duration snippet */}
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.75rem',
+                                fontSize: '0.76rem',
+                                color: '#64748B',
+                                marginBottom: '0.65rem',
+                                flexWrap: 'wrap',
+                              }}
+                            >
+                              {exam.totalDurationMinutes > 0 && (
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                                  <Clock size={13} color="#FF9800" />
+                                  {exam.totalDurationMinutes} mins
+                                </span>
+                              )}
+                              {exam.scoreRange && (
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                                  <Award size={13} color="#FF9800" />
+                                  {exam.scoreRange}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Action Link Footer: View Details, Single Mock Test Button, Save to My Plan */}
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              paddingTop: '0.6rem',
+                              borderTop: '1px solid #F1F5F9',
+                              marginTop: '0.35rem',
+                            }}
+                          >
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onSelectExam(exam);
+                              }}
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.3rem',
+                                background: 'none',
+                                border: 'none',
+                                color: '#FF9800',
+                                fontSize: '0.8rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                padding: 0,
+                              }}
+                            >
+                              <BookOpen size={14} />
+                              <span>View Details</span>
+                            </button>
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                               {exam.hasMockTest && onTakeMockTest && (
                                 <button
                                   type="button"
+                                  id={`mock-test-btn-${exam.code.toLowerCase()}`}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     onTakeMockTest(exam);
@@ -1002,26 +1064,36 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                                   style={{
                                     display: 'inline-flex',
                                     alignItems: 'center',
-                                    gap: '0.2rem',
-                                    padding: '0.2rem 0.5rem',
+                                    gap: '0.3rem',
+                                    padding: '0.35rem 0.75rem',
                                     borderRadius: '6px',
-                                    backgroundColor: 'rgba(8, 79, 94, 0.08)',
-                                    border: '1px solid rgba(8, 79, 94, 0.25)',
+                                    backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                                    border: '1px solid rgba(255, 152, 0, 0.4)',
                                     color: '#F57C00',
-                                    fontSize: '0.72rem',
-                                    fontWeight: 600,
+                                    fontSize: '0.76rem',
+                                    fontWeight: 700,
                                     cursor: 'pointer',
+                                    transition: 'all 0.15s ease',
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'rgba(255, 152, 0, 0.2)';
+                                    e.currentTarget.style.borderColor = '#FF9800';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'rgba(255, 152, 0, 0.1)';
+                                    e.currentTarget.style.borderColor = 'rgba(255, 152, 0, 0.4)';
                                   }}
                                   title="Take diagnostic timed practice test"
                                 >
-                                  <PlayCircle size={11} />
-                                  <span>Mock</span>
+                                  <PlayCircle size={13} />
+                                  <span>Mock Test</span>
                                 </button>
                               )}
 
                               {onAddToPlan && (
                                 <button
                                   type="button"
+                                  id={`plan-btn-${exam.code.toLowerCase()}`}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     onAddToPlan(exam);
@@ -1029,20 +1101,23 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                                   style={{
                                     display: 'inline-flex',
                                     alignItems: 'center',
-                                    gap: '0.2rem',
-                                    padding: '0.2rem 0.5rem',
+                                    gap: '0.3rem',
+                                    padding: '0.35rem 0.75rem',
                                     borderRadius: '6px',
                                     backgroundColor: '#FF9800',
                                     border: '1px solid #FF9800',
                                     color: '#FFFFFF',
-                                    fontSize: '0.72rem',
-                                    fontWeight: 600,
+                                    fontSize: '0.76rem',
+                                    fontWeight: 700,
                                     cursor: 'pointer',
+                                    transition: 'background 0.15s ease',
                                   }}
-                                  title="Add to study plan"
+                                  onMouseEnter={(e) => (e.currentTarget.style.background = '#F57C00')}
+                                  onMouseLeave={(e) => (e.currentTarget.style.background = '#FF9800')}
+                                  title="Save exam to personal plan"
                                 >
-                                  <Plus size={11} />
-                                  <span>Plan</span>
+                                  <Bookmark size={13} />
+                                  <span>{exam.studentPlanStatus ? 'In Plan' : '+ Plan'}</span>
                                 </button>
                               )}
                             </div>
@@ -1057,6 +1132,20 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
           );
         })}
       </div>
+
+      <style>{`
+        .entrance-2col-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1rem;
+          margin-top: 0.5rem;
+        }
+        @media (max-width: 860px) {
+          .entrance-2col-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
     </div>
   );
 };

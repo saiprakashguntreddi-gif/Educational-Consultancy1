@@ -15,6 +15,7 @@ import {
 import { EntranceExamRecord } from '../entrance.types';
 import { CollegesService } from '../../colleges/services/colleges.service';
 import { ExamAcceptedInstitutionItem } from '../../colleges/colleges.types';
+import { ExamLogo } from './ExamLogo';
 
 interface ExamDetailModalProps {
   exam: EntranceExamRecord | null;
@@ -134,9 +135,12 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
                 </span>
               )}
             </div>
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#172D53', margin: 0 }}>
-              {exam.name}
-            </h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginTop: '0.2rem' }}>
+              <ExamLogo examCode={exam.code} size={22} />
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#172D53', margin: 0 }}>
+                {exam.name}
+              </h2>
+            </div>
           </div>
 
           <button

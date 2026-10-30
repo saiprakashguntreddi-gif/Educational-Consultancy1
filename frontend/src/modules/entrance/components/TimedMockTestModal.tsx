@@ -9,14 +9,10 @@ import {
   ArrowLeft,
   Send,
   Bookmark,
-  Award,
-  Check,
-  RotateCcw,
-  BarChart2,
-  HelpCircle,
 } from 'lucide-react';
 import { EntranceService } from '../services/entrance.service';
 import { MockTestTakingView, MockTestResultRecord } from '../entrance.types';
+import { ExamLogo } from './ExamLogo';
 
 interface TimedMockTestModalProps {
   testId: string;
@@ -345,9 +341,12 @@ export const TimedMockTestModal: React.FC<TimedMockTestModalProps> = ({
                 Practice Mock Examination
               </span>
             </div>
-            <h2 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
-              {testData.title}
-            </h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <ExamLogo examCode={testData.examCode || testData.examName || ''} size={22} />
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
+                {testData.title}
+              </h2>
+            </div>
           </div>
 
           {/* Timer and Close Button */}

@@ -34,6 +34,8 @@ const AppContent: React.FC = () => {
       setCurrentView('reset-password');
     } else if (viewParam === 'forgot-password') {
       setCurrentView('forgot-password');
+    } else if (viewParam) {
+      setCurrentView(viewParam);
     }
   }, []);
 

@@ -1,64 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import {
-  Search,
-  Check,
-  Plus,
-  PlayCircle,
-  Clock,
-  Award,
-  Sparkles,
-  Info,
-} from 'lucide-react';
+import { Search } from 'lucide-react';
 import { EntranceExamRecord, ExamCategoryGroup } from '../entrance.types';
 import { EntranceService } from '../services/entrance.service';
 import { ExamCategoriesDropdown } from './ExamCategoriesDropdown';
-
-// Multi-category mapping ensuring each exam belongs to all genuinely applicable categories
-const EXAM_CATEGORY_MAPPING: Record<string, string[]> = {
-  SAT: ['UNDERGRADUATE', 'STUDY_ABROAD'],
-  ACT: ['UNDERGRADUATE', 'STUDY_ABROAD'],
-  JEE_MAIN: ['UNDERGRADUATE', 'ENGINEERING_TECHNOLOGY'],
-  CUET_UG: ['UNDERGRADUATE'],
-  GAOKAO: ['UNDERGRADUATE'],
-  ENEM: ['UNDERGRADUATE'],
-  BITSAT: ['UNDERGRADUATE', 'ENGINEERING_TECHNOLOGY'],
-  VITEEE: ['UNDERGRADUATE', 'ENGINEERING_TECHNOLOGY'],
-  COMEDK_UGET: ['UNDERGRADUATE', 'ENGINEERING_TECHNOLOGY'],
-  KCET: ['UNDERGRADUATE', 'ENGINEERING_TECHNOLOGY'],
-  WBJEE: ['UNDERGRADUATE', 'ENGINEERING_TECHNOLOGY'],
-  MHT_CET: ['UNDERGRADUATE', 'ENGINEERING_TECHNOLOGY'],
-  IPMAT: ['UNDERGRADUATE', 'MBA_MANAGEMENT'],
-  JEE_ADVANCED: ['ENGINEERING_TECHNOLOGY'],
-  GATE: ['ENGINEERING_TECHNOLOGY', 'POSTGRADUATE'],
-  GRE: ['POSTGRADUATE', 'MBA_MANAGEMENT', 'STUDY_ABROAD'],
-  CUET_PG: ['POSTGRADUATE'],
-  IIT_JAM: ['POSTGRADUATE'],
-  NIMCET: ['POSTGRADUATE'],
-  CEED: ['DESIGN_ARCHITECTURE', 'POSTGRADUATE'],
-  GMAT: ['MBA_MANAGEMENT', 'STUDY_ABROAD'],
-  CAT: ['MBA_MANAGEMENT'],
-  XAT: ['MBA_MANAGEMENT'],
-  MAT: ['MBA_MANAGEMENT'],
-  CMAT: ['MBA_MANAGEMENT'],
-  NMAT: ['MBA_MANAGEMENT'],
-  IELTS: ['STUDY_ABROAD', 'LANGUAGE_PROFICIENCY'],
-  TOEFL: ['STUDY_ABROAD', 'LANGUAGE_PROFICIENCY'],
-  PTE: ['STUDY_ABROAD', 'LANGUAGE_PROFICIENCY'],
-  DUOLINGO: ['STUDY_ABROAD', 'LANGUAGE_PROFICIENCY'],
-  TOEIC: ['LANGUAGE_PROFICIENCY'],
-  OET: ['LANGUAGE_PROFICIENCY'],
-  JLPT: ['LANGUAGE_PROFICIENCY'],
-  TOPIK: ['LANGUAGE_PROFICIENCY'],
-  DELE: ['LANGUAGE_PROFICIENCY'],
-  DELF: ['LANGUAGE_PROFICIENCY'],
-  GOETHE: ['LANGUAGE_PROFICIENCY'],
-  HSK: ['LANGUAGE_PROFICIENCY'],
-  NID_DAT: ['DESIGN_ARCHITECTURE', 'UNDERGRADUATE'],
-  UCEED: ['DESIGN_ARCHITECTURE', 'UNDERGRADUATE'],
-  NATA: ['DESIGN_ARCHITECTURE', 'UNDERGRADUATE'],
-  NIFT: ['DESIGN_ARCHITECTURE', 'UNDERGRADUATE'],
-  NEET: ['UNDERGRADUATE'],
-};
 
 // Filter options: Exactly the 7 main categories + All Exams
 const CATEGORY_OPTIONS = [
@@ -86,7 +30,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
   onSelectExam,
   onAddToPlan,
   onTakeMockTest,
-  isLoading,
+  isLoading: _isLoading,
   categories: initialCategories,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');

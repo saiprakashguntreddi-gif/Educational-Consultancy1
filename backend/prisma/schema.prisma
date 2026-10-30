@@ -267,6 +267,8 @@ model StudentExamPlan {
   status           String         @default("PLANNED") // "PLANNED", "PREPARING", "REGISTERED", "COMPLETED"
   targetDate       String?        // Target test date (YYYY-MM-DD or Month Year)
   targetScore      String?        // Target score, e.g. "1450" or "8.0"
+  targetCollege    String?        // Target college or university name
+  targetCourse     String?        // Target degree or course name
   currentScore     String?        // Actual score achieved if completed
   notes            String?        // Personal notes or study goals
 

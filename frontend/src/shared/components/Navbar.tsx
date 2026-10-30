@@ -116,6 +116,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
               </button>
 
               <button
+                onClick={() => handleNavClick('entrance')}
+                className={`nav-link-btn ${currentView === 'entrance' || currentView === 'entrance-exams' ? 'is-active' : ''}`}
+                id="nav-entrance-exams-btn"
+              >
+                Entrance Exams
+              </button>
+              <button
                 onClick={() => handleNavClick('#services')}
                 className="nav-link-btn"
               >
@@ -147,6 +154,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
                 className={`nav-link-btn ${currentView === 'home' ? 'is-active' : ''}`}
               >
                 Home
+              </button>
+
+              <button
+                onClick={() => handleNavClick('entrance')}
+                className={`nav-link-btn ${currentView === 'entrance' || currentView === 'entrance-exams' ? 'is-active' : ''}`}
+                id="nav-auth-entrance-exams-btn"
+              >
+                Entrance Exams
               </button>
 
               <button
@@ -245,6 +260,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
             id="mobile-nav-home-btn"
           >
             Home
+          </button>
+          <button
+            onClick={() => handleNavClick('entrance')}
+            className={`nav-mobile-link ${currentView === 'entrance' || currentView === 'entrance-exams' ? 'is-active' : ''}`}
+            id="mobile-nav-entrance-exams-btn"
+          >
+            Entrance Exams & Mocks
           </button>
 
           <button

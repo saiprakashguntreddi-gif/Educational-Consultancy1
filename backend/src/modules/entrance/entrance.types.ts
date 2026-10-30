@@ -50,6 +50,8 @@ export interface StudentExamPlanInput {
   status: 'PLANNED' | 'PREPARING' | 'REGISTERED' | 'COMPLETED';
   targetDate?: string;
   targetScore?: string;
+  targetCollege?: string;
+  targetCourse?: string;
   currentScore?: string;
   notes?: string;
 }
@@ -62,6 +64,8 @@ export interface StudentExamPlanRecord {
   status: 'PLANNED' | 'PREPARING' | 'REGISTERED' | 'COMPLETED';
   targetDate: string | null;
   targetScore: string | null;
+  targetCollege?: string | null;
+  targetCourse?: string | null;
   currentScore: string | null;
   notes: string | null;
   createdAt: string;

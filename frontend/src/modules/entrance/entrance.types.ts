@@ -81,6 +81,8 @@ export interface StudentExamPlanRecord {
   status: ExamPlanStatus;
   targetDate?: string | null;
   targetScore?: string | null;
+  targetCollege?: string | null;
+  targetCourse?: string | null;
   currentScore?: string | null;
   notes?: string | null;
   createdAt: string;
@@ -93,6 +95,8 @@ export interface StudentExamPlanInput {
   status: ExamPlanStatus;
   targetDate?: string | null;
   targetScore?: string | null;
+  targetCollege?: string | null;
+  targetCourse?: string | null;
   currentScore?: string | null;
   notes?: string | null;
 }
@@ -101,6 +105,8 @@ export interface UpdateExamPlanInput {
   status?: ExamPlanStatus;
   targetDate?: string | null;
   targetScore?: string | null;
+  targetCollege?: string | null;
+  targetCourse?: string | null;
   currentScore?: string | null;
   notes?: string | null;
 }
@@ -129,6 +135,7 @@ export interface MockTestTakingView {
   id: string;
   examId: string;
   examName: string;
+  examCode?: string;
   title: string;
   description: string;
   durationMinutes: number;

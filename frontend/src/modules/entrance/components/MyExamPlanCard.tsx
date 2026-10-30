@@ -10,6 +10,7 @@ import {
   BookOpen,
   Award,
   AlertCircle,
+  GraduationCap,
 } from 'lucide-react';
 import {
   StudentExamPlanRecord,
@@ -17,6 +18,7 @@ import {
   UpdateExamPlanInput,
   EntranceExamRecord,
 } from '../entrance.types';
+import { ExamLogo } from './ExamLogo';
 
 interface MyExamPlanCardProps {
   planItems: StudentExamPlanRecord[];
@@ -46,6 +48,8 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
       status: item.status,
       targetDate: item.targetDate || '',
       targetScore: item.targetScore || '',
+      targetCollege: item.targetCollege || '',
+      targetCourse: item.targetCourse || '',
       currentScore: item.currentScore || '',
       notes: item.notes || '',
     });
@@ -238,9 +242,12 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
                   </span>
                 </div>
 
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#172D53', margin: 0 }}>
-                  {exam?.name || 'Entrance Exam'}
-                </h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <ExamLogo examCode={exam?.code || ''} size={20} />
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#172D53', margin: 0 }}>
+                    {exam?.name || 'Entrance Exam'}
+                  </h3>
+                </div>
               </div>
 
               {/* Action Buttons Top Right */}
@@ -377,6 +384,50 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
                       <option value="REGISTERED">Registered</option>
                       <option value="COMPLETED">Completed</option>
                     </select>
+                  </div>
+
+                  {/* Target College */}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#334155', marginBottom: '0.35rem' }}>
+                      Target College / University
+                    </label>
+                    <input
+                      id={`edit-target-college-${item.id}`}
+                      type="text"
+                      placeholder="e.g. Stanford University, IIT Bombay"
+                      value={editForm.targetCollege || ''}
+                      onChange={(e) => setEditForm({ ...editForm, targetCollege: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '0.55rem 0.75rem',
+                        borderRadius: '6px',
+                        border: '1px solid #CBD5E1',
+                        fontSize: '0.86rem',
+                        backgroundColor: '#FFFFFF',
+                      }}
+                    />
+                  </div>
+
+                  {/* Target Course */}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#334155', marginBottom: '0.35rem' }}>
+                      Target Degree / Course
+                    </label>
+                    <input
+                      id={`edit-target-course-${item.id}`}
+                      type="text"
+                      placeholder="e.g. B.Tech Computer Science, MS AI"
+                      value={editForm.targetCourse || ''}
+                      onChange={(e) => setEditForm({ ...editForm, targetCourse: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '0.55rem 0.75rem',
+                        borderRadius: '6px',
+                        border: '1px solid #CBD5E1',
+                        fontSize: '0.86rem',
+                        backgroundColor: '#FFFFFF',
+                      }}
+                    />
                   </div>
 
                   {/* Target Date */}
@@ -523,7 +574,25 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
               >
                 <div>
                   <div style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                    <Calendar size={13} /> Target Date
+                    <GraduationCap size={13} color="#FF9800" /> Target College / Univ
+                  </div>
+                  <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#172D53', marginTop: '0.2rem' }}>
+                    {item.targetCollege || 'College not set'}
+                  </div>
+                </div>
+
+                <div>
+                  <div style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                    <BookOpen size={13} color="#FF9800" /> Target Course / Major
+                  </div>
+                  <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#172D53', marginTop: '0.2rem' }}>
+                    {item.targetCourse || 'Course not set'}
+                  </div>
+                </div>
+
+                <div>
+                  <div style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                    <Calendar size={13} color="#FF9800" /> Target Exam Date
                   </div>
                   <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#172D53', marginTop: '0.2rem' }}>
                     {item.targetDate || 'Not scheduled yet'}
@@ -532,7 +601,7 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
 
                 <div>
                   <div style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                    <Target size={13} /> Target Score
+                    <Target size={13} color="#FF9800" /> Target Score
                   </div>
                   <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#172D53', marginTop: '0.2rem' }}>
                     {item.targetScore || 'Goal not set'}
@@ -541,7 +610,7 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
 
                 <div>
                   <div style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                    <Award size={13} /> Current / Achieved Score
+                    <Award size={13} color="#FF9800" /> Current / Achieved Score
                   </div>
                   <div style={{ fontSize: '0.92rem', fontWeight: 700, color: item.currentScore ? '#B7791F' : '#64748B', marginTop: '0.2rem' }}>
                     {item.currentScore || '--'}
@@ -551,7 +620,7 @@ export const MyExamPlanCard: React.FC<MyExamPlanCardProps> = ({
                 {item.notes && (
                   <div style={{ gridColumn: '1 / -1', marginTop: '0.25rem', paddingTop: '0.65rem', borderTop: '1px dashed #E2E8F0' }}>
                     <div style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600 }}>
-                      Study Notes:
+                      Study Notes & Strategy:
                     </div>
                     <p style={{ fontSize: '0.84rem', color: '#334155', margin: '0.2rem 0 0', lineHeight: 1.5 }}>
                       {item.notes}

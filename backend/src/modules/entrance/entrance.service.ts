@@ -9,8 +9,9 @@ import {
   MockTestResultRecord,
   QuestionResultBreakdown,
 } from './entrance.types';
-import { seedEntranceExamsCatalog } from './entrance.seed';
+import { seedEntranceExamsCatalog, seedGenericMockTest } from './entrance.seed';
 import { MAIN_EXAM_CATEGORIES, ExamCategoryDefinition } from './entrance.categories';
+import { REMAINING_EXAM_MOCK_TESTS } from './entrance.mock-data';
 
 export class EntranceService {
   /**
@@ -59,13 +60,14 @@ export class EntranceService {
   }
 
   /**
-   * Ensure the exam catalog and 7 main categories are initialized in SQLite.
+   * Ensure the exam catalog, 7 main categories, and all exam mock tests are initialized.
    */
   static async ensureCatalogInitialized() {
     const examCount = await prisma.entranceExam.count();
     const categoryCount = await prisma.examCategory.count();
     const mappingCount = await prisma.examCategoryMapping.count();
-    if (examCount < 50 || categoryCount !== 7 || mappingCount < 60) {
+    const mockTestCount = await prisma.mockTest.count();
+    if (examCount < 50 || categoryCount !== 7 || mappingCount < 60 || mockTestCount < 40) {
       await seedEntranceExamsCatalog();
     }
   }
@@ -318,6 +320,8 @@ export class EntranceService {
       status: p.status as any,
       targetDate: p.targetDate,
       targetScore: p.targetScore,
+      targetCollege: (p as any).targetCollege || null,
+      targetCourse: (p as any).targetCourse || null,
       currentScore: p.currentScore,
       notes: p.notes,
       createdAt: p.createdAt.toISOString(),
@@ -344,14 +348,36 @@ export class EntranceService {
     input: StudentExamPlanInput,
     ipAddress?: string
   ): Promise<StudentExamPlanRecord> {
-    const profile = await prisma.studentProfile.findUnique({
+    let profile = await prisma.studentProfile.findUnique({
       where: { userId },
     });
 
     if (!profile) {
-      const err: any = new Error('Student profile not found. Please complete profile intake first.');
-      err.statusCode = 404;
-      throw err;
+      // Auto-create student profile shell so saving exam plan never fails
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (!user) {
+        const err: any = new Error('User account not found.');
+        err.statusCode = 404;
+        throw err;
+      }
+      profile = await prisma.studentProfile.create({
+        data: {
+          userId,
+          fullName: user.email.split('@')[0],
+          gender: 'PREFER_NOT_TO_SAY',
+          grade: 'Grade 12',
+          contactEmail: user.email,
+          phone: '',
+          addressStreet: '',
+          addressCity: '',
+          addressState: '',
+          addressPostalCode: '',
+          addressCountry: '',
+          board: 'Other',
+          citizenship: '',
+          passingOutYear: new Date().getFullYear(),
+        },
+      });
     }
 
     const exam = await prisma.entranceExam.findUnique({
@@ -377,6 +403,8 @@ export class EntranceService {
         status: input.status,
         targetDate: input.targetDate?.trim() || null,
         targetScore: input.targetScore?.trim() || null,
+        targetCollege: input.targetCollege?.trim() || null,
+        targetCourse: input.targetCourse?.trim() || null,
         currentScore: input.currentScore?.trim() || null,
         notes: input.notes?.trim() || null,
       },
@@ -384,6 +412,8 @@ export class EntranceService {
         status: input.status,
         targetDate: input.targetDate !== undefined ? input.targetDate?.trim() || null : undefined,
         targetScore: input.targetScore !== undefined ? input.targetScore?.trim() || null : undefined,
+        targetCollege: input.targetCollege !== undefined ? input.targetCollege?.trim() || null : undefined,
+        targetCourse: input.targetCourse !== undefined ? input.targetCourse?.trim() || null : undefined,
         currentScore: input.currentScore !== undefined ? input.currentScore?.trim() || null : undefined,
         notes: input.notes !== undefined ? input.notes?.trim() || null : undefined,
       },
@@ -402,6 +432,8 @@ export class EntranceService {
           examCode: exam.code,
           status: planRecord.status,
           targetScore: planRecord.targetScore,
+          targetCollege: planRecord.targetCollege,
+          targetCourse: planRecord.targetCourse,
         }),
         ipAddress: ipAddress || null,
       },
@@ -415,6 +447,8 @@ export class EntranceService {
       status: planRecord.status as any,
       targetDate: planRecord.targetDate,
       targetScore: planRecord.targetScore,
+      targetCollege: planRecord.targetCollege,
+      targetCourse: planRecord.targetCourse,
       currentScore: planRecord.currentScore,
       notes: planRecord.notes,
       createdAt: planRecord.createdAt.toISOString(),
@@ -458,6 +492,8 @@ export class EntranceService {
         status: updates.status || undefined,
         targetDate: updates.targetDate !== undefined ? updates.targetDate?.trim() || null : undefined,
         targetScore: updates.targetScore !== undefined ? updates.targetScore?.trim() || null : undefined,
+        targetCollege: updates.targetCollege !== undefined ? updates.targetCollege?.trim() || null : undefined,
+        targetCourse: updates.targetCourse !== undefined ? updates.targetCourse?.trim() || null : undefined,
         currentScore: updates.currentScore !== undefined ? updates.currentScore?.trim() || null : undefined,
         notes: updates.notes !== undefined ? updates.notes?.trim() || null : undefined,
       },
@@ -483,6 +519,8 @@ export class EntranceService {
       status: updated.status as any,
       targetDate: updated.targetDate,
       targetScore: updated.targetScore,
+      targetCollege: updated.targetCollege,
+      targetCourse: updated.targetCourse,
       currentScore: updated.currentScore,
       notes: updated.notes,
       createdAt: updated.createdAt.toISOString(),
@@ -537,7 +575,7 @@ export class EntranceService {
   static async getMockTestsForExam(examId: string): Promise<any[]> {
     await this.ensureCatalogInitialized();
 
-    const mockTests = await prisma.mockTest.findMany({
+    let mockTests = await prisma.mockTest.findMany({
       where: { examId },
       include: {
         questions: {
@@ -545,6 +583,21 @@ export class EntranceService {
         },
       },
     });
+
+    if (mockTests.length === 0) {
+      const exam = await prisma.entranceExam.findUnique({ where: { id: examId } });
+      if (exam && REMAINING_EXAM_MOCK_TESTS[exam.code]) {
+        await seedGenericMockTest(exam.id, REMAINING_EXAM_MOCK_TESTS[exam.code]);
+        mockTests = await prisma.mockTest.findMany({
+          where: { examId },
+          include: {
+            questions: {
+              select: { id: true, section: true },
+            },
+          },
+        });
+      }
+    }
 
     return mockTests.map((t) => ({
       id: t.id,

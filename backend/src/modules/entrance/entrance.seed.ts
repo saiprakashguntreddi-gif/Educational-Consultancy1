@@ -1,5 +1,6 @@
 import { prisma } from '../../shared/database/prisma.service';
 import { MAIN_EXAM_CATEGORIES, REMOVED_CATEGORY_IDS } from './entrance.categories';
+import { REMAINING_EXAM_MOCK_TESTS, ExamMockTestDef } from './entrance.mock-data';
 
 export async function seedEntranceExamsCatalog() {
   const examsData = [
@@ -2011,18 +2012,22 @@ export async function seedEntranceExamsCatalog() {
     });
 
     let examRecord;
+    const examPayload = {
+      ...exam,
+      hasMockTest: true,
+    };
     if (!existing) {
       examRecord = await prisma.entranceExam.create({
-        data: exam,
+        data: examPayload,
       });
     } else {
       examRecord = await prisma.entranceExam.update({
         where: { code: exam.code },
-        data: exam,
+        data: examPayload,
       });
     }
 
-    // Seed realistic diagnostic practice mock tests for SAT, IELTS, and JEE Main
+    // Preserve the original 4 mock tests (SAT, ACT, JEE Main, CUET UG) and IELTS unchanged
     if (exam.code === 'SAT') {
       await seedSatMockTest(examRecord.id);
     } else if (exam.code === 'IELTS') {
@@ -2033,6 +2038,8 @@ export async function seedEntranceExamsCatalog() {
       await seedActMockTest(examRecord.id);
     } else if (exam.code === 'CUET_UG') {
       await seedCuetUgMockTest(examRecord.id);
+    } else if (REMAINING_EXAM_MOCK_TESTS[exam.code]) {
+      await seedGenericMockTest(examRecord.id, REMAINING_EXAM_MOCK_TESTS[exam.code]);
     }
   }
 
@@ -2482,6 +2489,41 @@ async function seedCuetUgMockTest(examId: string) {
       data: {
         mockTestId: mockTest.id,
         ...q,
+      },
+    });
+  }
+}
+
+export async function seedGenericMockTest(examId: string, def: ExamMockTestDef) {
+  const existingTest = await prisma.mockTest.findFirst({
+    where: { examId, title: def.title },
+  });
+
+  if (existingTest) return;
+
+  const mockTest = await prisma.mockTest.create({
+    data: {
+      examId,
+      title: def.title,
+      description: def.description,
+      durationMinutes: def.durationMinutes,
+      totalMarks: def.totalMarks,
+      passingMarks: def.passingMarks,
+    },
+  });
+
+  for (let i = 0; i < def.questions.length; i++) {
+    const q = def.questions[i];
+    await prisma.mockQuestion.create({
+      data: {
+        mockTestId: mockTest.id,
+        section: q.section,
+        questionText: q.questionText,
+        options: JSON.stringify(q.options),
+        correctOptionIndex: q.correctOptionIndex,
+        explanation: q.explanation,
+        marks: q.marks || 1,
+        orderIndex: i + 1,
       },
     });
   }
