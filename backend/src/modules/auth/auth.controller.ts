@@ -68,4 +68,36 @@ export class AuthController {
       next(error);
     }
   }
+
+  public static async sendEmailOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { email } = req.body;
+      if (!email) {
+        ApiResponse.error(res, 'Email address is required', 400, 'Bad Request');
+        return;
+      }
+      const result = await AuthService.sendEmailVerificationOtp(email);
+      ApiResponse.success(res, result, result.message);
+    } catch (error: any) {
+      if (error.message.includes('already exists')) {
+        ApiResponse.error(res, error.message, 409, 'Conflict');
+        return;
+      }
+      ApiResponse.error(res, error.message || 'Failed to send verification code', 400, 'Bad Request');
+    }
+  }
+
+  public static async verifyEmailOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { email, otp } = req.body;
+      if (!email || !otp) {
+        ApiResponse.error(res, 'Email address and 6-digit OTP code are required', 400, 'Bad Request');
+        return;
+      }
+      const result = await AuthService.verifyEmailOtp(email, otp);
+      ApiResponse.success(res, result, result.message);
+    } catch (error: any) {
+      ApiResponse.error(res, error.message || 'Verification failed', 400, 'Bad Request');
+    }
+  }
 }

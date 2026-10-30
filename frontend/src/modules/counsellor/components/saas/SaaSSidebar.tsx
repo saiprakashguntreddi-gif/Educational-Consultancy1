@@ -9,7 +9,6 @@ import {
   Calendar,
   ClipboardList,
   LogOut,
-  Sparkles,
   Settings,
   Building2,
   Layers,
@@ -73,12 +72,23 @@ export const SaaSSidebar: React.FC<SaaSSidebarProps> = ({
   return (
     <aside className="saas-sidebar">
       {/* Brand Header */}
-      <div className="saas-sidebar-brand">
+      <div
+        className="saas-sidebar-brand"
+        style={{ cursor: onNavigateLanding ? 'pointer' : 'default' }}
+        onClick={() => onNavigateLanding && onNavigateLanding()}
+        title="Go to Global Consultancy Website"
+      >
         <div className="saas-brand-logo">
-          <Sparkles size={18} />
+          <img
+            src="/assets/global-logo-full.png"
+            alt="Global Consultancy Logo"
+            className="saas-brand-logo-img"
+          />
         </div>
         <div className="saas-brand-text">
-          <div className="saas-brand-title">Superconsciousness</div>
+          <div className="saas-brand-title">
+            GLOBAL <span style={{ color: '#013A2B' }}>CONSULTANCY</span>
+          </div>
           <div className="saas-brand-subtitle">
             Management Console
           </div>

@@ -38,6 +38,7 @@ import {
   Award,
   Lock,
   ShieldAlert,
+  Play,
 } from 'lucide-react';
 
 interface AppointmentsDashboardProps {
@@ -192,7 +193,7 @@ export const AppointmentsDashboard: React.FC<AppointmentsDashboardProps> = ({
       if (res.success) {
         setFeedback({
           type: 'success',
-          message: 'Congratulations! You are now officially enrolled with Superconsciousness Educational Consultancy! 1 performance token awarded to your counsellor.',
+          message: 'Congratulations! You are now officially enrolled with Global Consultancy! 1 performance token awarded to your counsellor.',
         });
         setEnrollmentModalOpen(false);
         // Reload status
@@ -1183,7 +1184,7 @@ export const AppointmentsDashboard: React.FC<AppointmentsDashboardProps> = ({
                         In-Person Campus Advisory
                       </div>
                       <div style={{ fontSize: '0.76rem', color: '#64748B' }}>
-                        Superconsciousness Guidance Center Office
+                        Global Consultancy Guidance Center Office
                       </div>
                     </div>
                   </div>
@@ -1337,7 +1338,7 @@ export const AppointmentsDashboard: React.FC<AppointmentsDashboardProps> = ({
             <div style={{ marginTop: '1.5rem', background: '#F8FAFC', padding: '1rem', borderRadius: '10px', fontSize: '0.78rem', color: '#64748B', lineHeight: 1.5 }}>
               <div style={{ fontWeight: 700, color: '#172033', marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                 <CheckCircle size={14} color="#16A34A" />
-                <span>Superconsciousness Advisory Guarantee</span>
+                <span>Global Consultancy Advisory Guarantee</span>
               </div>
               All consultations are complimentary for registered students. Rescheduling is permitted up to 2 hours prior to start time.
             </div>
@@ -1386,6 +1387,47 @@ export const AppointmentsDashboard: React.FC<AppointmentsDashboardProps> = ({
               >
                 Cancelled
               </button>
+            </div>
+          </div>
+
+          {/* Recorded Sessions Replay 24/7 Notification Banner */}
+          <div
+            style={{
+              backgroundColor: '#F0FDF4',
+              border: '1px solid #BBF7D0',
+              borderRadius: '10px',
+              padding: '0.85rem 1.15rem',
+              marginBottom: '1.25rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '1rem',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: '50%',
+                  backgroundColor: '#DCFCE7',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <Play size={18} color="#16A34A" fill="#16A34A" />
+              </div>
+              <div>
+                <div style={{ fontSize: '0.86rem', fontWeight: 700, color: '#166534' }}>
+                  Recorded Sessions Available 24/7 for Replay
+                </div>
+                <div style={{ fontSize: '0.78rem', color: '#15803D' }}>
+                  All video consultations are automatically recorded. If you didn't understand any recommendation or missed university details, click <strong>"Watch Recorded Session"</strong> on any completed appointment below to re-watch the guidance anytime.
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1493,12 +1535,26 @@ export const AppointmentsDashboard: React.FC<AppointmentsDashboardProps> = ({
                       {isCompleted && (
                         <button
                           onClick={() => setViewSessionRecord(app)}
-                          className="app-btn-outline"
-                          style={{ color: '#16A34A', borderColor: '#BBF7D0', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+                          style={{
+                            backgroundColor: '#013A2B',
+                            color: '#FFFFFF',
+                            border: '1px solid #426557',
+                            borderRadius: '8px',
+                            padding: '0.45rem 0.95rem',
+                            fontSize: '0.82rem',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.45rem',
+                            boxShadow: '0 2px 6px rgba(1, 58, 43, 0.25)',
+                            transition: 'all 0.2s ease',
+                          }}
                           type="button"
+                          title="Replay full video recording, audio stream, and advisor recommendations"
                         >
-                          <CheckCircle size={14} />
-                          <span>View Session Notes</span>
+                          <Play size={14} fill="#FFFFFF" />
+                          <span>Watch Recorded Session</span>
                         </button>
                       )}
                     </div>
@@ -2201,7 +2257,7 @@ export const AppointmentsDashboard: React.FC<AppointmentsDashboardProps> = ({
                   onChange={(e) => setAgreedToPolicies(e.target.checked)}
                 />
                 <label htmlFor="agreeCheckbox" style={{ fontSize: '0.82rem', color: '#0F172A', cursor: 'pointer', fontWeight: 600 }}>
-                  I accept the Superconsciousness Company Agreement and Admissions Policies
+                  I accept the Global Consultancy Company Agreement and Admissions Policies
                 </label>
               </div>
             </div>

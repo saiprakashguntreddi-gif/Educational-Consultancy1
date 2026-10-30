@@ -182,5 +182,19 @@ export class AdminController {
       return next(err);
     }
   }
+
+  public static async updateApplicationStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      if (!status) {
+        return ApiResponse.error(res, 'Status is required', 400);
+      }
+      const data = await AdminService.updateApplicationStatus(id, status);
+      return ApiResponse.success(res, data, 'Application status updated successfully');
+    } catch (err) {
+      return next(err);
+    }
+  }
 }
 

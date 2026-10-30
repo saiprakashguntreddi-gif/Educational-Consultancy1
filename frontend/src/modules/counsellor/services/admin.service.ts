@@ -164,9 +164,24 @@ export interface AssignmentHistoryItem {
   reason?: string | null;
 }
 
+const adminClientCache = new Map<string, { data: any; timestamp: number }>();
+
 export class AdminClientService {
+  public static clearCache() {
+    adminClientCache.clear();
+  }
+
   public static async getDashboard(): Promise<ApiResponse<AdminDashboardData & { attentionRequired?: any }>> {
-    return apiClient.get(API_ENDPOINTS.ADMIN.DASHBOARD);
+    const cacheKey = 'dashboard';
+    const hit = adminClientCache.get(cacheKey);
+    if (hit && Date.now() - hit.timestamp < 15000) {
+      return hit.data;
+    }
+    const res = await apiClient.get<AdminDashboardData & { attentionRequired?: any }>(API_ENDPOINTS.ADMIN.DASHBOARD);
+    if (res && res.success) {
+      adminClientCache.set(cacheKey, { data: res, timestamp: Date.now() });
+    }
+    return res;
   }
 
   public static async listAllStudents(params: {
@@ -192,7 +207,16 @@ export class AdminClientService {
     if (params.limit) q.append('limit', String(params.limit));
 
     const queryStr = q.toString() ? `?${q.toString()}` : '';
-    return apiClient.get(`${API_ENDPOINTS.ADMIN.STUDENTS}${queryStr}`);
+    const cacheKey = `students:${queryStr}`;
+    const hit = adminClientCache.get(cacheKey);
+    if (hit && Date.now() - hit.timestamp < 10000) {
+      return hit.data;
+    }
+    const res = await apiClient.get<any>(`${API_ENDPOINTS.ADMIN.STUDENTS}${queryStr}`);
+    if (res && res.success) {
+      adminClientCache.set(cacheKey, { data: res, timestamp: Date.now() });
+    }
+    return res;
   }
 
   public static async assignCounsellor(
@@ -312,6 +336,10 @@ export class AdminClientService {
     if (params.search) q.append('search', params.search);
     const qs = q.toString() ? `?${q.toString()}` : '';
     return apiClient.get(`${API_ENDPOINTS.ADMIN.APPLICATIONS}${qs}`);
+  }
+
+  public static async updateApplicationStatus(id: string, status: string): Promise<ApiResponse<any>> {
+    return apiClient.patch(`${API_ENDPOINTS.ADMIN.APPLICATIONS}/${id}/status`, { status });
   }
 
   public static async downloadExportCsv(): Promise<void> {

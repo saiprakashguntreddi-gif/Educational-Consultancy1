@@ -9,6 +9,8 @@ const router = Router();
 // Public routes
 router.post('/register', validateRequest(registerSchema), AuthController.register);
 router.post('/login', validateRequest(loginSchema), AuthController.login);
+router.post('/send-email-otp', AuthController.sendEmailOtp);
+router.post('/verify-email-otp', AuthController.verifyEmailOtp);
 router.post('/forgot-password', validateRequest(forgotPasswordSchema), AuthController.forgotPassword);
 router.post('/reset-password', validateRequest(resetPasswordSchema), AuthController.resetPassword);
 

@@ -17,13 +17,14 @@ import {
   Mail,
   Phone,
   MapPin,
-  ExternalLink,
   ShieldCheck,
   Award,
+  Eye,
 } from 'lucide-react';
 import { CounsellorClientService, ActionPlanItem, StudentCounsellorNote } from '../services/counsellor.service';
 import { ProfileService } from '../../profile/services/profile.service';
 import { AppointmentsService } from '../../appointments/services/appointments.service';
+import { MarksheetVerificationModal, MarksheetType } from './MarksheetVerificationModal';
 
 interface Student360ModalProps {
   profileId: string;
@@ -38,6 +39,8 @@ export const Student360Modal: React.FC<Student360ModalProps> = ({ profileId, onC
   const [activeTab, setActiveTab] = useState<
     'profile' | 'academics' | 'preferences' | 'exams' | 'recommendations' | 'shortlist' | 'appointments' | 'guidance'
   >('profile');
+  const [marksheetModalOpen, setMarksheetModalOpen] = useState(false);
+  const [selectedDocType, setSelectedDocType] = useState<MarksheetType>('12th');
 
   // New Action Plan form state
   const [newPlanTitle, setNewPlanTitle] = useState('');
@@ -671,11 +674,17 @@ export const Student360Modal: React.FC<Student360ModalProps> = ({ profileId, onC
                               </span>
                             </div>
                             {data.education.tenthDocumentUrl ? (
-                              <a
-                                href={data.education.tenthDocumentUrl}
-                                target="_blank"
-                                rel="noreferrer"
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedDocType('10th');
+                                  setMarksheetModalOpen(true);
+                                }}
                                 style={{
+                                  background: 'none',
+                                  border: 'none',
+                                  padding: 0,
+                                  cursor: 'pointer',
                                   display: 'inline-flex',
                                   alignItems: 'center',
                                   gap: '0.3rem',
@@ -683,12 +692,11 @@ export const Student360Modal: React.FC<Student360ModalProps> = ({ profileId, onC
                                   fontSize: '0.78rem',
                                   color: '#2563EB',
                                   fontWeight: 600,
-                                  textDecoration: 'none',
                                 }}
                               >
                                 <span>Inspect 10th Certificate</span>
-                                <ExternalLink size={12} />
-                              </a>
+                                <Eye size={13} />
+                              </button>
                             ) : (
                               <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.35rem' }}>
                                 Not uploaded by student
@@ -720,11 +728,17 @@ export const Student360Modal: React.FC<Student360ModalProps> = ({ profileId, onC
                               </span>
                             </div>
                             {data.education.twelfthDocumentUrl ? (
-                              <a
-                                href={data.education.twelfthDocumentUrl}
-                                target="_blank"
-                                rel="noreferrer"
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedDocType('12th');
+                                  setMarksheetModalOpen(true);
+                                }}
                                 style={{
+                                  background: 'none',
+                                  border: 'none',
+                                  padding: 0,
+                                  cursor: 'pointer',
                                   display: 'inline-flex',
                                   alignItems: 'center',
                                   gap: '0.3rem',
@@ -732,12 +746,11 @@ export const Student360Modal: React.FC<Student360ModalProps> = ({ profileId, onC
                                   fontSize: '0.78rem',
                                   color: '#2563EB',
                                   fontWeight: 600,
-                                  textDecoration: 'none',
                                 }}
                               >
                                 <span>Inspect 12th Certificate</span>
-                                <ExternalLink size={12} />
-                              </a>
+                                <Eye size={13} />
+                              </button>
                             ) : (
                               <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.35rem' }}>
                                 Not uploaded by student
@@ -770,11 +783,17 @@ export const Student360Modal: React.FC<Student360ModalProps> = ({ profileId, onC
                                 </span>
                               </div>
                               {data.education.undergradDocumentUrl ? (
-                                <a
-                                  href={data.education.undergradDocumentUrl}
-                                  target="_blank"
-                                  rel="noreferrer"
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedDocType('undergrad');
+                                    setMarksheetModalOpen(true);
+                                  }}
                                   style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    padding: 0,
+                                    cursor: 'pointer',
                                     display: 'inline-flex',
                                     alignItems: 'center',
                                     gap: '0.3rem',
@@ -782,12 +801,11 @@ export const Student360Modal: React.FC<Student360ModalProps> = ({ profileId, onC
                                     fontSize: '0.78rem',
                                     color: '#2563EB',
                                     fontWeight: 600,
-                                    textDecoration: 'none',
                                   }}
                                 >
                                   <span>Inspect Degree Certificate</span>
-                                  <ExternalLink size={12} />
-                                </a>
+                                  <Eye size={13} />
+                                </button>
                               ) : (
                                 <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.35rem' }}>
                                   Not uploaded by student
@@ -1559,6 +1577,14 @@ export const Student360Modal: React.FC<Student360ModalProps> = ({ profileId, onC
           )}
         </div>
       </div>
+
+      <MarksheetVerificationModal
+        isOpen={marksheetModalOpen}
+        onClose={() => setMarksheetModalOpen(false)}
+        education={data?.education}
+        profile={data?.profile}
+        initialDocumentType={selectedDocType}
+      />
     </div>
   );
 };

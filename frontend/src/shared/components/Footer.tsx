@@ -56,7 +56,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   return (
     <>
       <footer className="clean-footer" id="site-footer">
-        <div className="landing-container">
+        <div className="clean-footer-container">
           <div className="clean-footer-grid">
             {/* 1. Brand Column */}
             <div className="clean-footer-col clean-footer-brand-col">
@@ -67,10 +67,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 tabIndex={0}
               >
                 <div className="clean-footer-logo-badge">
-                  <span>G</span>
+                  <img
+                    src="/assets/global-logo-full.png"
+                    alt="Global Consultancy Logo"
+                    className="clean-footer-logo-img"
+                  />
                 </div>
                 <span className="clean-footer-brand-name">
-                  Global<span className="brand-orange">Consciousness</span>
+                  Global <span className="brand-orange">Consultancy</span>
                 </span>
               </div>
 
@@ -79,7 +83,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               </p>
 
               <div className="clean-footer-verified">
-                <ShieldCheck size={16} className="clean-footer-shield" />
+                <ShieldCheck size={18} className="clean-footer-shield" />
                 <span>Verified Student Guidance System</span>
               </div>
             </div>
@@ -165,6 +169,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     Register
                   </button>
                 </li>
+                <li>
+                  <button
+                    type="button"
+                    className="clean-footer-link"
+                    onClick={() => handleAccountClick('dashboard')}
+                    id="footer-dashboard-link"
+                  >
+                    Student Dashboard
+                  </button>
+                </li>
               </ul>
             </div>
 
@@ -175,10 +189,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <div className="clean-footer-contact-group">
                 <span className="clean-footer-contact-label">Email</span>
                 <a
-                  href="mailto:guidance@globalconsciousness.edu"
+                  href="mailto:guidance@globalconsultancy.edu"
                   className="clean-footer-contact-val"
                 >
-                  guidance@globalconsciousness.edu
+                  guidance@globalconsultancy.edu
                 </a>
               </div>
 
@@ -196,7 +210,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           {/* Bottom Legal Bar */}
           <div className="clean-footer-bottom-bar">
             <div className="clean-footer-copyright">
-              &copy; 2026 Global Consciousness. All rights reserved.
+              &copy; 2026 Global Consultancy. All rights reserved.
             </div>
             <div className="clean-footer-legal-links">
               <button
@@ -257,7 +271,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     {activeLegalModal === 'protection' && 'Student Data Protection & Compliance Standards'}
                   </h3>
                   <span className="legal-modal-subtitle">
-                    Global Consciousness Educational Guidance System • Effective Academic Year 2026
+                    Global Consultancy Educational Guidance System • Effective Academic Year 2026
                   </span>
                 </div>
               </div>
@@ -303,7 +317,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   <div className="legal-section-block">
                     <h4>1. Scope of Data Collection</h4>
                     <p>
-                      Global Consciousness collects student academic transcripts, test performance records, competency assessment inputs, and target institution preferences strictly to formulate verified education roadmaps and facilitate counsellor advisory.
+                      Global Consultancy collects student academic transcripts, test performance records, competency assessment inputs, and target institution preferences strictly to formulate verified education roadmaps and facilitate counsellor advisory.
                     </p>
                   </div>
 
@@ -335,7 +349,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   <div className="legal-section-block">
                     <h4>1. Advisory Nature of Guidance</h4>
                     <p>
-                      Global Consciousness provides structured diagnostic assessments, pathway recommendations, and counsellor mentorship. Final admissions, exam scores, and visa decisions remain subject to independent university boards and consular authorities.
+                      Global Consultancy provides structured diagnostic assessments, pathway recommendations, and counsellor mentorship. Final admissions, exam scores, and visa decisions remain subject to independent university boards and consular authorities.
                     </p>
                   </div>
 
@@ -356,7 +370,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   <div className="legal-section-block">
                     <h4>4. Intellectual Property</h4>
                     <p>
-                      All diagnostic competency frameworks, 8-pathway career assessment methodologies, and proprietary scoring algorithms are the exclusive intellectual property of Global Consciousness.
+                      All diagnostic competency frameworks, 8-pathway career assessment methodologies, and proprietary scoring algorithms are the exclusive intellectual property of Global Consultancy.
                     </p>
                   </div>
                 </div>

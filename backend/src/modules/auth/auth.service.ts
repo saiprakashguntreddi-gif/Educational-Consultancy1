@@ -40,12 +40,14 @@ export class AuthService {
     // SECURITY ENFORCEMENT: Public registration strictly creates STUDENT accounts only.
     // Never trust client-supplied roles to prevent privilege escalation.
     const assignedRole = Role.STUDENT;
+    const emailVerified = this.isEmailVerified(input.email);
 
     const user = await prisma.user.create({
       data: {
         email: input.email,
         passwordHash: hashedPassword,
         role: assignedRole,
+        isEmailVerified: emailVerified,
         studentProfile: {
           create: {
             fullName: input.fullName?.trim() || input.email.split('@')[0],
@@ -288,5 +290,85 @@ export class AuthService {
     return {
       message: 'Your password has been successfully reset. You may now log in.',
     };
+  }
+
+  // Store active email verification OTPs in-memory: normalized email -> { otp, expiresAt, verified }
+  private static emailOtpStore = new Map<string, { otp: string; expiresAt: number; verified: boolean }>();
+
+  /**
+   * Dispatch a 6-digit verification code to student's email address
+   */
+  public static async sendEmailVerificationOtp(email: string): Promise<{ message: string; otp?: string; isDev: boolean }> {
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+      throw new Error('Please enter a valid email address.');
+    }
+
+    const existingUser = await prisma.user.findUnique({
+      where: { email: normalizedEmail },
+    });
+    if (existingUser) {
+      throw new Error('An account with this email address already exists. Please sign in instead.');
+    }
+
+    // Generate 6-digit numeric OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes expiry
+
+    this.emailOtpStore.set(normalizedEmail, {
+      otp,
+      expiresAt,
+      verified: false,
+    });
+
+    // Send the email via EmailService
+    await EmailService.sendVerificationOtpEmail(normalizedEmail, otp);
+
+    const isDev = process.env.NODE_ENV !== 'production';
+
+    return {
+      message: `Verification code sent to ${normalizedEmail}. Please enter the 6-digit OTP.`,
+      // Return OTP in non-production environments to allow instant testing and demonstration
+      otp: isDev ? otp : undefined,
+      isDev,
+    };
+  }
+
+  /**
+   * Verify the OTP entered by the student
+   */
+  public static async verifyEmailOtp(email: string, otp: string): Promise<{ message: string; verified: boolean }> {
+    const normalizedEmail = email.trim().toLowerCase();
+    const record = this.emailOtpStore.get(normalizedEmail);
+
+    if (!record) {
+      throw new Error('No verification code found for this email. Please click "Verify" to receive a code.');
+    }
+
+    if (Date.now() > record.expiresAt) {
+      this.emailOtpStore.delete(normalizedEmail);
+      throw new Error('Verification code has expired. Please click "Verify" to request a fresh code.');
+    }
+
+    if (record.otp !== otp.trim()) {
+      throw new Error('Incorrect verification code. Please check your email and try again.');
+    }
+
+    // Mark email as verified
+    record.verified = true;
+
+    return {
+      message: 'Email address verified successfully!',
+      verified: true,
+    };
+  }
+
+  /**
+   * Check if an email was successfully verified via OTP
+   */
+  public static isEmailVerified(email: string): boolean {
+    const normalizedEmail = email.trim().toLowerCase();
+    const record = this.emailOtpStore.get(normalizedEmail);
+    return !!record?.verified;
   }
 }

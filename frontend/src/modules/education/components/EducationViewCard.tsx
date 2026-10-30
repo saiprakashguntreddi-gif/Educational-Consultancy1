@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StudentEducationRecord } from '../education.types';
 import {
   Pencil,
   BookOpen,
   GraduationCap,
   Award,
-  ExternalLink,
   ShieldCheck,
   AlertCircle,
   FileText,
+  Eye,
 } from 'lucide-react';
+import { MarksheetVerificationModal, MarksheetType } from '../../counsellor/components/MarksheetVerificationModal';
 
 interface EducationViewCardProps {
   education: StudentEducationRecord | null;
@@ -24,6 +25,9 @@ export const EducationViewCard: React.FC<EducationViewCardProps> = ({
   defaultYear = 2026,
   onEdit,
 }) => {
+  const [marksheetModalOpen, setMarksheetModalOpen] = useState(false);
+  const [selectedDocType, setSelectedDocType] = useState<MarksheetType>('12th');
+
   const isPG = education?.studyCategory === 'POSTGRADUATE';
   const hasDocuments = Boolean(
     education?.tenthDocumentUrl || education?.twelfthDocumentUrl || education?.undergradDocumentUrl
@@ -344,22 +348,28 @@ export const EducationViewCard: React.FC<EducationViewCardProps> = ({
                 </div>
               </div>
               {education?.tenthDocumentUrl && (
-                <a
-                  href={education.tenthDocumentUrl}
-                  target="_blank"
-                  rel="noreferrer"
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedDocType('10th');
+                    setMarksheetModalOpen(true);
+                  }}
                   style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    cursor: 'pointer',
                     fontSize: '0.75rem',
                     fontWeight: 600,
                     color: '#2563eb',
-                    textDecoration: 'none',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '0.2rem',
+                    gap: '0.25rem',
                   }}
                 >
-                  View <ExternalLink size={12} />
-                </a>
+                  <span>View</span>
+                  <Eye size={13} />
+                </button>
               )}
             </div>
 
@@ -385,22 +395,28 @@ export const EducationViewCard: React.FC<EducationViewCardProps> = ({
                 </div>
               </div>
               {education?.twelfthDocumentUrl && (
-                <a
-                  href={education.twelfthDocumentUrl}
-                  target="_blank"
-                  rel="noreferrer"
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedDocType('12th');
+                    setMarksheetModalOpen(true);
+                  }}
                   style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    cursor: 'pointer',
                     fontSize: '0.75rem',
                     fontWeight: 600,
                     color: '#2563eb',
-                    textDecoration: 'none',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '0.2rem',
+                    gap: '0.25rem',
                   }}
                 >
-                  View <ExternalLink size={12} />
-                </a>
+                  <span>View</span>
+                  <Eye size={13} />
+                </button>
               )}
             </div>
 
@@ -427,22 +443,28 @@ export const EducationViewCard: React.FC<EducationViewCardProps> = ({
                   </div>
                 </div>
                 {education?.undergradDocumentUrl && (
-                  <a
-                    href={education.undergradDocumentUrl}
-                    target="_blank"
-                    rel="noreferrer"
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedDocType('undergrad');
+                      setMarksheetModalOpen(true);
+                    }}
                     style={{
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      cursor: 'pointer',
                       fontSize: '0.75rem',
                       fontWeight: 600,
                       color: '#2563eb',
-                      textDecoration: 'none',
                       display: 'inline-flex',
                       alignItems: 'center',
-                      gap: '0.2rem',
+                      gap: '0.25rem',
                     }}
                   >
-                    View <ExternalLink size={12} />
-                  </a>
+                    <span>View</span>
+                    <Eye size={13} />
+                  </button>
                 )}
               </div>
             )}
@@ -468,6 +490,14 @@ export const EducationViewCard: React.FC<EducationViewCardProps> = ({
           </div>
         )}
       </div>
+
+      <MarksheetVerificationModal
+        isOpen={marksheetModalOpen}
+        onClose={() => setMarksheetModalOpen(false)}
+        education={education}
+        profile={null}
+        initialDocumentType={selectedDocType}
+      />
     </div>
   );
 };

@@ -776,7 +776,7 @@ export const SessionAuditDetailsModal: React.FC<SessionAuditDetailsModalProps> =
                 Automated Session Recording
               </span>
               <span style={{ fontSize: '0.8rem', color: '#0F172A' }}>
-                {session.isRecorded !== false ? 'Archived & Audited by Superconsciousness Compliance' : 'Standard Session'}
+                {session.isRecorded !== false ? 'Archived & Audited by Global Consultancy Compliance' : 'Standard Session'}
               </span>
             </div>
             {session.recordingUrl && (
@@ -850,7 +850,7 @@ export const SessionAuditDetailsModal: React.FC<SessionAuditDetailsModalProps> =
                     </span>
                   </div>
                   <span style={{ fontSize: '0.74rem', color: '#64748B' }}>
-                    22kHz 16-bit Master Audio • Archived & Audited by Superconsciousness Compliance
+                    22kHz 16-bit Master Audio • Archived & Audited by Global Consultancy Compliance
                   </span>
                 </div>
               </div>
@@ -1073,7 +1073,7 @@ export const SessionAuditDetailsModal: React.FC<SessionAuditDetailsModalProps> =
                     Audited Audio Transcript (Spoken):
                   </div>
                   <span>
-                    "Hello and welcome. This is the official audited audio stream for the Superconsciousness counselling session. The student academic profile, GRE and GPA scores, course stream recommendations, and European university eligibility have been reviewed and approved by compliance governance."
+                    "Hello and welcome. This is the official audited audio stream for the Global Consultancy counselling session. The student academic profile, GRE and GPA scores, course stream recommendations, and European university eligibility have been reviewed and approved by compliance governance."
                   </span>
                 </div>
               </div>

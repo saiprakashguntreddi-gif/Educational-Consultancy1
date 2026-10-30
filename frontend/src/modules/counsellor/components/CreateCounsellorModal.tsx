@@ -227,7 +227,7 @@ export const CreateCounsellorModal: React.FC<CreateCounsellorModalProps> = ({ on
                     type="email"
                     required
                     style={inputStyle}
-                    placeholder="counsellor@superconsciousness.com"
+                    placeholder="counsellor@globalconsultancy.edu"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   />

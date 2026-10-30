@@ -110,6 +110,7 @@ router.get('/export', AdminController.exportStudents);
 
 // 10. Platform Applications Overview
 router.get('/applications', AdminController.listApplications);
+router.patch('/applications/:id/status', AdminController.updateApplicationStatus);
 
 export { router as adminRouter };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Users,
   UserCheck,
@@ -62,6 +62,9 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
   >([]);
   const [counsellors, setCounsellors] = useState<CounsellorWorkloadInfo[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
+  const [isApplicationsLoading, setIsApplicationsLoading] = useState(false);
+  const [applicationSearch, setApplicationSearch] = useState('');
+  const [statusUpdatingId, setStatusUpdatingId] = useState<string | null>(null);
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
 
   // Counsellor Management State
@@ -281,6 +284,40 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
     }
   };
 
+  const loadApplications = async (searchTerm = applicationSearch) => {
+    setIsApplicationsLoading(true);
+    try {
+      const res = await AdminClientService.listApplications({
+        search: searchTerm.trim() || undefined,
+      });
+      if (res.success && res.data) {
+        setApplications(res.data);
+      }
+    } catch (err: any) {
+      console.error('Error loading applications:', err);
+    } finally {
+      setIsApplicationsLoading(false);
+    }
+  };
+
+  const handleUpdateAppStatus = async (appId: string, newStatus: string) => {
+    setStatusUpdatingId(appId);
+    try {
+      const res = await AdminClientService.updateApplicationStatus(appId, newStatus);
+      if (res.success) {
+        setApplications((prev) =>
+          prev.map((app) => (app.id === appId ? { ...app, status: newStatus } : app))
+        );
+      } else {
+        alert(res.message || 'Failed to update application status');
+      }
+    } catch (err: any) {
+      alert(`Error updating application: ${err.message}`);
+    } finally {
+      setStatusUpdatingId(null);
+    }
+  };
+
   const loadDashboard = async () => {
     setIsLoading(true);
     try {
@@ -330,8 +367,19 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
   };
 
   useEffect(() => {
-    loadDashboard();
-    loadStudents(1);
+    if (activeTab === 'students') {
+      loadStudents(1);
+      const timer = setTimeout(() => {
+        loadDashboard();
+      }, 60);
+      return () => clearTimeout(timer);
+    } else {
+      loadDashboard();
+      const timer = setTimeout(() => {
+        loadStudents(1);
+      }, 60);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -365,6 +413,9 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
   };
 
   useEffect(() => {
+    if (activeTab === 'students' && students.length === 0) {
+      loadStudents(1);
+    }
     if (activeTab === 'appointments') {
       loadCounsellorAppointments();
     }
@@ -374,17 +425,44 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
     if (activeTab === 'counsellor-performance') {
       loadCounsellorPerformance();
     }
+    if (activeTab === 'applications') {
+      loadApplications();
+    }
   }, [activeTab, auditCounsellorFilter, auditStatusFilter, auditFollowUpFilter]);
 
-  // Filtered applications based on appStatusTab
-  const filteredApplications = applications.filter((app) => {
-    if (appStatusTab === 'ALL') return true;
-    if (appStatusTab === 'PENDING') return app.status.toLowerCase() === 'pending';
-    if (appStatusTab === 'APPROVED') return app.status.toLowerCase() === 'approved';
-    if (appStatusTab === 'REJECTED') return app.status.toLowerCase() === 'rejected';
-    if (appStatusTab === 'IN_REVIEW') return app.status.toLowerCase() === 'in review';
-    return true;
-  });
+  // Counts per status for tabs
+  const appCounts = useMemo(() => {
+    return {
+      ALL: applications.length,
+      PENDING: applications.filter((a) => (a.status || '').toLowerCase().replace(/[\s_]+/g, '') === 'pending').length,
+      IN_REVIEW: applications.filter((a) => (a.status || '').toLowerCase().replace(/[\s_]+/g, '') === 'inreview').length,
+      APPROVED: applications.filter((a) => (a.status || '').toLowerCase().replace(/[\s_]+/g, '') === 'approved').length,
+      REJECTED: applications.filter((a) => (a.status || '').toLowerCase().replace(/[\s_]+/g, '') === 'rejected').length,
+    };
+  }, [applications]);
+
+  // Filtered applications based on appStatusTab and applicationSearch
+  const filteredApplications = useMemo(() => {
+    return applications.filter((app) => {
+      if (appStatusTab !== 'ALL') {
+        const normTab = appStatusTab.toLowerCase().replace(/[\s_]+/g, '');
+        const normApp = (app.status || '').toLowerCase().replace(/[\s_]+/g, '');
+        if (normApp !== normTab) return false;
+      }
+      if (applicationSearch.trim()) {
+        const q = applicationSearch.toLowerCase().trim();
+        const matchName = (app.studentName || '').toLowerCase().includes(q);
+        const matchEmail = (app.studentEmail || '').toLowerCase().includes(q);
+        const matchInst = (app.institutionName || '').toLowerCase().includes(q);
+        const matchProgram = (app.program || '').toLowerCase().includes(q);
+        const matchCountry = (app.country || '').toLowerCase().includes(q);
+        if (!matchName && !matchEmail && !matchInst && !matchProgram && !matchCountry) {
+          return false;
+        }
+      }
+      return true;
+    });
+  }, [applications, appStatusTab, applicationSearch]);
 
   return (
     <SaaSShell
@@ -1397,95 +1475,312 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
           ========================================================================= */}
       {activeTab === 'applications' && (
         <div>
-          <div className="saas-welcome-banner">
+          <div className="saas-welcome-banner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
             <div>
               <h1 className="saas-welcome-title">Applications Overview</h1>
               <p className="saas-welcome-sub">
-                Track formal admissions pipelines, student college shortlists, and decision statuses.
+                Track formal admissions pipelines, student college shortlists, decision statuses, and counselor reviews.
               </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div
+                style={{
+                  padding: '0.45rem 0.9rem',
+                  backgroundColor: '#F8F5EE',
+                  border: '1px solid #426557',
+                  borderRadius: '8px',
+                  color: '#013A2B',
+                  fontWeight: 600,
+                  fontSize: '0.85rem',
+                }}
+              >
+                Total Applications: {applications.length}
+              </div>
+              <button
+                onClick={() => loadApplications()}
+                disabled={isApplicationsLoading}
+                style={{
+                  backgroundColor: '#013A2B',
+                  color: '#FFFFFF',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  padding: '0.48rem 1rem',
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  cursor: isApplicationsLoading ? 'not-allowed' : 'pointer',
+                  border: 'none',
+                  transition: 'background-color 0.2s ease',
+                }}
+                type="button"
+              >
+                <RefreshCw size={14} className={isApplicationsLoading ? 'spin-anim' : ''} />
+                {isApplicationsLoading ? 'Refreshing...' : 'Refresh'}
+              </button>
             </div>
           </div>
 
-          <div className="saas-card">
+          <div className="saas-card" style={{ overflow: 'hidden', border: '1px solid #E2E8F0', borderRadius: '12px' }}>
             {/* Status Tabs Header */}
-            <div style={{ display: 'flex', gap: '0.5rem', padding: '1rem 1.5rem', borderBottom: '1px solid #E2E8F0', backgroundColor: '#F8FAFC' }}>
-              {(['ALL', 'PENDING', 'IN_REVIEW', 'APPROVED', 'REJECTED'] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setAppStatusTab(tab)}
-                  style={{
-                    padding: '0.45rem 1rem',
-                    borderRadius: '8px',
-                    fontSize: '0.82rem',
-                    fontWeight: appStatusTab === tab ? 600 : 500,
-                    backgroundColor: appStatusTab === tab ? '#2563EB' : 'transparent',
-                    color: appStatusTab === tab ? '#FFFFFF' : '#64748B',
-                    border: 'none',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                  }}
-                  type="button"
-                >
-                  {tab === 'ALL' ? 'All Applications' : tab.replace('_', ' ')}
-                </button>
-              ))}
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.5rem',
+                padding: '0.85rem 1.25rem',
+                borderBottom: '1px solid #E2E8F0',
+                backgroundColor: '#F8F5EE',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+              }}
+            >
+              {(
+                [
+                  { key: 'ALL', label: 'All Applications', count: appCounts.ALL },
+                  { key: 'PENDING', label: 'Pending', count: appCounts.PENDING },
+                  { key: 'IN_REVIEW', label: 'In Review', count: appCounts.IN_REVIEW },
+                  { key: 'APPROVED', label: 'Approved', count: appCounts.APPROVED },
+                  { key: 'REJECTED', label: 'Rejected', count: appCounts.REJECTED },
+                ] as const
+              ).map((tab) => {
+                const isActive = appStatusTab === tab.key;
+                return (
+                  <button
+                    key={tab.key}
+                    onClick={() => setAppStatusTab(tab.key)}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      padding: '0.45rem 0.9rem',
+                      borderRadius: '8px',
+                      fontSize: '0.82rem',
+                      fontWeight: isActive ? 600 : 500,
+                      backgroundColor: isActive ? '#013A2B' : 'transparent',
+                      color: isActive ? '#FFFFFF' : '#426557',
+                      border: isActive ? '1px solid #013A2B' : '1px solid transparent',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                    type="button"
+                  >
+                    <span>{tab.label}</span>
+                    <span
+                      style={{
+                        padding: '0.1rem 0.45rem',
+                        borderRadius: '999px',
+                        fontSize: '0.72rem',
+                        fontWeight: 700,
+                        backgroundColor: isActive ? '#426557' : '#E2E8F0',
+                        color: isActive ? '#FFFFFF' : '#475569',
+                      }}
+                    >
+                      {tab.count}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
 
+            {/* Application Search & Quick Filter Controls */}
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.75rem',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '0.85rem 1.25rem',
+                borderBottom: '1px solid #E2E8F0',
+                backgroundColor: '#FFFFFF',
+                flexWrap: 'wrap',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: '280px', maxWidth: '520px' }}>
+                <div className="saas-search-container" style={{ width: '100%' }}>
+                  <Search size={15} color="#426557" />
+                  <input
+                    type="text"
+                    value={applicationSearch}
+                    onChange={(e) => setApplicationSearch(e.target.value)}
+                    className="saas-search-input"
+                    placeholder="Search by student, email, institution, country, or program..."
+                    style={{ fontSize: '0.84rem' }}
+                  />
+                  {applicationSearch && (
+                    <button
+                      onClick={() => setApplicationSearch('')}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#64748B',
+                        fontSize: '0.75rem',
+                        cursor: 'pointer',
+                        padding: '0 0.5rem',
+                      }}
+                      type="button"
+                    >
+                      ✕ Clear
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div style={{ fontSize: '0.82rem', color: '#64748B', fontWeight: 500 }}>
+                Showing <strong style={{ color: '#013A2B' }}>{filteredApplications.length}</strong> of{' '}
+                <strong>{applications.length}</strong> applications
+              </div>
+            </div>
+
+            {/* Applications Table */}
             <div className="saas-table-container">
-              <table className="saas-table">
-                <thead>
-                  <tr>
-                    <th>Student</th>
-                    <th>Program</th>
-                    <th>Target Institution</th>
-                    <th>Country</th>
-                    <th>Status</th>
-                    <th>Applied On</th>
-                    <th>Assigned Counsellor</th>
-                    <th style={{ textAlign: 'right' }}>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredApplications.length === 0 ? (
+              {isApplicationsLoading ? (
+                <div style={{ textAlign: 'center', padding: '3.5rem 1rem', color: '#013A2B' }}>
+                  <RefreshCw size={28} className="spin-anim" style={{ margin: '0 auto 0.75rem' }} />
+                  <p style={{ margin: 0, fontWeight: 600, fontSize: '0.92rem' }}>Loading platform applications...</p>
+                </div>
+              ) : (
+                <table className="saas-table">
+                  <thead>
                     <tr>
-                      <td colSpan={8} style={{ textAlign: 'center', padding: '3rem', color: '#64748B' }}>
-                        <FileText size={32} color="#CBD5E1" style={{ margin: '0 auto 0.5rem' }} />
-                        <p style={{ margin: 0 }}>No applications found under this status filter.</p>
-                      </td>
+                      <th style={{ minWidth: '170px' }}>Student</th>
+                      <th style={{ minWidth: '200px' }}>Target Institution</th>
+                      <th style={{ minWidth: '160px' }}>Program / Degree</th>
+                      <th>Country</th>
+                      <th style={{ minWidth: '160px' }}>Status & Quick Action</th>
+                      <th>Applied On</th>
+                      <th>Counsellor</th>
+                      <th style={{ textAlign: 'right', minWidth: '90px' }}>Action</th>
                     </tr>
-                  ) : (
-                    filteredApplications.map((app) => (
-                      <tr key={app.id}>
-                        <td>
-                          <div style={{ fontWeight: 600, color: '#0F172A' }}>{app.studentName}</div>
-                          <div style={{ fontSize: '0.72rem', color: '#64748B' }}>{app.studentEmail}</div>
-                        </td>
-                        <td style={{ fontSize: '0.82rem', color: '#475569' }}>{app.program}</td>
-                        <td style={{ fontWeight: 500, color: '#0F172A' }}>{app.institutionName}</td>
-                        <td>
-                          <span style={{ fontSize: '0.8rem', color: '#1E293B', backgroundColor: '#F1F5F9', padding: '0.2rem 0.5rem', borderRadius: 4 }}>
-                            {app.country}
-                          </span>
-                        </td>
-                        <td>
-                          <StatusBadge status={app.status} />
-                        </td>
-                        <td style={{ fontSize: '0.82rem', color: '#64748B' }}>{app.appliedOn}</td>
-                        <td style={{ fontSize: '0.82rem', color: '#2563EB' }}>{app.counsellorEmail}</td>
-                        <td style={{ textAlign: 'right' }}>
-                          <button
-                            onClick={() => setSelectedProfileId(app.studentId)}
-                            className="saas-btn saas-btn-outline-primary saas-btn-sm"
-                            type="button"
-                          >
-                            <Eye size={13} /> View
-                          </button>
+                  </thead>
+                  <tbody>
+                    {filteredApplications.length === 0 ? (
+                      <tr>
+                        <td colSpan={8} style={{ textAlign: 'center', padding: '3.5rem 1rem', color: '#64748B' }}>
+                          <FileText size={36} color="#CBD5E1" style={{ margin: '0 auto 0.6rem' }} />
+                          <h4 style={{ margin: '0 0 0.25rem', color: '#0F172A', fontWeight: 600, fontSize: '1rem' }}>
+                            No applications found
+                          </h4>
+                          <p style={{ margin: '0 0 1rem', fontSize: '0.85rem' }}>
+                            {applicationSearch
+                              ? 'No applications match your search query.'
+                              : 'No applications found under this status filter.'}
+                          </p>
+                          {(applicationSearch || appStatusTab !== 'ALL') && (
+                            <button
+                              onClick={() => {
+                                setApplicationSearch('');
+                                setAppStatusTab('ALL');
+                              }}
+                              className="saas-btn saas-btn-sm saas-btn-secondary"
+                              type="button"
+                            >
+                              Reset Filters
+                            </button>
+                          )}
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                    ) : (
+                      filteredApplications.map((app) => (
+                        <tr key={app.id}>
+                          <td>
+                            <div style={{ fontWeight: 600, color: '#013A2B', fontSize: '0.9rem' }}>
+                              {app.studentName}
+                            </div>
+                            <div style={{ fontSize: '0.74rem', color: '#64748B' }}>{app.studentEmail}</div>
+                          </td>
+                          <td>
+                            <div style={{ fontWeight: 600, color: '#0F172A', fontSize: '0.88rem' }}>
+                              {app.institutionName}
+                            </div>
+                            <div style={{ fontSize: '0.74rem', color: '#64748B' }}>{app.country}</div>
+                          </td>
+                          <td>
+                            <span
+                              style={{
+                                fontSize: '0.8rem',
+                                color: '#013A2B',
+                                backgroundColor: '#F8F5EE',
+                                padding: '0.25rem 0.55rem',
+                                borderRadius: 6,
+                                fontWeight: 500,
+                                display: 'inline-block',
+                              }}
+                            >
+                              {app.program}
+                            </span>
+                          </td>
+                          <td>
+                            <span
+                              style={{
+                                fontSize: '0.8rem',
+                                color: '#1E293B',
+                                backgroundColor: '#F1F5F9',
+                                padding: '0.2rem 0.55rem',
+                                borderRadius: 4,
+                                fontWeight: 500,
+                              }}
+                            >
+                              {app.country}
+                            </span>
+                          </td>
+                          <td>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
+                              <StatusBadge status={app.status} />
+                              <select
+                                value={app.status}
+                                onChange={(e) => handleUpdateAppStatus(app.id, e.target.value)}
+                                disabled={statusUpdatingId === app.id}
+                                title="Change application decision status"
+                                style={{
+                                  padding: '0.2rem 0.45rem',
+                                  fontSize: '0.72rem',
+                                  borderRadius: 4,
+                                  border: '1px solid #CBD5E1',
+                                  backgroundColor: '#FFFFFF',
+                                  color: '#334155',
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                <option value="Pending">Pending</option>
+                                <option value="In Review">In Review</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                              </select>
+                            </div>
+                          </td>
+                          <td style={{ fontSize: '0.82rem', color: '#64748B' }}>{app.appliedOn}</td>
+                          <td style={{ fontSize: '0.82rem', color: '#013A2B', fontWeight: 500 }}>
+                            {app.counsellorEmail}
+                          </td>
+                          <td style={{ textAlign: 'right' }}>
+                            <button
+                              onClick={() => setSelectedProfileId(app.studentId)}
+                              className="saas-btn saas-btn-sm"
+                              style={{
+                                backgroundColor: '#013A2B',
+                                color: '#FFFFFF',
+                                border: 'none',
+                                borderRadius: '6px',
+                                padding: '0.35rem 0.65rem',
+                                fontSize: '0.78rem',
+                                fontWeight: 500,
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.35rem',
+                                cursor: 'pointer',
+                              }}
+                              type="button"
+                              title="Open Student 360 profile & verification modal"
+                            >
+                              <Eye size={12} /> View 360
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>

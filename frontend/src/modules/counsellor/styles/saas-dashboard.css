@@ -4,34 +4,49 @@
    ========================================================================== */
 
 :root {
-  --saas-bg: #F8FAFC;
-  --saas-surface: #FFFFFF;
-  --saas-surface-hover: #F8FAFC;
-  --saas-border: #E2E8F0;
-  --saas-border-subtle: #F1F5F9;
+  /* Three Custom Admin Theme Colors */
+  --saas-warm-ivory: #FBF8F1;       /* Warm Ivory Page & Canvas Background */
+  --saas-soft-cream: #F8F5EE;       /* Soft Cream Panels, Sidebar & Headers */
+  --saas-sage: #426557;             /* Sage Border, Active Accents & Badges */
+  --saas-sage-light: rgba(66, 101, 87, 0.09);
+  --saas-sage-border: rgba(66, 101, 87, 0.28);
+  --saas-sage-text: #2f493e;
+
+  /* Surfaces & Structural Borders */
+  --saas-bg: #FBF8F1;               /* Main Workspace in Warm Ivory */
+  --saas-surface: #FFFFFF;          /* Pure White Cards */
+  --saas-surface-cream: #F8F5EE;    /* Soft Cream Surface */
+  --saas-surface-hover: #F8F5EE;
+  --saas-border: rgba(66, 101, 87, 0.22);       /* Elegant Sage Border */
+  --saas-border-subtle: rgba(66, 101, 87, 0.12); /* Subtle Sage Hairline */
+  --saas-border-sage: #426557;
   
-  --saas-navy: #0F172A;
-  --saas-text-primary: #0F172A;
+  /* Typography */
+  --saas-navy: #172D53;
+  --saas-text-primary: #172D53;
   --saas-text-secondary: #475569;
   --saas-text-muted: #64748B;
   --saas-text-light: #94A3B8;
 
-  --saas-primary: #2563EB;
-  --saas-primary-hover: #1D4ED8;
-  --saas-primary-light: #EFF6FF;
-  --saas-primary-border: #BFDBFE;
+  /* Primary Brand Accent (Forest Green #013A2B) */
+  --saas-forest-green: #013A2B;
+  --saas-primary: #013A2B;
+  --saas-primary-hover: #01281e;
+  --saas-primary-light: rgba(1, 58, 43, 0.08);
+  --saas-primary-border: rgba(1, 58, 43, 0.28);
   
-  --saas-success: #16A34A;
-  --saas-success-bg: #F0FDF4;
-  --saas-success-border: #BBF7D0;
-  --saas-success-text: #15803D;
+  /* Statuses */
+  --saas-success: #426557;          /* Sage Success */
+  --saas-success-bg: rgba(66, 101, 87, 0.1);
+  --saas-success-border: rgba(66, 101, 87, 0.35);
+  --saas-success-text: #426557;
 
   --saas-warning: #D97706;
   --saas-warning-bg: #FFFBEB;
   --saas-warning-border: #FDE68A;
   --saas-warning-text: #B45309;
 
-  --saas-danger: #DC2626;
+  --saas-danger: #B51F2A;
   --saas-danger-bg: #FEF2F2;
   --saas-danger-border: #FECACA;
   --saas-danger-text: #B91C1C;
@@ -41,9 +56,9 @@
   --saas-purple-border: #DDD6FE;
   --saas-purple-text: #6D28D9;
 
-  --saas-shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
-  --saas-shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
-  --saas-shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+  --saas-shadow-sm: 0 1px 3px 0 rgba(66, 101, 87, 0.08);
+  --saas-shadow-md: 0 4px 8px -1px rgba(66, 101, 87, 0.1), 0 2px 4px -2px rgba(66, 101, 87, 0.06);
+  --saas-shadow-lg: 0 10px 20px -3px rgba(66, 101, 87, 0.12), 0 4px 6px -4px rgba(66, 101, 87, 0.05);
   --saas-radius-sm: 6px;
   --saas-radius-md: 10px;
   --saas-radius-lg: 14px;
@@ -61,9 +76,9 @@
 
 /* Sidebar */
 .saas-sidebar {
-  width: 256px;
-  min-width: 256px;
-  background-color: var(--saas-surface);
+  width: 260px;
+  min-width: 260px;
+  background-color: var(--saas-soft-cream);
   border-right: 1px solid var(--saas-border);
   display: flex;
   flex-direction: column;
@@ -76,46 +91,67 @@
 
 .saas-sidebar-brand {
   padding: 1.25rem 1.25rem 1rem;
-  border-bottom: 1px solid var(--saas-border-subtle);
+  border-bottom: 1px solid var(--saas-border);
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
 .saas-brand-logo {
-  width: 36px;
-  height: 36px;
-  border-radius: 9px;
-  background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 10px;
+  background: #FFFFFF;
+  border: 1px solid var(--saas-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFFFFF;
-  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);
+  padding: 2.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.saas-brand-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .saas-brand-text {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  gap: 2px;
 }
 
 .saas-brand-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--saas-navy);
-  letter-spacing: -0.01em;
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #172D53;
+  letter-spacing: -0.015em;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  line-height: 1.2;
+}
+
+.saas-brand-title span {
+  color: #013A2B;
+  font-weight: 800;
 }
 
 .saas-brand-subtitle {
-  font-size: 0.72rem;
-  font-weight: 500;
-  color: var(--saas-text-muted);
+  font-size: 0.70rem;
+  font-weight: 600;
+  color: #64748B;
   white-space: nowrap;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1.2;
 }
 
 .saas-sidebar-nav {
@@ -155,18 +191,20 @@
 }
 
 .saas-nav-item:hover {
-  background-color: var(--saas-border-subtle);
+  background-color: rgba(66, 101, 87, 0.08);
   color: var(--saas-navy);
 }
 
 .saas-nav-item.active {
-  background-color: var(--saas-primary-light);
-  color: var(--saas-primary);
-  font-weight: 600;
+  background-color: #FFFFFF;
+  color: var(--saas-sage);
+  font-weight: 700;
+  border-left: 3.5px solid var(--saas-sage);
+  box-shadow: 0 1px 3px rgba(66, 101, 87, 0.12);
 }
 
 .saas-nav-item.active svg {
-  color: var(--saas-primary);
+  color: var(--saas-sage);
 }
 
 .saas-nav-badge {
@@ -186,11 +224,11 @@
 
 .saas-sidebar-footer {
   padding: 1rem 1.25rem;
-  border-top: 1px solid var(--saas-border-subtle);
+  border-top: 1px solid var(--saas-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #FAFAFA;
+  background-color: var(--saas-soft-cream);
 }
 
 .saas-user-info {
@@ -255,7 +293,7 @@
 /* TopBar */
 .saas-topbar {
   height: 64px;
-  background-color: var(--saas-surface);
+  background-color: var(--saas-soft-cream);
   border-bottom: 1px solid var(--saas-border);
   display: flex;
   align-items: center;
@@ -280,9 +318,9 @@
 }
 
 .saas-search-container:focus-within {
-  border-color: var(--saas-primary);
+  border-color: var(--saas-sage);
   background-color: #FFFFFF;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  box-shadow: 0 0 0 3px rgba(66, 101, 87, 0.15);
 }
 
 .saas-search-input {
@@ -306,9 +344,10 @@
 
 .saas-date-badge {
   font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--saas-text-muted);
-  background-color: var(--saas-border-subtle);
+  font-weight: 600;
+  color: var(--saas-sage);
+  background-color: var(--saas-soft-cream);
+  border: 1px solid var(--saas-border);
   padding: 0.35rem 0.75rem;
   border-radius: var(--saas-radius-sm);
   display: flex;
@@ -482,7 +521,8 @@
 
 .saas-card-header {
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--saas-border-subtle);
+  background-color: var(--saas-soft-cream);
+  border-bottom: 1px solid var(--saas-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -522,14 +562,14 @@
 }
 
 .saas-table th {
-  background-color: #F8FAFC;
-  color: var(--saas-text-secondary);
-  font-weight: 600;
+  background-color: var(--saas-soft-cream);
+  color: var(--saas-navy);
+  font-weight: 700;
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--saas-border);
+  padding: 0.85rem 1rem;
+  border-bottom: 2px solid var(--saas-sage);
   white-space: nowrap;
 }
 
@@ -545,7 +585,7 @@
 }
 
 .saas-table tbody tr:hover {
-  background-color: #F8FAFC;
+  background-color: var(--saas-soft-cream);
 }
 
 /* Status Badges */
@@ -654,7 +694,7 @@
   gap: 1rem;
   flex-wrap: wrap;
   padding: 1rem 1.5rem;
-  background-color: #FAFAFA;
+  background-color: var(--saas-soft-cream);
   border-bottom: 1px solid var(--saas-border);
 }
 
@@ -688,7 +728,7 @@
   justify-content: space-between;
   padding: 0.95rem 1.5rem;
   border-top: 1px solid var(--saas-border);
-  background-color: #FFFFFF;
+  background-color: var(--saas-soft-cream);
   font-size: 0.85rem;
   color: var(--saas-text-muted);
 }

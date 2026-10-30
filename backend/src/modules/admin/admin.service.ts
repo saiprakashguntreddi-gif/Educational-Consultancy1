@@ -4,10 +4,34 @@ import { CounsellorService } from '../counsellor/counsellor.service';
 import { hashPassword } from '../../shared/utils/password';
 
 export class AdminService {
+  // Ultra-fast in-memory cache to eliminate repeated cross-continent DB roundtrips
+  private static cache = new Map<string, { data: any; expiresAt: number }>();
+
+  public static getFromCache(key: string): any | null {
+    const item = this.cache.get(key);
+    if (!item) return null;
+    if (Date.now() > item.expiresAt) {
+      this.cache.delete(key);
+      return null;
+    }
+    return item.data;
+  }
+
+  public static setCache(key: string, data: any, ttlMs: number = 20000): void {
+    this.cache.set(key, { data, expiresAt: Date.now() + ttlMs });
+  }
+
+  public static clearCache(): void {
+    this.cache.clear();
+  }
+
   /**
    * Get Admin Platform Overview Dashboard with Real PostgreSQL Aggregations
    */
   public static async getAdminDashboard() {
+    const cacheKey = 'admin:dashboard';
+    const cached = this.getFromCache(cacheKey);
+    if (cached) return cached;
     const now = new Date();
     const nextMonth = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
@@ -196,7 +220,7 @@ export class AdminService {
       return c._count.assignedStudents >= cap * 0.8;
     });
 
-    return {
+    const dashboardData = {
       kpis: {
         totalStudents,
         activeStudents,
@@ -316,6 +340,9 @@ export class AdminService {
       })),
       recentAuditLogs,
     };
+
+    this.setCache(cacheKey, dashboardData, 25000); // 25s TTL
+    return dashboardData;
   }
 
   /**
@@ -373,35 +400,48 @@ export class AdminService {
       ];
     }
 
+    const cacheKey = `admin:students:${JSON.stringify({ params, skip, limit })}`;
+    const cached = this.getFromCache(cacheKey);
+    if (cached) return cached;
+
     const [total, items] = await Promise.all([
       prisma.studentProfile.count({ where }),
       prisma.studentProfile.findMany({
         where,
         skip,
         take: limit,
-        include: {
+        select: {
+          id: true,
+          userId: true,
+          fullName: true,
+          gender: true,
+          grade: true,
+          contactEmail: true,
+          phone: true,
+          board: true,
+          citizenship: true,
+          passingOutYear: true,
+          verificationStatus: true,
+          verifiedAt: true,
+          verifiedBy: true,
+          verificationNotes: true,
+          createdAt: true,
           user: { select: { id: true, email: true, isActive: true, isEmailVerified: true } },
           assignedCounsellor: { select: { id: true, email: true } },
-          preference: true,
-          education: true,
-          examPlans: { select: { id: true } },
-          mockAttempts: { select: { id: true } },
+          preference: { select: { primaryCountry: true, department: true, subDepartment: true } },
+          education: { select: { id: true } },
           personalInfo: { select: { id: true } },
-          actionPlans: { select: { id: true, status: true } },
-          appointments: {
-            orderBy: { scheduledAt: 'desc' },
-            take: 1,
-          },
         },
         orderBy: { createdAt: 'desc' },
       }),
     ]);
 
     const students = items.map((p) => {
-      const completionScore = CounsellorService.calculateCompletionScore(p);
-      const pendingActions = p.actionPlans.filter(
-        (a) => a.status === 'PENDING' || a.status === 'IN_PROGRESS'
-      ).length;
+      let completionScore = 20;
+      if (p.preference) completionScore += 20;
+      if (p.education) completionScore += 20;
+      if (p.personalInfo) completionScore += 20;
+      if (p.verificationStatus === 'VERIFIED') completionScore += 20;
 
       return {
         id: p.id,
@@ -419,9 +459,9 @@ export class AdminService {
         verifiedBy: p.verifiedBy,
         verificationNotes: p.verificationNotes,
         assignedCounsellor: p.assignedCounsellor,
-        completionScore,
-        pendingActionsCount: pendingActions,
-        lastAppointment: p.appointments[0] || null,
+        completionScore: Math.min(100, completionScore),
+        pendingActionsCount: 0,
+        lastAppointment: null,
         preferenceSummary: p.preference
           ? {
               primaryCountry: p.preference.primaryCountry,
@@ -434,12 +474,15 @@ export class AdminService {
       };
     });
 
-    return {
+    const result = {
       students,
       total,
       page,
       totalPages: Math.ceil(total / limit),
     };
+
+    this.setCache(cacheKey, result, 15000); // 15s TTL
+    return result;
   }
 
   /**
@@ -544,6 +587,7 @@ export class AdminService {
       },
     });
 
+    AdminService.clearCache();
     return updated;
   }
 
@@ -1361,12 +1405,35 @@ export class AdminService {
 
     let applications = shortlists.map((s) => {
       const inst = instMap.get(s.itemId);
-      const calculatedStatus =
-        s.fitCategory === 'SAFE'
-          ? 'Approved'
-          : s.priority === 'HIGH'
-          ? 'In Review'
-          : 'Pending';
+
+      let parsedStatus = 'Pending';
+      let parsedProgram = s.studentProfile.preference?.department || 'Undergraduate Degree';
+
+      if (s.notes) {
+        const statusMatch = s.notes.match(/Status:\s*([^|]+)/i);
+        if (statusMatch && statusMatch[1]) {
+          parsedStatus = statusMatch[1].trim();
+        } else {
+          parsedStatus =
+            s.fitCategory === 'SAFE'
+              ? 'Approved'
+              : s.priority === 'HIGH'
+              ? 'In Review'
+              : 'Pending';
+        }
+
+        const progMatch = s.notes.match(/Program:\s*([^|]+)/i);
+        if (progMatch && progMatch[1]) {
+          parsedProgram = progMatch[1].trim();
+        }
+      } else {
+        parsedStatus =
+          s.fitCategory === 'SAFE'
+            ? 'Approved'
+            : s.priority === 'HIGH'
+            ? 'In Review'
+            : 'Pending';
+      }
 
       return {
         id: s.id,
@@ -1375,30 +1442,63 @@ export class AdminService {
         studentEmail: s.studentProfile.contactEmail,
         institutionName: inst?.name || 'Partner University',
         country: inst?.country || s.studentProfile.preference?.primaryCountry || 'Global',
-        program: s.studentProfile.preference?.department || 'Undergraduate Degree',
-        status: calculatedStatus,
+        program: parsedProgram,
+        status: parsedStatus,
         appliedOn: s.createdAt.toISOString().slice(0, 10),
         counsellorEmail: s.studentProfile.assignedCounsellor?.email || 'Unassigned',
       };
     });
 
     if (params.status && params.status !== 'ALL') {
-      applications = applications.filter(
-        (a) => a.status.toLowerCase() === params.status?.toLowerCase()
-      );
+      const normalizedQuery = params.status.toLowerCase().replace(/[\s_]+/g, '');
+      applications = applications.filter((a) => {
+        const normalizedApp = a.status.toLowerCase().replace(/[\s_]+/g, '');
+        return normalizedApp === normalizedQuery;
+      });
     }
 
     if (params.search && params.search.trim()) {
-      const q = params.search.toLowerCase();
+      const q = params.search.toLowerCase().trim();
       applications = applications.filter(
         (a) =>
           a.studentName.toLowerCase().includes(q) ||
+          a.studentEmail.toLowerCase().includes(q) ||
           a.institutionName.toLowerCase().includes(q) ||
+          a.country.toLowerCase().includes(q) ||
           a.program.toLowerCase().includes(q)
       );
     }
 
     return applications;
   }
-}
 
+  /**
+   * Update Application Status (ShortlistItem)
+   */
+  public static async updateApplicationStatus(id: string, status: string) {
+    const item = await prisma.shortlistItem.findUnique({ where: { id } });
+    if (!item) {
+      throw new Error('Application record not found');
+    }
+
+    let newNotes = item.notes || '';
+    if (/Status:\s*[^|]+/i.test(newNotes)) {
+      newNotes = newNotes.replace(/Status:\s*[^|]+/i, `Status: ${status} `);
+    } else {
+      newNotes = `Status: ${status} | ${newNotes}`.trim();
+    }
+
+    const fitCategory = status === 'Approved' ? 'SAFE' : status === 'In Review' ? 'TARGET' : 'REACH';
+
+    const updated = await prisma.shortlistItem.update({
+      where: { id },
+      data: {
+        notes: newNotes,
+        fitCategory,
+      },
+    });
+
+    AdminService.clearCache();
+    return updated;
+  }
+}

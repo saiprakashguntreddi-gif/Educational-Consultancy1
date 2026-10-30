@@ -139,7 +139,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </h1>
 
             <p className="t-body text-ink-dim">
-              Global Consciousness bridges the gap between student aspirations and top educational institutions worldwide. Explore premier university pathways, assess academic competencies, and secure verified admissions with structured mentor guidance.
+              Global Consultancy bridges the gap between student aspirations and top educational institutions worldwide. Explore premier university pathways, assess academic competencies, and secure verified admissions with structured mentor guidance.
             </p>
 
             <div className="hero-actions">
@@ -317,7 +317,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <div className="about-showcase-left">
               <div className="about-eyebrow-row">
                 <span className="about-eyebrow-dash" />
-                <span className="about-eyebrow-text">ABOUT GLOBAL CONSCIOUSNESS</span>
+                <span className="about-eyebrow-text">ABOUT GLOBAL CONSULTANCY</span>
               </div>
 
               <h2 className="about-main-headline">
@@ -335,7 +335,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 {/* 4K Transparent Students Image Cutout */}
                 <img
                   src="/assets/about-students-transparent.png"
-                  alt="Global Consciousness university students"
+                  alt="Global Consultancy university students"
                   className="about-students-img"
                 />
 
@@ -833,7 +833,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
               {/* Description */}
               <p className="cta-modern-desc">
-                Start your student journey with Global Consciousness. Complete your profile intake and receive structured, verified guidance from expert mentors.
+                Start your student journey with Global Consultancy. Complete your profile intake and receive structured, verified guidance from expert mentors.
               </p>
 
               {/* Action Buttons */}

@@ -1,6 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../shared/context/AuthContext';
-import { UserPlus, AlertCircle, Eye, EyeOff, CheckCircle2, ShieldCheck, ArrowRight } from 'lucide-react';
+import { apiClient } from '../../../shared/services/api-client';
+import { API_ENDPOINTS } from '../../../config/api.config';
+import {
+  UserPlus,
+  AlertCircle,
+  Eye,
+  EyeOff,
+  CheckCircle2,
+  ShieldCheck,
+  ArrowRight,
+  Mail,
+  RotateCw,
+} from 'lucide-react';
 
 interface RegisterPageProps {
   onSuccess: () => void;
@@ -28,15 +40,111 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [registeredInfo, setRegisteredInfo] = useState<{ name: string; email: string } | null>(null);
 
+  // Email OTP Verification State
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [otpError, setOtpError] = useState<string | null>(null);
+  const [otpSuccessMsg, setOtpSuccessMsg] = useState<string | null>(null);
+  const [devOtpHint, setDevOtpHint] = useState<string | null>(null);
+  const [resendCountdown, setResendCountdown] = useState(0);
+
+  // Ensure clean empty fields on load (prevent browser autofill)
+  useEffect(() => {
+    setPassword('');
+    setConfirmPassword('');
+  }, []);
+
+  // Countdown timer for OTP resend
+  useEffect(() => {
+    if (resendCountdown <= 0) return;
+    const timer = setInterval(() => {
+      setResendCountdown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [resendCountdown]);
+
+  const handleSendOtp = async () => {
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      setOtpError('Please enter a valid email address first.');
+      return;
+    }
+
+    setOtpError(null);
+    setOtpSuccessMsg(null);
+    setIsSendingOtp(true);
+
+    try {
+      const response: any = await apiClient.post(API_ENDPOINTS.AUTH.SEND_EMAIL_OTP, {
+        email: trimmed,
+      });
+
+      if (response && response.success) {
+        setOtpSent(true);
+        setOtpSuccessMsg(response.message || `Verification code sent to ${trimmed}!`);
+        if (response.data?.otp) {
+          setDevOtpHint(response.data.otp);
+        }
+        setResendCountdown(30);
+      } else {
+        setOtpError(response?.error || response?.message || 'Failed to send verification code.');
+      }
+    } catch (err: any) {
+      setOtpError(err.message || 'Unable to send OTP. Please check your network or try again.');
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    const cleanOtp = otpCode.trim();
+    if (cleanOtp.length !== 6) {
+      setOtpError('Please enter the complete 6-digit OTP code.');
+      return;
+    }
+
+    setOtpError(null);
+    setIsVerifyingOtp(true);
+
+    try {
+      const response: any = await apiClient.post(API_ENDPOINTS.AUTH.VERIFY_EMAIL_OTP, {
+        email: email.trim().toLowerCase(),
+        otp: cleanOtp,
+      });
+
+      if (response && response.success) {
+        setIsEmailVerified(true);
+        setOtpSent(false);
+        setOtpSuccessMsg('Email verified successfully!');
+        setOtpError(null);
+      } else {
+        setOtpError(response?.error || response?.message || 'Invalid verification code.');
+      }
+    } catch (err: any) {
+      setOtpError(err.message || 'Verification failed. Please check the code.');
+    } finally {
+      setIsVerifyingOtp(false);
+    }
+  };
+
   // Password requirement checks
   const hasMinLength = password.length >= 8;
   const hasUpper = /[A-Z]/.test(password);
   const hasLower = /[a-z]/.test(password);
   const hasNumber = /[0-9]/.test(password);
+  const isPasswordDirty = password.length > 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!isEmailVerified) {
+      setError('Please verify your email address with the OTP code before registering.');
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError('Passwords do not match. Please verify your confirm password.');
@@ -140,7 +248,10 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off">
+          {/* Hidden inputs to capture aggressive browser autofill */}
+          <input type="text" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
+          <input type="password" style={{ display: 'none' }} tabIndex={-1} autoComplete="new-password" />
           <div className="form-group">
             <label className="form-label">Full Name <span className="required">*</span></label>
             <input
@@ -153,16 +264,379 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Email Address <span className="required">*</span></label>
-            <input
-              type="email"
-              required
-              className="form-input"
-              placeholder="student@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+          <div className="form-group" style={{ marginBottom: '1.25rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+              <label className="form-label" style={{ margin: 0 }}>
+                Email Address <span className="required">*</span>
+              </label>
+              {isEmailVerified && (
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                    backgroundColor: '#DCFCE7',
+                    color: '#15803D',
+                    border: '1px solid #86EFAC',
+                    padding: '0.15rem 0.55rem',
+                    borderRadius: '9999px',
+                    fontSize: '0.72rem',
+                    fontWeight: 700,
+                  }}
+                >
+                  <CheckCircle2 size={12} color="#16A34A" />
+                  <span>Verified</span>
+                </span>
+              )}
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'stretch' }}>
+              <div style={{ position: 'relative', flex: 1 }}>
+                <input
+                  type="email"
+                  required
+                  className="form-input"
+                  placeholder="student@example.com"
+                  value={email}
+                  disabled={isEmailVerified}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (isEmailVerified) {
+                      setIsEmailVerified(false);
+                      setOtpSent(false);
+                    }
+                    if (otpError) setOtpError(null);
+                  }}
+                  style={{
+                    width: '100%',
+                    paddingRight: isEmailVerified ? '2.5rem' : '0.9rem',
+                    borderColor: isEmailVerified ? '#22C55E' : undefined,
+                    backgroundColor: isEmailVerified ? '#F0FDF4' : '#FFFFFF',
+                    transition: 'all 0.2s ease',
+                  }}
+                />
+                {isEmailVerified && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      right: '0.75rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      color: '#16A34A',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <CheckCircle2 size={18} />
+                  </div>
+                )}
+              </div>
+
+              {!isEmailVerified ? (
+                <button
+                  type="button"
+                  onClick={handleSendOtp}
+                  disabled={isSendingOtp || !email.trim()}
+                  style={{
+                    backgroundColor: email.trim() ? '#FF9800' : '#E2E8F0',
+                    color: email.trim() ? '#FFFFFF' : '#94A3B8',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0 1.15rem',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    cursor: email.trim() && !isSendingOtp ? 'pointer' : 'not-allowed',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    whiteSpace: 'nowrap',
+                    transition: 'all 0.2s ease',
+                    boxShadow: email.trim() ? '0 2px 8px rgba(255, 152, 0, 0.3)' : 'none',
+                  }}
+                  title="Click to send verification code to this email"
+                >
+                  {isSendingOtp ? (
+                    <span>Sending...</span>
+                  ) : otpSent ? (
+                    <>
+                      <RotateCw size={13} />
+                      <span>Resend</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck size={14} />
+                      <span>Verify</span>
+                    </>
+                  )}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsEmailVerified(false);
+                    setOtpSent(false);
+                    setOtpCode('');
+                    setOtpSuccessMsg(null);
+                  }}
+                  style={{
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #CBD5E1',
+                    borderRadius: '8px',
+                    padding: '0 0.85rem',
+                    fontSize: '0.76rem',
+                    fontWeight: 600,
+                    color: '#64748B',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                    transition: 'all 0.15s ease',
+                  }}
+                  title="Click if you need to change your email address"
+                >
+                  Change
+                </button>
+              )}
+            </div>
+
+            {/* Error message banner if sending failed or email conflict */}
+            {!otpSent && otpError && (
+              <div
+                style={{
+                  marginTop: '0.65rem',
+                  padding: '0.65rem 0.85rem',
+                  backgroundColor: '#FEF2F2',
+                  border: '1px solid #FCA5A5',
+                  borderRadius: '8px',
+                  color: '#991B1B',
+                  fontSize: '0.82rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '0.5rem',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <AlertCircle size={15} color="#DC2626" style={{ flexShrink: 0 }} />
+                  <span>{otpError}</span>
+                </div>
+                {otpError.toLowerCase().includes('already exists') && (
+                  <button
+                    type="button"
+                    onClick={onNavigateToLogin}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#2563EB',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      fontSize: '0.78rem',
+                      textDecoration: 'underline',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    Go to Login
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* OTP Input Card (Active when OTP sent and not yet verified) */}
+            {otpSent && !isEmailVerified && (
+              <div
+                style={{
+                  marginTop: '0.75rem',
+                  padding: '1rem',
+                  backgroundColor: '#FFFBEB',
+                  border: '1.5px solid #FCD34D',
+                  borderRadius: '12px',
+                  boxShadow: '0 4px 14px rgba(245, 158, 11, 0.1)',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', fontWeight: 700, color: '#92400E' }}>
+                    <Mail size={14} />
+                    <span>Enter 6-Digit OTP Code:</span>
+                  </div>
+                  <span style={{ fontSize: '0.72rem', color: '#B45309' }}>
+                    Valid for 10 mins
+                  </span>
+                </div>
+
+                <p style={{ margin: '0 0 0.65rem 0', fontSize: '0.76rem', color: '#78350F', lineHeight: 1.4 }}>
+                  We sent a 6-digit verification code to <strong>{email}</strong>.
+                </p>
+
+                {otpSuccessMsg && (
+                  <div
+                    style={{
+                      fontSize: '0.75rem',
+                      color: '#15803D',
+                      backgroundColor: '#DCFCE7',
+                      border: '1px solid #86EFAC',
+                      padding: '0.35rem 0.65rem',
+                      borderRadius: '6px',
+                      marginBottom: '0.65rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                    }}
+                  >
+                    <CheckCircle2 size={13} color="#16A34A" />
+                    <span>{otpSuccessMsg}</span>
+                  </div>
+                )}
+
+                {/* Dev Mode Helper */}
+                {devOtpHint && (
+                  <div
+                    style={{
+                      fontSize: '0.75rem',
+                      color: '#15803D',
+                      backgroundColor: '#DCFCE7',
+                      border: '1px solid #86EFAC',
+                      padding: '0.35rem 0.65rem',
+                      borderRadius: '6px',
+                      marginBottom: '0.65rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <span>Demo/Dev Code: <strong>{devOtpHint}</strong></span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOtpCode(devOtpHint);
+                        setOtpError(null);
+                      }}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#16A34A',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        fontSize: '0.72rem',
+                        textDecoration: 'underline',
+                      }}
+                    >
+                      Auto-fill
+                    </button>
+                  </div>
+                )}
+
+                {otpError && (
+                  <div
+                    style={{
+                      fontSize: '0.75rem',
+                      color: '#DC2626',
+                      backgroundColor: '#FEE2E2',
+                      border: '1px solid #FCA5A5',
+                      padding: '0.4rem 0.65rem',
+                      borderRadius: '6px',
+                      marginBottom: '0.65rem',
+                    }}
+                  >
+                    {otpError}
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input
+                    type="text"
+                    maxLength={6}
+                    placeholder="• • • • • •"
+                    value={otpCode}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '').slice(0, 6);
+                      setOtpCode(val);
+                      if (otpError) setOtpError(null);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleVerifyOtp();
+                      }
+                    }}
+                    style={{
+                      flex: 1,
+                      textAlign: 'center',
+                      fontSize: '1.25rem',
+                      fontWeight: 800,
+                      letterSpacing: '0.45rem',
+                      padding: '0.55rem',
+                      borderRadius: '8px',
+                      border: '1.5px solid #F59E0B',
+                      outline: 'none',
+                      backgroundColor: '#FFFFFF',
+                      color: '#172D53',
+                      fontFamily: 'monospace',
+                    }}
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={handleVerifyOtp}
+                    disabled={isVerifyingOtp || otpCode.trim().length !== 6}
+                    style={{
+                      backgroundColor: otpCode.trim().length === 6 ? '#16A34A' : '#94A3B8',
+                      color: '#FFFFFF',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '0 1.25rem',
+                      fontSize: '0.82rem',
+                      fontWeight: 700,
+                      cursor: otpCode.trim().length === 6 && !isVerifyingOtp ? 'pointer' : 'not-allowed',
+                      transition: 'all 0.2s ease',
+                      boxShadow: otpCode.trim().length === 6 ? '0 2px 8px rgba(22, 163, 74, 0.3)' : 'none',
+                    }}
+                  >
+                    {isVerifyingOtp ? 'Verifying...' : 'Submit OTP'}
+                  </button>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.6rem', fontSize: '0.74rem' }}>
+                  <span style={{ color: '#78350F' }}>
+                    Didn't receive email? Check spam or
+                  </span>
+                  <button
+                    type="button"
+                    disabled={resendCountdown > 0 || isSendingOtp}
+                    onClick={handleSendOtp}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: resendCountdown > 0 ? '#9CA3AF' : '#EA580C',
+                      fontWeight: 700,
+                      cursor: resendCountdown > 0 ? 'not-allowed' : 'pointer',
+                      padding: 0,
+                    }}
+                  >
+                    {resendCountdown > 0 ? `Resend in ${resendCountdown}s` : 'Resend Code'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Verified Confirmation Badge */}
+            {isEmailVerified && (
+              <div
+                style={{
+                  marginTop: '0.45rem',
+                  padding: '0.45rem 0.75rem',
+                  backgroundColor: '#F0FDF4',
+                  border: '1px solid #86EFAC',
+                  borderRadius: '8px',
+                  color: '#15803D',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                }}
+              >
+                <CheckCircle2 size={15} color="#16A34A" />
+                <span>Email verified successfully! You can now complete your registration.</span>
+              </div>
+            )}
           </div>
 
           <div className="form-group">
@@ -171,6 +645,8 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
               <input
                 type={showPassword ? 'text' : 'password'}
                 required
+                name="new_registration_password"
+                autoComplete="new-password"
                 className="form-input"
                 placeholder="e.g. Student123!"
                 value={password}
@@ -213,17 +689,17 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
               borderRadius: '6px',
               border: '1px solid #E5E7EB',
             }}>
-              <span style={{ color: hasMinLength ? '#198754' : undefined, fontWeight: hasMinLength ? 600 : 400, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                {hasMinLength ? '✓' : '•'} 8+ characters
+              <span style={{ color: isPasswordDirty && hasMinLength ? '#15803D' : '#64748B', fontWeight: isPasswordDirty && hasMinLength ? 600 : 400, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                {isPasswordDirty && hasMinLength ? '✓' : '•'} 8+ characters
               </span>
-              <span style={{ color: hasUpper ? '#198754' : undefined, fontWeight: hasUpper ? 600 : 400, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                {hasUpper ? '✓' : '•'} 1 uppercase (A-Z)
+              <span style={{ color: isPasswordDirty && hasUpper ? '#15803D' : '#64748B', fontWeight: isPasswordDirty && hasUpper ? 600 : 400, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                {isPasswordDirty && hasUpper ? '✓' : '•'} 1 uppercase (A-Z)
               </span>
-              <span style={{ color: hasLower ? '#198754' : undefined, fontWeight: hasLower ? 600 : 400, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                {hasLower ? '✓' : '•'} 1 lowercase (a-z)
+              <span style={{ color: isPasswordDirty && hasLower ? '#15803D' : '#64748B', fontWeight: isPasswordDirty && hasLower ? 600 : 400, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                {isPasswordDirty && hasLower ? '✓' : '•'} 1 lowercase (a-z)
               </span>
-              <span style={{ color: hasNumber ? '#198754' : undefined, fontWeight: hasNumber ? 600 : 400, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                {hasNumber ? '✓' : '•'} 1 number (0-9)
+              <span style={{ color: isPasswordDirty && hasNumber ? '#15803D' : '#64748B', fontWeight: isPasswordDirty && hasNumber ? 600 : 400, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                {isPasswordDirty && hasNumber ? '✓' : '•'} 1 number (0-9)
               </span>
             </div>
           </div>
@@ -234,6 +710,8 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
               <input
                 type={showConfirmPassword ? 'text' : 'password'}
                 required
+                name="new_registration_password_confirm"
+                autoComplete="new-password"
                 className="form-input"
                 placeholder="Re-enter your password"
                 value={confirmPassword}

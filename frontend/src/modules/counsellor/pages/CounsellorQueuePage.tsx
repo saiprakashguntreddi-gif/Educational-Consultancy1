@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { ProfileService } from '../../profile/services/profile.service';
 import { StudentProfileRecord, VerificationStatus } from '../../profile/profile.types';
-import { ShieldCheck, Check, X, Clock, Compass, GraduationCap, Sparkles, Award } from 'lucide-react';
+import { ShieldCheck, Check, X, Clock, Compass, GraduationCap, Sparkles, Award, FileText, Eye, FileCheck2 } from 'lucide-react';
 import { PreferencesService } from '../../preferences/services/preferences.service';
 import { StudentPreferenceRecord } from '../../preferences/preferences.types';
 import { EducationService } from '../../education/services/education.service';
 import { StudentEducationRecord } from '../../education/education.types';
 import { CounsellorRecommendationModal } from '../../recommendations/components/CounsellorRecommendationModal';
 import { CounsellorAssessmentModal } from '../../assessments/components/CounsellorAssessmentModal';
+import { MarksheetVerificationModal, MarksheetType } from '../components/MarksheetVerificationModal';
 
 export const CounsellorQueuePage: React.FC = () => {
   const [profiles, setProfiles] = useState<StudentProfileRecord[]>([]);
@@ -22,6 +23,13 @@ export const CounsellorQueuePage: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [recommendationModalOpen, setRecommendationModalOpen] = useState(false);
   const [assessmentModalOpen, setAssessmentModalOpen] = useState(false);
+  const [marksheetModalOpen, setMarksheetModalOpen] = useState(false);
+  const [selectedDocType, setSelectedDocType] = useState<MarksheetType>('12th');
+
+  const openMarksheetModal = (docType: MarksheetType) => {
+    setSelectedDocType(docType);
+    setMarksheetModalOpen(true);
+  };
 
   const loadQueue = async () => {
     setIsLoading(true);
@@ -327,6 +335,194 @@ export const CounsellorQueuePage: React.FC = () => {
                         {selectedEducation.tenthPercentage ? `, ${selectedEducation.tenthPercentage}%` : ''})
                       </div>
                     )}
+
+                    {/* Marksheets Verification & Photocopy Inspection Section */}
+                    <div
+                      style={{
+                        marginTop: '0.65rem',
+                        paddingTop: '0.65rem',
+                        borderTop: '1px solid #CBD5E1',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.5rem',
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: '0.74rem',
+                          fontWeight: 700,
+                          textTransform: 'uppercase',
+                          color: '#013A2B',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                        }}
+                      >
+                        <FileCheck2 size={14} color="#013A2B" />
+                        <span>Submitted Marksheet Photocopies (Verify Marks & Percentages)</span>
+                      </div>
+
+                      {/* 12th Marksheet Item */}
+                      <div
+                        style={{
+                          backgroundColor: selectedEducation.twelfthDocumentUrl ? '#F0FDF4' : '#FFFBEB',
+                          border: selectedEducation.twelfthDocumentUrl ? '1px solid #BBF7D0' : '1px solid #FDE68A',
+                          borderRadius: '6px',
+                          padding: '0.5rem 0.65rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: '0.5rem',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.78rem' }}>
+                          <FileText size={15} color={selectedEducation.twelfthDocumentUrl ? '#16A34A' : '#D97706'} />
+                          <div>
+                            <strong style={{ color: '#0F172A' }}>12th Marksheet:</strong>{' '}
+                            <span style={{ color: '#0284C7', fontWeight: 700 }}>
+                              Claimed {selectedEducation.percentage}%
+                            </span>{' '}
+                            <span
+                              style={{
+                                fontSize: '0.7rem',
+                                color: selectedEducation.twelfthDocumentUrl ? '#15803D' : '#B45309',
+                                fontWeight: 600,
+                              }}
+                            >
+                              ({selectedEducation.twelfthDocumentUrl ? 'Photocopy Available' : 'Pending Upload'})
+                            </span>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => openMarksheetModal('12th')}
+                          style={{
+                            backgroundColor: selectedEducation.twelfthDocumentUrl ? '#013A2B' : '#334155',
+                            color: '#FFFFFF',
+                            border: 'none',
+                            padding: '0.32rem 0.75rem',
+                            borderRadius: '5px',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                            flexShrink: 0,
+                            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                          }}
+                          title="Open and inspect 12th marksheet photocopy to cross-check percentage and subject scores"
+                        >
+                          <Eye size={13} />
+                          <span>Open & Verify 12th</span>
+                        </button>
+                      </div>
+
+                      {/* 10th Marksheet Item */}
+                      <div
+                        style={{
+                          backgroundColor: selectedEducation.tenthDocumentUrl ? '#F0FDF4' : '#FFFBEB',
+                          border: selectedEducation.tenthDocumentUrl ? '1px solid #BBF7D0' : '1px solid #FDE68A',
+                          borderRadius: '6px',
+                          padding: '0.5rem 0.65rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: '0.5rem',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.78rem' }}>
+                          <FileText size={15} color={selectedEducation.tenthDocumentUrl ? '#16A34A' : '#D97706'} />
+                          <div>
+                            <strong style={{ color: '#0F172A' }}>10th Marksheet:</strong>{' '}
+                            <span style={{ color: '#0284C7', fontWeight: 700 }}>
+                              Claimed {selectedEducation.tenthPercentage ?? 'N/A'}%
+                            </span>{' '}
+                            <span
+                              style={{
+                                fontSize: '0.7rem',
+                                color: selectedEducation.tenthDocumentUrl ? '#15803D' : '#B45309',
+                                fontWeight: 600,
+                              }}
+                            >
+                              ({selectedEducation.tenthDocumentUrl ? 'Photocopy Available' : 'Pending Upload'})
+                            </span>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => openMarksheetModal('10th')}
+                          style={{
+                            backgroundColor: selectedEducation.tenthDocumentUrl ? '#013A2B' : '#334155',
+                            color: '#FFFFFF',
+                            border: 'none',
+                            padding: '0.32rem 0.75rem',
+                            borderRadius: '5px',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                            flexShrink: 0,
+                            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                          }}
+                          title="Open and inspect 10th marksheet photocopy to cross-check percentage"
+                        >
+                          <Eye size={13} />
+                          <span>Open & Verify 10th</span>
+                        </button>
+                      </div>
+
+                      {/* Degree Item (if Postgrad or if undergradDocumentUrl present) */}
+                      {(selectedEducation.studyCategory === 'POSTGRADUATE' || selectedEducation.undergradDocumentUrl) && (
+                        <div
+                          style={{
+                            backgroundColor: selectedEducation.undergradDocumentUrl ? '#F0FDF4' : '#FFFBEB',
+                            border: selectedEducation.undergradDocumentUrl ? '1px solid #BBF7D0' : '1px solid #FDE68A',
+                            borderRadius: '6px',
+                            padding: '0.5rem 0.65rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: '0.5rem',
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.78rem' }}>
+                            <Award size={15} color={selectedEducation.undergradDocumentUrl ? '#16A34A' : '#D97706'} />
+                            <div>
+                              <strong style={{ color: '#0F172A' }}>Degree Certificate:</strong>{' '}
+                              <span style={{ color: '#0284C7', fontWeight: 700 }}>
+                                Claimed {selectedEducation.undergradPercentage ?? 'N/A'}%
+                              </span>
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => openMarksheetModal('undergrad')}
+                            style={{
+                              backgroundColor: selectedEducation.undergradDocumentUrl ? '#013A2B' : '#334155',
+                              color: '#FFFFFF',
+                              border: 'none',
+                              padding: '0.32rem 0.75rem',
+                              borderRadius: '5px',
+                              fontSize: '0.75rem',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.35rem',
+                            }}
+                          >
+                            <Eye size={13} />
+                            <span>Verify Degree</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ) : (
                   <div style={{ fontSize: '0.8rem', color: '#64748B', fontStyle: 'italic' }}>
@@ -431,6 +627,16 @@ export const CounsellorQueuePage: React.FC = () => {
             studentProfileId={selectedProfile.id}
             studentName={selectedProfile.fullName}
             studentEmail={selectedProfile.contactEmail}
+          />
+          <MarksheetVerificationModal
+            isOpen={marksheetModalOpen}
+            onClose={() => setMarksheetModalOpen(false)}
+            education={selectedEducation}
+            profile={selectedProfile}
+            initialDocumentType={selectedDocType}
+            onApplyVerificationNote={(note) => {
+              setNotes((prev) => (prev ? `${prev}\n${note}` : note));
+            }}
           />
         </>
       )}

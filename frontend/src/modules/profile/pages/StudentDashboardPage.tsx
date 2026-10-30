@@ -2460,7 +2460,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
               <div style={{ padding: '0.75rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid #EAECF0' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#172033' }}>Welcome to Superconsciousness</div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#172033' }}>Welcome to Global Consultancy</div>
                 <div style={{ fontSize: '0.78rem', color: '#667085', marginTop: '0.15rem' }}>Your student command center is active. Complete your profile to unlock university recommendations.</div>
               </div>
             </div>
