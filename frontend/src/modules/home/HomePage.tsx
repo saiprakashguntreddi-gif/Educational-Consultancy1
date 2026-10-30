@@ -142,7 +142,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </h1>
 
             <p className="t-body text-ink-dim">
-              Global Consciousness bridges the gap between student aspirations and top educational institutions worldwide. Explore premier university pathways, assess academic competencies, and secure verified admissions with structured mentor guidance.
+              Global Consultancy bridges the gap between student aspirations and top educational institutions worldwide. Explore premier university pathways, assess academic competencies, and secure verified admissions with structured mentor guidance.
             </p>
 
             <div className="hero-actions">
@@ -342,7 +342,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <div className="eunistud-about-content">
               <div className="eunistud-eyebrow-row">
                 <span className="eunistud-eyebrow-line" />
-                <h4 className="t-eyebrow text-brand-dark">About Global Consciousness</h4>
+                <h4 className="t-eyebrow text-brand-dark">About Global Consultancy</h4>
               </div>
 
               <h2 className="eunistud-about-heading">
@@ -350,7 +350,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               </h2>
               <p className="eunistud-about-lead">
                 Every student has unique strengths, academic backgrounds, and aspirations.
-                Global Consciousness replaces fragmented advice and hearsay with a structured, verified student guidance framework.
+                Global Consultancy replaces fragmented advice and hearsay with a structured, verified student guidance framework.
               </p>
 
               <div className="eunistud-checklist">
@@ -776,7 +776,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
               {/* Description */}
               <p className="cta-description">
-                Start your student journey with Global Consciousness. Complete your initial profile intake and receive structured, verified guidance from expert mentors.
+                Start your student journey with Global Consultancy. Complete your initial profile intake and receive structured, verified guidance from expert mentors.
               </p>
 
               {/* Action Buttons */}

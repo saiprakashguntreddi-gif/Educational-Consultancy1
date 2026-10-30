@@ -404,20 +404,20 @@
 }
 
 .nav-brand-logo-icon {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  min-height: 44px;
-  border-radius: 12px;
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  min-height: 56px;
+  border-radius: 14px;
   background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28), 0 0 10px rgba(255, 152, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28), 0 0 12px rgba(255, 152, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.95);
   flex-shrink: 0;
   overflow: hidden;
-  padding: 4px;
+  padding: 2px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -442,7 +442,7 @@
 
 .nav-brand-title {
   font-family: var(--font-sans);
-  font-size: 1.18rem;
+  font-size: 1.28rem;
   font-weight: 800;
   letter-spacing: -0.015em;
   color: #ffffff;

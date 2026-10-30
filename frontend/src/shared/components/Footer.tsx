@@ -141,10 +141,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <div className="footer-brand-badge" onClick={() => scrollTo('home')} style={{ cursor: 'pointer' }}>
                 <div
                   style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '8px',
-                    background: '#172D53',
+                    width: '42px',
+                    height: '42px',
+                    borderRadius: '10px',
+                    background: '#ffffff',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -152,11 +152,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     flexShrink: 0,
                     overflow: 'hidden',
                     padding: '2px',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
                   }}
                 >
                   <img
                     src="/assets/global-logo-full.png"
-                    alt="Global Consciousness Logo"
+                    alt="Global Consultancy Logo"
                     style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                   />
                 </div>
@@ -168,7 +169,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     letterSpacing: '-0.02em',
                   }}
                 >
-                  GLOBAL<span style={{ color: '#FF9800' }}>CONSCIOUSNESS</span>
+                  GLOBAL <span style={{ color: '#FF9800' }}>CONSULTANCY</span>
                 </span>
               </div>
 
@@ -288,7 +289,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           {/* Footer Bottom Bar */}
           <div className="footer-legal-bar">
             <div>
-              &copy; 2026 Global Consciousness. All rights reserved.
+              &copy; 2026 Global Consultancy. All rights reserved.
             </div>
             <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center', color: 'rgba(255, 255, 255, 0.75)', fontSize: '12.5px' }}>
               <span style={{ color: 'rgba(255, 255, 255, 0.35)' }}>|</span>
@@ -352,7 +353,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     {activeLegalModal === 'protection' && 'Student Data Protection & Compliance Standards'}
                   </h3>
                   <span className="legal-modal-subtitle">
-                    Global Consciousness Educational Guidance System • Effective Academic Year 2026
+                    Global Consultancy Educational Guidance System • Effective Academic Year 2026
                   </span>
                 </div>
               </div>
@@ -398,7 +399,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   <div className="legal-section-block">
                     <h4>1. Scope of Data Collection</h4>
                     <p>
-                      Global Consciousness collects student academic transcripts, test performance records, competency assessment inputs, and target institution preferences strictly to formulate verified education roadmaps and facilitate counsellor advisory.
+                      Global Consultancy collects student academic transcripts, test performance records, competency assessment inputs, and target institution preferences strictly to formulate verified education roadmaps and facilitate counsellor advisory.
                     </p>
                   </div>
 
@@ -430,7 +431,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   <div className="legal-section-block">
                     <h4>1. Advisory Nature of Guidance</h4>
                     <p>
-                      Global Consciousness provides structured diagnostic assessments, pathway recommendations, and counsellor mentorship. Final admissions, exam scores, and visa decisions remain subject to independent university boards and consular authorities.
+                      Global Consultancy provides structured diagnostic assessments, pathway recommendations, and counsellor mentorship. Final admissions, exam scores, and visa decisions remain subject to independent university boards and consular authorities.
                     </p>
                   </div>
 
@@ -451,7 +452,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   <div className="legal-section-block">
                     <h4>4. Intellectual Property</h4>
                     <p>
-                      All diagnostic competency frameworks, 8-pathway career assessment methodologies, and proprietary scoring algorithms are the exclusive intellectual property of Global Consciousness.
+                      All diagnostic competency frameworks, 8-pathway career assessment methodologies, and proprietary scoring algorithms are the exclusive intellectual property of Global Consultancy.
                     </p>
                   </div>
                 </div>
