@@ -157,7 +157,7 @@ export class EntranceController {
    */
   static async submitMockTest(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = req.user!.id;
+      const userId = req.user?.id;
       const ip = req.ip;
       const result = await EntranceService.submitMockTest(userId, req.params.testId, req.body, ip);
       return ApiResponse.success(res, result, 'Mock test submitted and evaluated successfully', 201);

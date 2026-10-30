@@ -77,20 +77,10 @@ router.get(
 );
 
 // Get mock test payload for taking (strips correct answers/explanations until submitted)
-router.get(
-  '/mock-tests/:testId',
-  authenticateJwt,
-  EntranceController.getMockTest
-);
+router.get('/mock-tests/:testId', optionalAuthenticateJwt, EntranceController.getMockTest);
 
 // Submit timed mock test for server-side evaluation & grading
-router.post(
-  '/mock-tests/:testId/submit',
-  authenticateJwt,
-  requireRoles(Role.STUDENT),
-  validateRequest(submitMockTestSchema),
-  EntranceController.submitMockTest
-);
+router.post('/mock-tests/:testId/submit', optionalAuthenticateJwt, validateRequest(submitMockTestSchema), EntranceController.submitMockTest);
 
 // ==========================================
 // ADMIN REVIEW ROUTE

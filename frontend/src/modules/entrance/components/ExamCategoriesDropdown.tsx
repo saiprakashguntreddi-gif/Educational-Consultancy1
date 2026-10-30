@@ -968,38 +968,7 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                                 <span>View Details</span>
                               </button>
 
-                              <button
-                                type="button"
-                                title="Jump to full card in grid below"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  const el = document.getElementById(`exam-card-${exam.code.toLowerCase()}`);
-                                  if (el) {
-                                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                    el.style.borderColor = '#FF9800';
-                                    el.style.boxShadow = '0 0 0 4px rgba(255, 152, 0, 0.25), 0 10px 25px -5px rgba(16, 42, 67, 0.1)';
-                                    setTimeout(() => {
-                                      el.style.borderColor = '';
-                                      el.style.boxShadow = '';
-                                    }, 2200);
-                                  }
-                                }}
-                                style={{
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '0.2rem',
-                                  background: 'none',
-                                  border: 'none',
-                                  color: '#64748B',
-                                  fontSize: '0.74rem',
-                                  fontWeight: 500,
-                                  cursor: 'pointer',
-                                  padding: '0.15rem 0.35rem',
-                                  borderRadius: '4px',
-                                }}
-                              >
-                                <span>Card ↓</span>
-                              </button>
+                              
 
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                               {exam.officialWebsiteUrl && (

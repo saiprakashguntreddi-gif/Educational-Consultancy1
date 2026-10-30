@@ -124,7 +124,7 @@ export async function seedEntranceExamsCatalog() {
         'Pacing is critical on the ACT; practice answering roughly one question per minute in Math.',
         'Use the Science section charts and trends to locate answers quickly without over-reading text.',
       ]),
-      hasMockTest: false,
+      hasMockTest: true,
     },
     {
       code: 'JEE_MAIN',
@@ -197,7 +197,7 @@ export async function seedEntranceExamsCatalog() {
         'Rely primarily on NCERT Class 12 syllabus as questions closely adhere to textbook definitions.',
         'Review the General Test section thoroughly for static GK and quick mental arithmetic.',
       ]),
-      hasMockTest: false,
+      hasMockTest: true,
     },
     {
       code: 'GAOKAO',
@@ -2029,6 +2029,10 @@ export async function seedEntranceExamsCatalog() {
       await seedIeltsMockTest(examRecord.id);
     } else if (exam.code === 'JEE_MAIN') {
       await seedJeeMockTest(examRecord.id);
+    } else if (exam.code === 'ACT') {
+      await seedActMockTest(examRecord.id);
+    } else if (exam.code === 'CUET_UG') {
+      await seedCuetUgMockTest(examRecord.id);
     }
   }
 
@@ -2300,6 +2304,176 @@ async function seedJeeMockTest(examId: string) {
       explanation: 'lim_{x->0} sin(3x)/x = 3 * lim_{x->0} sin(3x)/(3x) = 3 * 1 = 3.',
       marks: 1,
       orderIndex: 4,
+    },
+  ];
+
+  for (const q of questions) {
+    await prisma.mockQuestion.create({
+      data: {
+        mockTestId: mockTest.id,
+        ...q,
+      },
+    });
+  }
+}
+
+async function seedActMockTest(examId: string) {
+  const existingTest = await prisma.mockTest.findFirst({
+    where: { examId, title: 'ACT Diagnostic Practice Test' },
+  });
+  if (existingTest) return;
+
+  const mockTest = await prisma.mockTest.create({
+    data: {
+      examId,
+      title: 'ACT Diagnostic Practice Test',
+      description: 'Official-pattern diagnostic assessment evaluating English conventions, Mathematics reasoning, Reading comprehension, and Scientific data interpretation.',
+      durationMinutes: 15,
+      totalMarks: 5,
+      passingMarks: 3,
+    },
+  });
+
+  const questions = [
+    {
+      section: 'English',
+      questionText: 'Choose the option that produces the most concise and grammatically correct sentence: "Due to the fact that the experimental results were inconclusive, the research committee decided to repeat the trial."',
+      options: JSON.stringify([
+        'Because the experimental results were inconclusive,',
+        'Due to the fact that the experimental results were inconclusive,',
+        'Owing to the circumstance that results lacked conclusive certainty,',
+        'On account of the inconclusive experimental results having occurred,',
+      ]),
+      correctOptionIndex: 0,
+      explanation: '"Because the experimental results were inconclusive," is the most direct, concise, and standard grammatical construction, eliminating wordy redundancies like "due to the fact that".',
+      marks: 1,
+      orderIndex: 1,
+    },
+    {
+      section: 'Mathematics',
+      questionText: 'In a geometric sequence, the first term is 4 and the third term is 36. What is the value of the fifth term if all terms are positive real numbers?',
+      options: JSON.stringify(['108', '144', '324', '432']),
+      correctOptionIndex: 2,
+      explanation: 'In a geometric sequence, a_n = a * r^(n-1). Here a = 4, a_3 = 4 * r^2 = 36 => r^2 = 9 => r = 3 (since terms are positive). The fifth term a_5 = 4 * 3^4 = 4 * 81 = 324.',
+      marks: 1,
+      orderIndex: 2,
+    },
+    {
+      section: 'Reading',
+      questionText: 'In literary analysis, when a passage describes a character as having "an austere exterior that harbored a restless, searching intellect," the author is primarily conveying that the character:',
+      options: JSON.stringify([
+        'Is outwardly stern and restrained while internally curious and dynamic',
+        'Is completely indifferent to intellectual pursuits',
+        'Possesses immense physical wealth masked by humble attire',
+        'Struggles with chronic moral indecision',
+      ]),
+      correctOptionIndex: 0,
+      explanation: '"Austere" signifies severe, strict, or unadorned outward manner, while "restless, searching intellect" highlights an active, inquisitive mind beneath that stern surface.',
+      marks: 1,
+      orderIndex: 3,
+    },
+    {
+      section: 'Science',
+      questionText: 'In an experiment measuring enzymatic activity at varying temperatures, enzyme reaction velocity increases steadily from 20°C to 42°C, but drops sharply to 0 at 65°C. What biological process best accounts for the sharp decline at 65°C?',
+      options: JSON.stringify([
+        'Substrate depletion due to accelerated turnover',
+        'Thermal denaturation of the enzyme’s tertiary protein structure',
+        'Shift in reaction equilibrium toward product dissociation',
+        'Formation of irreversible competitive inhibitor complexes',
+      ]),
+      correctOptionIndex: 1,
+      explanation: 'At elevated temperatures exceeding physiological limits (~65°C), thermal kinetic energy disrupts hydrogen and ionic bonds, causing denaturation (unfolding) of the enzyme\'s 3D tertiary conformation and loss of active site function.',
+      marks: 1,
+      orderIndex: 4,
+    },
+    {
+      section: 'Mathematics',
+      questionText: 'A triangle has side lengths of 7 cm and 10 cm. Which of the following CANNOT be the length of the third side?',
+      options: JSON.stringify(['4 cm', '9 cm', '15 cm', '18 cm']),
+      correctOptionIndex: 3,
+      explanation: 'By the Triangle Inequality Theorem, the third side x must satisfy: |10 - 7| < x < 10 + 7 => 3 < x < 17. Thus, 18 cm is strictly impossible.',
+      marks: 1,
+      orderIndex: 5,
+    },
+  ];
+
+  for (const q of questions) {
+    await prisma.mockQuestion.create({
+      data: {
+        mockTestId: mockTest.id,
+        ...q,
+      },
+    });
+  }
+}
+
+async function seedCuetUgMockTest(examId: string) {
+  const existingTest = await prisma.mockTest.findFirst({
+    where: { examId, title: 'CUET UG Diagnostic Practice Test' },
+  });
+  if (existingTest) return;
+
+  const mockTest = await prisma.mockTest.create({
+    data: {
+      examId,
+      title: 'CUET UG Diagnostic Practice Test',
+      description: 'Official NTA-pattern diagnostic practice test covering Section IA (Language Proficiency), Domain Knowledge (Core Sciences & Math), and Section III (General Test Analytical Ability).',
+      durationMinutes: 15,
+      totalMarks: 5,
+      passingMarks: 3,
+    },
+  });
+
+  const questions = [
+    {
+      section: 'Section IA - English Language',
+      questionText: 'Identify the word that is nearest in meaning (synonym) to the word "METICULOUS":',
+      options: JSON.stringify([
+        'Painstaking and scrupulous',
+        'Careless and hasty',
+        'Ambiguous and obscure',
+        'Superficial and cursory',
+      ]),
+      correctOptionIndex: 0,
+      explanation: '"Meticulous" denotes showing great attention to detail, very careful, thorough, and scrupulous.',
+      marks: 1,
+      orderIndex: 1,
+    },
+    {
+      section: 'Section II - Domain Physics',
+      questionText: 'According to Gauss’s Law in electrostatics, the net electric flux through any closed Gaussian surface enclosing a dipole consisting of charges +q and -q in vacuum is:',
+      options: JSON.stringify(['q / ε₀', '2q / ε₀', 'Zero', 'q / (2ε₀)']),
+      correctOptionIndex: 2,
+      explanation: 'Gauss\'s law states that total electric flux = q_enclosed / ε₀. For an electric dipole, net enclosed charge = +q + (-q) = 0, so the net flux through the closed surface is strictly zero.',
+      marks: 1,
+      orderIndex: 2,
+    },
+    {
+      section: 'Section II - Domain Mathematics',
+      questionText: 'If matrix A is an invertible square matrix of order 3 and |A| = 4, then what is the determinant value of the adjoint matrix |adj(A)|?',
+      options: JSON.stringify(['4', '12', '16', '64']),
+      correctOptionIndex: 2,
+      explanation: 'For an n x n square matrix, |adj(A)| = |A|^(n - 1). Here n = 3 and |A| = 4, so |adj(A)| = 4^(3 - 1) = 4^2 = 16.',
+      marks: 1,
+      orderIndex: 3,
+    },
+    {
+      section: 'Section III - General Test (Logical Reasoning)',
+      questionText: 'What number comes next in the numerical sequence: 3, 7, 15, 31, 63, _____?',
+      options: JSON.stringify(['95', '127', '128', '144']),
+      correctOptionIndex: 1,
+      explanation: 'The pattern is x_{n+1} = 2 * x_n + 1 (or 2^(n+2) - 1). 3*2+1=7; 7*2+1=15; 15*2+1=31; 31*2+1=63; 63*2+1 = 127.',
+      marks: 1,
+      orderIndex: 4,
+    },
+    {
+      section: 'Section III - General Test (Quantitative Ability)',
+      questionText: 'A shopkeeper offers two successive discounts of 20% and 10% on an article with a marked price of ₹1,000. What is the single equivalent discount percentage?',
+      options: JSON.stringify(['30%', '28%', '25%', '32%']),
+      correctOptionIndex: 1,
+      explanation: 'Equivalent discount = d1 + d2 - (d1 * d2) / 100 = 20 + 10 - (20 * 10)/100 = 30 - 2 = 28%.',
+      marks: 1,
+      orderIndex: 5,
     },
   ];
 
