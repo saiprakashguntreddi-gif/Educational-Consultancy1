@@ -1098,10 +1098,30 @@ export class AdminService {
         (a as any).recordingUrl &&
         !(a as any).recordingUrl.includes('.internal') &&
         !(a as any).recordingUrl.includes('storage.superconsciousness.com') &&
-        !(a as any).recordingUrl.includes('commondatastorage.googleapis.com')
+        !(a as any).recordingUrl.includes('commondatastorage.googleapis.com') &&
+        !(a as any).recordingUrl.includes('sample-consultation.mp4')
           ? (a as any).recordingUrl
-          : '/assets/sample-consultation.mp4',
-      audioUrl: '/assets/sample-consultation-audio.wav',
+          : null,
+      audioUrl: (() => {
+        try {
+          if (a.attachments) {
+            const parsed = JSON.parse(a.attachments);
+            const found = parsed.find(
+              (att: any) =>
+                att.type === 'AUDIO_AUDIT' ||
+                att.title?.endsWith('.wav') ||
+                att.title?.endsWith('.mp3') ||
+                att.fileUrl?.includes('/recordings/')
+            );
+            if (found?.fileUrl) return found.fileUrl;
+          }
+        } catch (_) {}
+        const rec = (a as any).recordingUrl;
+        if (rec && (rec.endsWith('.wav') || rec.endsWith('.mp3') || rec.endsWith('.ogg') || rec.endsWith('.m4a'))) {
+          return rec;
+        }
+        return null;
+      })(),
       student: {
         id: a.studentProfile.id,
         name: a.studentProfile.fullName,

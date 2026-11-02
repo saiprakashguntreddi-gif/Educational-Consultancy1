@@ -158,4 +158,20 @@ export class ProfileController {
       next(error);
     }
   }
+
+  /**
+   * Extend student access for continuing / postgraduate studies (+3 Years)
+   */
+  public static async extendAccess(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      if (!req.user) {
+        ApiResponse.error(res, 'Authentication required', 401, 'Unauthorized');
+        return;
+      }
+      const updated = await ProfileService.extendAccess(req.user.id);
+      ApiResponse.success(res, updated, 'Academic access extended by 3 years for postgraduate studies.');
+    } catch (error) {
+      next(error);
+    }
+  }
 }

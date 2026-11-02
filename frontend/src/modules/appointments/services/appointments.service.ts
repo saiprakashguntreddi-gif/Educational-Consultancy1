@@ -142,9 +142,26 @@ export class AppointmentsService {
       studyScope?: 'DOMESTIC' | 'INTERNATIONAL' | 'BOTH';
       detailedInterestReport?: string;
       sendPolicyViaWhatsApp?: boolean;
+      recordingUrl?: string;
+      audioUrl?: string;
     }
   ): Promise<ApiResponse<any>> {
     return apiClient.post(API_ENDPOINTS.APPOINTMENTS.RECORD_SESSION_OUTCOME(id), payload);
+  }
+
+  /**
+   * Upload audio or video recording file for an appointment session
+   */
+  public static async uploadSessionRecording(
+    id: string,
+    payload: {
+      dataBase64: string;
+      mimeType?: string;
+      filename?: string;
+      type: 'video' | 'audio';
+    }
+  ): Promise<ApiResponse<{ fileUrl: string; type: string; filename: string }>> {
+    return apiClient.post(API_ENDPOINTS.APPOINTMENTS.UPLOAD_RECORDING(id), payload);
   }
 
   /**

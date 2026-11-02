@@ -77,6 +77,20 @@ export const recordSessionOutcomeSchema = z.object({
     studyScope: z.enum(['DOMESTIC', 'INTERNATIONAL', 'BOTH']).optional().default('INTERNATIONAL'),
     detailedInterestReport: z.string().optional(),
     sendPolicyViaWhatsApp: z.boolean().optional().default(false),
+    recordingUrl: z.string().optional(),
+    audioUrl: z.string().optional(),
+  }),
+});
+
+export const uploadRecordingSchema = z.object({
+  params: z.object({
+    id: z.string().min(1),
+  }),
+  body: z.object({
+    dataBase64: z.string().min(1, 'Audio/Video data required'),
+    mimeType: z.string().optional().default('audio/webm'),
+    filename: z.string().optional(),
+    type: z.enum(['video', 'audio']).default('audio'),
   }),
 });
 

@@ -11,6 +11,7 @@ import {
   Bookmark,
   PlayCircle,
   GraduationCap,
+  Globe,
 } from 'lucide-react';
 import { EntranceExamRecord } from '../entrance.types';
 import { CollegesService } from '../../colleges/services/colleges.service';
@@ -135,11 +136,49 @@ export const ExamDetailModal: React.FC<ExamDetailModalProps> = ({
                 </span>
               )}
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginTop: '0.2rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginTop: '0.2rem', flexWrap: 'wrap' }}>
               <ExamLogo examCode={exam.code} size={22} />
               <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#172D53', margin: 0 }}>
                 {exam.name}
               </h2>
+              {exam.officialWebsiteUrl && (
+                <a
+                  href={exam.officialWebsiteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(exam.officialWebsiteUrl, '_blank', 'noopener,noreferrer');
+                  }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '6px',
+                    color: '#F57C00',
+                    backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                    border: '1px solid rgba(255, 152, 0, 0.3)',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    textDecoration: 'none',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#FF9800';
+                    e.currentTarget.style.color = '#FFFFFF';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 152, 0, 0.1)';
+                    e.currentTarget.style.color = '#F57C00';
+                  }}
+                  title={`Visit Official Website: ${exam.officialWebsiteUrl}`}
+                  aria-label={`Visit official website for ${exam.name}`}
+                >
+                  <Globe size={16} />
+                </a>
+              )}
             </div>
           </div>
 

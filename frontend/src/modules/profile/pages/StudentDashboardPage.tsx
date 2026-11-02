@@ -417,6 +417,49 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
   const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [studentReadNotifs, setStudentReadNotifs] = useState<Set<string>>(() => {
+    try {
+      const saved = localStorage.getItem('rgc_student_read_notifs');
+      return saved ? new Set(JSON.parse(saved)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
+
+  const studentNotifications = [
+    {
+      id: 'notif-univ-1',
+      title: 'University Recommendations Live',
+      message: 'Verified 3-Tier Fit matches (Top Reach, Target, and Safer) have been computed for your target study scope.',
+      time: '1h ago',
+    },
+    {
+      id: 'notif-counsel-1',
+      title: 'Counselling Desk Open',
+      message: 'Book a 1-on-1 session with our senior study abroad counsellors for personalized profile evaluation.',
+      time: '3h ago',
+    },
+    {
+      id: 'notif-exams-1',
+      title: 'Entrance Exams Deadlines Tracker',
+      message: 'Verified 2026 admissions benchmarks and mock test schedules are available in your Entrance Exams tab.',
+      time: '5h ago',
+    },
+    {
+      id: 'notif-scholarships-1',
+      title: 'Global Scholarship Matches',
+      message: 'New merit and government scholarships open for international students in USA, UK, Canada, and Germany.',
+      time: '1d ago',
+    },
+    {
+      id: 'notif-welcome-1',
+      title: 'Welcome to Global Consultancy Command Center',
+      message: 'Your student command center is active. Complete your profile preferences to receive maximum institutional matching.',
+      time: '2d ago',
+    },
+  ];
+
+  const unreadStudentNotifs = studentNotifications.filter((n) => !studentReadNotifs.has(n.id)).length;
   const [userDropdownOpen, setUserDropdownOpen] = useState<boolean>(false);
   const [isProfessionalInfoOpen, setIsProfessionalInfoOpen] = useState<boolean>(true);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
@@ -902,6 +945,21 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
           </button>
 
           <button
+            className={`cmd-nav-item ${activeMenu === 'scholarships' ? 'active' : ''}`}
+            onClick={() => handleNavSelection('scholarships')}
+          >
+            <span className="cmd-nav-item-icon">
+              <Coins size={17} />
+            </span>
+            <span>Scholarships</span>
+            {!profile?.isEnrolled && (
+              <span className="cmd-nav-item-badge" style={{ background: 'rgba(100, 116, 139, 0.2)', color: '#94A3B8', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                <Lock size={10} /> Locked
+              </span>
+            )}
+          </button>
+
+          <button
             className={`cmd-nav-item ${activeMenu === 'recommendations' ? 'active' : ''}`}
             onClick={() => handleNavSelection('recommendations')}
             id="dash-nav-recommendations-btn"
@@ -940,21 +998,6 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
               <Bookmark size={17} />
             </span>
             <span>Shortlist</span>
-            {!profile?.isEnrolled && (
-              <span className="cmd-nav-item-badge" style={{ background: 'rgba(100, 116, 139, 0.2)', color: '#94A3B8', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                <Lock size={10} /> Locked
-              </span>
-            )}
-          </button>
-
-          <button
-            className={`cmd-nav-item ${activeMenu === 'scholarships' ? 'active' : ''}`}
-            onClick={() => handleNavSelection('scholarships')}
-          >
-            <span className="cmd-nav-item-icon">
-              <Coins size={17} />
-            </span>
-            <span>Scholarships</span>
             {!profile?.isEnrolled && (
               <span className="cmd-nav-item-badge" style={{ background: 'rgba(100, 116, 139, 0.2)', color: '#94A3B8', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
                 <Lock size={10} /> Locked
@@ -1030,7 +1073,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
               title="Notifications"
             >
               <Bell size={17} />
-              <span className="cmd-notification-badge" />
+              {unreadStudentNotifs > 0 && <span className="cmd-notification-badge" />}
             </button>
 
             {/* Student Profile / Avatar & Name */}
@@ -1211,6 +1254,130 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
                   </button>
                 </div>
               </div>
+
+              {/* 5-YEAR ACADEMIC LIFECYCLE ACCESS STATUS */}
+              {profile?.isEnrolled && (
+                <div
+                  style={{
+                    background: 'linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 100%)',
+                    border: '1px solid #C7D2FE',
+                    borderRadius: '16px',
+                    padding: '1.25rem 1.5rem',
+                    marginBottom: '1.75rem',
+                    boxShadow: '0 2px 8px rgba(79, 70, 229, 0.06)',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                      gap: '0.75rem',
+                      marginBottom: '0.85rem',
+                      borderBottom: '1px solid rgba(199, 210, 254, 0.6)',
+                      paddingBottom: '0.75rem',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <div
+                        style={{
+                          width: '34px',
+                          height: '34px',
+                          borderRadius: '8px',
+                          background: '#4338CA',
+                          color: '#FFFFFF',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <ShieldCheck size={18} />
+                      </div>
+                      <div>
+                        <h4 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 800, color: '#1E1B4B' }}>
+                          5-Year Academic Lifecycle Access Policy
+                        </h4>
+                        <span style={{ fontSize: '0.76rem', color: '#6366F1', fontWeight: 600 }}>
+                          Enrolment Active: Valid through {(() => {
+                            const enrolled = profile?.enrolledAt ? new Date(profile.enrolledAt) : new Date();
+                            const exp = new Date(enrolled.getTime() + 5 * 365.25 * 24 * 60 * 60 * 1000);
+                            return exp.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                          })()} • 5-Year Tenure Covering UG/PG Admissions & Studies
+                        </span>
+                      </div>
+                    </div>
+
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '9999px',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        background: '#DCFCE7',
+                        color: '#15803D',
+                        border: '1px solid #BBF7D0',
+                      }}
+                    >
+                      <Check size={13} strokeWidth={2.5} />
+                      <span>5-Year Access Active</span>
+                    </span>
+                  </div>
+
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                      gap: '0.85rem',
+                    }}
+                  >
+                    <div
+                      style={{
+                        background: '#FFFFFF',
+                        border: '1px solid #E0E7FF',
+                        borderRadius: '10px',
+                        padding: '0.85rem 1rem',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.25rem' }}>
+                        <span style={{ fontSize: '0.68rem', fontWeight: 800, textTransform: 'uppercase', color: '#4338CA', background: '#EEF2FF', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
+                          Years 1 – 3
+                        </span>
+                        <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0F172A' }}>
+                          Active Guidance Phase
+                        </span>
+                      </div>
+                      <p style={{ margin: 0, fontSize: '0.76rem', color: '#64748B', lineHeight: 1.4 }}>
+                        1-on-1 certified counsellor consultation, 3-tier fit algorithms, live mock test readiness, and scholarship submissions.
+                      </p>
+                    </div>
+
+                    <div
+                      style={{
+                        background: '#FFFFFF',
+                        border: '1px solid #E0E7FF',
+                        borderRadius: '10px',
+                        padding: '0.85rem 1rem',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.25rem' }}>
+                        <span style={{ fontSize: '0.68rem', fontWeight: 800, textTransform: 'uppercase', color: '#0284C7', background: '#E0F2FE', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
+                          Years 4 – 5
+                        </span>
+                        <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0F172A' }}>
+                          Alumni & Self-Service Phase
+                        </span>
+                      </div>
+                      <p style={{ margin: 0, fontSize: '0.76rem', color: '#64748B', lineHeight: 1.4 }}>
+                        Continuous access to university catalogs, scholarship tracking, shortlists, fee comparisons, and academic dossier exports.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* DEDICATED ASSIGNED COUNSELLOR SECTION */}
               <div style={{ marginBottom: '1.75rem' }}>
@@ -2446,30 +2613,101 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({
 
       {activeModal === 'notifications' && (
         <div className="cmd-modal-overlay" onClick={() => setActiveModal(null)}>
-          <div className="cmd-modal-card" onClick={(e) => e.stopPropagation()}>
+          <div className="cmd-modal-card" style={{ maxWidth: '480px', width: '92%' }} onClick={(e) => e.stopPropagation()}>
             <button className="cmd-modal-close-btn" onClick={() => setActiveModal(null)}>
               <X size={18} />
             </button>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(255, 152, 0, 0.1)', color: '#FF9800', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Bell size={22} />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(255, 152, 0, 0.12)', color: '#FF9800', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Bell size={22} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#172033', margin: 0 }}>
+                    Notifications
+                  </h3>
+                  <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
+                    {unreadStudentNotifs > 0 ? `${unreadStudentNotifs} unread updates` : 'All caught up'}
+                  </span>
+                </div>
               </div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#172033', margin: 0 }}>
-                Notifications
-              </h3>
+              {unreadStudentNotifs > 0 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newRead = new Set(studentReadNotifs);
+                    studentNotifications.forEach((n) => newRead.add(n.id));
+                    setStudentReadNotifs(newRead);
+                    try {
+                      localStorage.setItem('rgc_student_read_notifs', JSON.stringify(Array.from(newRead)));
+                    } catch {}
+                  }}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#2563EB',
+                    fontSize: '0.78rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Mark all as read
+                </button>
+              )}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
-              <div style={{ padding: '0.75rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid #EAECF0' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#172033' }}>Welcome to Global Consultancy</div>
-                <div style={{ fontSize: '0.78rem', color: '#667085', marginTop: '0.15rem' }}>Your student command center is active. Complete your profile to unlock university recommendations.</div>
-              </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', maxHeight: '360px', overflowY: 'auto', marginBottom: '1.5rem', paddingRight: '0.25rem' }}>
+              {studentNotifications.map((n) => {
+                const isUnread = !studentReadNotifs.has(n.id);
+                return (
+                  <div
+                    key={n.id}
+                    onClick={() => {
+                      if (isUnread) {
+                        const newRead = new Set(studentReadNotifs);
+                        newRead.add(n.id);
+                        setStudentReadNotifs(newRead);
+                        try {
+                          localStorage.setItem('rgc_student_read_notifs', JSON.stringify(Array.from(newRead)));
+                        } catch {}
+                      }
+                    }}
+                    style={{
+                      padding: '0.85rem',
+                      background: isUnread ? '#FAF5EE' : '#F8FAFC',
+                      borderRadius: '10px',
+                      border: isUnread ? '1px solid #F59E0B' : '1px solid #EAECF0',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#172033' }}>{n.title}</div>
+                      {isUnread && (
+                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F59E0B', flexShrink: 0 }} />
+                      )}
+                    </div>
+                    <div style={{ fontSize: '0.78rem', color: '#475569', marginTop: '0.25rem', lineHeight: 1.4 }}>{n.message}</div>
+                    <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '0.4rem' }}>{n.time}</div>
+                  </div>
+                );
+              })}
             </div>
+
             <button
               className="cmd-btn-primary"
               style={{ width: '100%', justifyContent: 'center' }}
-              onClick={() => setActiveModal(null)}
+              onClick={() => {
+                const newRead = new Set(studentReadNotifs);
+                studentNotifications.forEach((n) => newRead.add(n.id));
+                setStudentReadNotifs(newRead);
+                try {
+                  localStorage.setItem('rgc_student_read_notifs', JSON.stringify(Array.from(newRead)));
+                } catch {}
+                setActiveModal(null);
+              }}
             >
-              Mark all as read
+              Done
             </button>
           </div>
         </div>

@@ -9,6 +9,8 @@ import {
   RotateCcw,
   Check,
   X,
+  Landmark,
+  Layers,
 } from 'lucide-react';
 import { DiscoveryFilterOptions, CollegeSearchParams } from '../colleges.types';
 
@@ -114,6 +116,49 @@ export const CollegeFilterPanel: React.FC<CollegeFilterPanelProps> = ({
           ))}
         </select>
       </div>
+
+      {/* State / Province Filter */}
+      {filterOptions.states && filterOptions.states.length > 0 && (
+        <div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+              marginBottom: '0.65rem',
+            }}
+          >
+            <MapPin size={15} color="#5B4FE9" />
+            <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#0F172A' }}>
+              State / Region
+            </span>
+          </div>
+          <select
+            id="filter-state-select"
+            value={currentFilters.state || 'ALL'}
+            onChange={(e) => onFilterChange({ state: e.target.value, page: 1 })}
+            style={{
+              width: '100%',
+              padding: '0.6rem 0.75rem',
+              borderRadius: '8px',
+              border: '1px solid #CBD5E1',
+              background: '#FFFFFF',
+              fontSize: '0.86rem',
+              color: '#0F172A',
+              outline: 'none',
+              boxSizing: 'border-box',
+            }}
+          >
+            <option value="ALL">All States</option>
+            {filterOptions.states.map((st) => (
+              <option key={st} value={st}>
+                {st}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
       {filterOptions.cities.length > 0 && (
         <div>
           <div
@@ -151,6 +196,90 @@ export const CollegeFilterPanel: React.FC<CollegeFilterPanelProps> = ({
                 {city}
               </option>
             ))}
+          </select>
+        </div>
+      )}
+
+      {/* Institution Type Filter */}
+      {filterOptions.institutionTypes && filterOptions.institutionTypes.length > 0 && (
+        <div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+              marginBottom: '0.65rem',
+            }}
+          >
+            <Landmark size={15} color="#5B4FE9" />
+            <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#0F172A' }}>
+              Institution Type
+            </span>
+          </div>
+          <select
+            id="filter-type-select"
+            value={currentFilters.institutionType || 'ALL'}
+            onChange={(e) => onFilterChange({ institutionType: e.target.value, page: 1 })}
+            style={{
+              width: '100%',
+              padding: '0.6rem 0.75rem',
+              borderRadius: '8px',
+              border: '1px solid #CBD5E1',
+              background: '#FFFFFF',
+              fontSize: '0.86rem',
+              color: '#0F172A',
+              outline: 'none',
+              boxSizing: 'border-box',
+            }}
+          >
+            <option value="ALL">All Types</option>
+            <option value="Government">Government / Public</option>
+            <option value="Private">Private / Deemed</option>
+            {filterOptions.institutionTypes.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {/* Study Mode Filter */}
+      {filterOptions.studyModes && filterOptions.studyModes.length > 0 && (
+        <div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+              marginBottom: '0.65rem',
+            }}
+          >
+            <Layers size={15} color="#5B4FE9" />
+            <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#0F172A' }}>
+              Study Mode
+            </span>
+          </div>
+          <select
+            id="filter-studymode-select"
+            value={currentFilters.studyMode || 'ALL'}
+            onChange={(e) => onFilterChange({ studyMode: e.target.value, page: 1 })}
+            style={{
+              width: '100%',
+              padding: '0.6rem 0.75rem',
+              borderRadius: '8px',
+              border: '1px solid #CBD5E1',
+              background: '#FFFFFF',
+              fontSize: '0.86rem',
+              color: '#0F172A',
+              outline: 'none',
+              boxSizing: 'border-box',
+            }}
+          >
+            <option value="ALL">All Modes</option>
+            <option value="Campus">On-Campus / Regular</option>
+            <option value="Distance">Distance Education</option>
+            <option value="Online">Online Learning</option>
           </select>
         </div>
       )}

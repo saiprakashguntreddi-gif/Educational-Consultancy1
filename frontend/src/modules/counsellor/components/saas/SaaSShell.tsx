@@ -35,6 +35,7 @@ export const SaaSShell: React.FC<SaaSShellProps> = ({
           onSearch={onGlobalSearch}
           searchPlaceholder={searchPlaceholder}
           onNavigateLanding={onNavigateLanding}
+          onSelectTab={onSelectTab}
         />
         <main className="saas-content">{children}</main>
       </div>

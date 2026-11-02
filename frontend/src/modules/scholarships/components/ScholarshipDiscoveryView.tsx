@@ -24,7 +24,18 @@ import {
   StudentProfileContext,
 } from '../scholarships.types';
 import { ScholarshipDetailModal } from './ScholarshipDetailModal';
+import { DestinationFundingCards } from './DestinationFundingCards';
+import { CountryScholarshipDetailPage } from './CountryScholarshipDetailPage';
 import '../scholarships.css';
+
+const COUNTRY_TAB_FLAGS: Record<string, string> = {
+  India: 'https://flagcdn.com/w40/in.png',
+  'United States': 'https://flagcdn.com/w40/us.png',
+  'United Kingdom': 'https://flagcdn.com/w40/gb.png',
+  Australia: 'https://flagcdn.com/w40/au.png',
+  Canada: 'https://flagcdn.com/w40/ca.png',
+  Germany: 'https://flagcdn.com/w40/de.png',
+};
 
 export const ScholarshipDiscoveryView: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -32,6 +43,7 @@ export const ScholarshipDiscoveryView: React.FC = () => {
   const [data, setData] = useState<ScholarshipListResponse | null>(null);
   const [selectedScholarship, setSelectedScholarship] = useState<ScholarshipDto | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [selectedCountryPage, setSelectedCountryPage] = useState<string | null>(null);
 
   // Filters state
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -41,6 +53,30 @@ export const ScholarshipDiscoveryView: React.FC = () => {
   const [eligibilityFilter, setEligibilityFilter] = useState<
     'ALL' | 'ELIGIBLE' | 'POTENTIALLY_ELIGIBLE' | 'NOT_ELIGIBLE' | 'SAVED'
   >('ALL');
+
+  // Country counts map (synced with catalogue data)
+  const [countryCounts, setCountryCounts] = useState<Record<string, number>>({
+    India: 13,
+    'United States': 4,
+    'United Kingdom': 5,
+    Australia: 3,
+    Germany: 3,
+    Canada: 3,
+  });
+
+  // When data loads with no filter, sync real counts
+  useEffect(() => {
+    if (data?.scholarships && !countryFilter && !searchTerm && eligibilityFilter === 'ALL') {
+      const countsMap: Record<string, number> = {};
+      data.scholarships.forEach((s) => {
+        const c = s.destinationCountry || s.country;
+        if (c) {
+          countsMap[c] = (countsMap[c] || 0) + 1;
+        }
+      });
+      setCountryCounts((prev) => ({ ...prev, ...countsMap }));
+    }
+  }, [data?.scholarships, countryFilter, searchTerm, eligibilityFilter]);
 
   // Load scholarships with filters
   const loadScholarships = useCallback(async () => {
@@ -204,6 +240,30 @@ export const ScholarshipDiscoveryView: React.FC = () => {
     setEligibilityFilter('ALL');
   };
 
+  // If a dedicated country page is selected, render the complete country scholarship directory view
+  if (selectedCountryPage) {
+    return (
+      <div className="sch-container" id="module8-scholarship-discovery">
+        <CountryScholarshipDetailPage
+          countryName={selectedCountryPage}
+          onBackToHubs={() => setSelectedCountryPage(null)}
+          onSelectCountry={(c) => setSelectedCountryPage(c)}
+          onOpenScholarshipDetail={(s) => setSelectedScholarship(s)}
+          onToggleSave={handleToggleSave}
+          savingId={savingId}
+        />
+        {selectedScholarship && (
+          <ScholarshipDetailModal
+            scholarship={selectedScholarship}
+            onClose={() => setSelectedScholarship(null)}
+            onToggleSave={handleToggleSave}
+            isSaving={savingId === selectedScholarship.id}
+          />
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="sch-container" id="module8-scholarship-discovery">
       {/* 1. HERO HEADER CARD */}
@@ -275,8 +335,94 @@ export const ScholarshipDiscoveryView: React.FC = () => {
         </div>
       )}
 
+      {/* 2.5 GLOBAL FUNDING HUBS (DESTINATION COUNTRY CARDS) */}
+      <DestinationFundingCards
+        selectedCountry={countryFilter}
+        onSelectCountry={(country) => setCountryFilter(country)}
+        onOpenCountryPage={(country) => {
+          setSelectedCountryPage(country);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        countryCounts={countryCounts}
+      />
+
       {/* 3. SEARCH & CONTROLS CARD */}
       <div className="sch-controls-card">
+        {/* Quick Country Switcher Tabs (Reference: College Discovery) */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            overflowX: 'auto',
+            paddingBottom: '0.65rem',
+            borderBottom: '1px solid #F1F5F9',
+          }}
+        >
+          {[
+            { label: 'All Destinations', value: '', count: counts.all || 32, icon: '🌍' },
+            { label: 'India', value: 'India', count: countryCounts['India'] || 13, flag: COUNTRY_TAB_FLAGS['India'] },
+            { label: 'United States', value: 'United States', count: countryCounts['United States'] || 4, flag: COUNTRY_TAB_FLAGS['United States'] },
+            { label: 'United Kingdom', value: 'United Kingdom', count: countryCounts['United Kingdom'] || 5, flag: COUNTRY_TAB_FLAGS['United Kingdom'] },
+            { label: 'Australia', value: 'Australia', count: countryCounts['Australia'] || 3, flag: COUNTRY_TAB_FLAGS['Australia'] },
+            { label: 'Germany', value: 'Germany', count: countryCounts['Germany'] || 3, flag: COUNTRY_TAB_FLAGS['Germany'] },
+            { label: 'Canada', value: 'Canada', count: countryCounts['Canada'] || 3, flag: COUNTRY_TAB_FLAGS['Canada'] },
+          ].map((tab) => {
+            const isSelected = countryFilter === tab.value;
+            return (
+              <button
+                key={tab.label}
+                onClick={() => {
+                  if (tab.value === '') {
+                    setCountryFilter('');
+                  } else {
+                    setSelectedCountryPage(tab.value);
+                  }
+                }}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  padding: '0.45rem 0.85rem',
+                  borderRadius: '999px',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  border: isSelected ? '1px solid #5B4FE9' : '1px solid #E2E8F0',
+                  background: isSelected ? '#5B4FE9' : '#FFFFFF',
+                  color: isSelected ? '#FFFFFF' : '#475569',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                  {tab.flag ? (
+                    <img
+                      src={tab.flag}
+                      alt=""
+                      style={{ width: '16px', height: '11px', objectFit: 'cover', borderRadius: '2px', display: 'inline-block' }}
+                    />
+                  ) : (
+                    <span>{tab.icon}</span>
+                  )}
+                  <span>{tab.label}</span>
+                </span>
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    padding: '0.05rem 0.4rem',
+                    borderRadius: '999px',
+                    background: isSelected ? 'rgba(255,255,255,0.25)' : '#F1F5F9',
+                    color: isSelected ? '#FFFFFF' : '#64748B',
+                  }}
+                >
+                  {tab.count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
         <div className="sch-filters-row">
           {/* Search Input */}
           <div className="sch-search-box">
@@ -301,11 +447,12 @@ export const ScholarshipDiscoveryView: React.FC = () => {
               className="sch-filter-select"
             >
               <option value="">All Destinations</option>
-              {uniqueCountries.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
+              <option value="India">🇮🇳 India ({countryCounts['India'] || 13})</option>
+              <option value="United States">🇺🇸 United States ({countryCounts['United States'] || 4})</option>
+              <option value="United Kingdom">🇬🇧 United Kingdom ({countryCounts['United Kingdom'] || 5})</option>
+              <option value="Australia">🇦🇺 Australia ({countryCounts['Australia'] || 3})</option>
+              <option value="Germany">🇩🇪 Germany ({countryCounts['Germany'] || 3})</option>
+              <option value="Canada">🇨🇦 Canada ({countryCounts['Canada'] || 3})</option>
             </select>
 
             {/* Department Filter */}
@@ -516,8 +663,16 @@ export const ScholarshipDiscoveryView: React.FC = () => {
                       )}
 
                       {scholarship.destinationCountry && (
-                        <span className="sch-tag destination">
-                          <MapPin size={11} />
+                        <span className="sch-tag destination" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                          {COUNTRY_TAB_FLAGS[scholarship.destinationCountry] ? (
+                            <img
+                              src={COUNTRY_TAB_FLAGS[scholarship.destinationCountry]}
+                              alt=""
+                              style={{ width: '15px', height: '10px', objectFit: 'cover', borderRadius: '2px', display: 'inline-block' }}
+                            />
+                          ) : (
+                            <MapPin size={11} />
+                          )}
                           <span>{scholarship.destinationCountry}</span>
                         </span>
                       )}

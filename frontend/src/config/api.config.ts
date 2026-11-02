@@ -174,6 +174,7 @@ export const API_ENDPOINTS = {
     COUNSELLOR_SCHEDULE: `${API_BASE_URL}/appointments/counsellor/schedule`,
     UPDATE_COUNSELLOR_STATUS: (id: string) => `${API_BASE_URL}/appointments/${id}/counsellor-status`,
     RECORD_SESSION_OUTCOME: (id: string) => `${API_BASE_URL}/appointments/${id}/session-outcome`,
+    UPLOAD_RECORDING: (id: string) => `${API_BASE_URL}/appointments/${id}/upload-recording`,
     AVAILABLE_SLOTS: (counsellorId: string, date: string) =>
       `${API_BASE_URL}/appointments/counsellor/${counsellorId}/available-slots?date=${date}`,
     SET_COUNSELLOR_SLOTS: `${API_BASE_URL}/appointments/counsellor/slots`,

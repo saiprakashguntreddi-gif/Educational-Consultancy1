@@ -341,6 +341,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                       Students retain full ownership of their academic dossiers and may request a portable export or permanent deletion of their account records by contacting <code>privacy@superconsciousness.edu</code>.
                     </p>
                   </div>
+
+                  <div className="legal-section-block">
+                    <h4>5. 5-Year Academic Access & 7-Year Audit Retention</h4>
+                    <p>
+                      Confirmed student enrolments include a 5-year academic lifecycle access window covering university admissions and degree studies, with 1-click extensions available for postgraduate studies. In compliance with financial and regulatory governance (Indian DPDPA, GDPR, and tax statutory requirements), immutable audit logs and verification records are preserved for 7 years before automated purging.
+                    </p>
+                  </div>
                 </div>
               )}
 
@@ -371,6 +378,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     <h4>4. Intellectual Property</h4>
                     <p>
                       All diagnostic competency frameworks, 8-pathway career assessment methodologies, and proprietary scoring algorithms are the exclusive intellectual property of Global Consultancy.
+                    </p>
+                  </div>
+
+                  <div className="legal-section-block">
+                    <h4>5. 5-Year Access Tenure & Tiered Lifecycle</h4>
+                    <p>
+                      Confirmed enrolment grants 5 years of uninterrupted platform access divided into: (1) Active Guidance (Years 1–3: live counsellor bookings, 3-tier fit algorithms, and admissions strategy), and (2) Alumni Self-Service (Years 4–5: discovery catalogs, scholarship tracking, shortlists, and dossier exports). Free extension is available for continuing postgraduate education.
                     </p>
                   </div>
                 </div>

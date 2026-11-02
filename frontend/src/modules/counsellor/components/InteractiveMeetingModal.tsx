@@ -24,7 +24,7 @@ interface InteractiveMeetingModalProps {
   appointment: any;
   userRole: 'ADMIN' | 'COUNSELLOR' | 'STUDENT';
   onClose: () => void;
-  onRecordOutcome?: (appointment: any) => void;
+  onRecordOutcome?: (appointment: any, recordedBlob?: Blob | null) => void;
 }
 
 export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = ({
@@ -56,6 +56,8 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
   // Refs for media elements & WebRTC / Web Audio API
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const screenVideoRef = useRef<HTMLVideoElement | null>(null);
+  const liveMediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const liveRecordedChunksRef = useRef<Blob[]>([]);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const screenStreamRef = useRef<MediaStream | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -75,24 +77,39 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
   // Determine which participant is the local user
   const isCounsellorLocal = userRole === 'COUNSELLOR' || userRole === 'ADMIN';
 
-  // Compute Google Meet Link
+  // Compute Google Meet Link - if valid URL exists, use it; otherwise use https://meet.google.com/new to launch a real live Google Meet instantly!
   const getGoogleMeetLink = (): string => {
-    if (appointment?.meetingLocation && appointment.meetingLocation.startsWith('http')) {
-      return appointment.meetingLocation;
+    const loc = appointment?.meetingLocation?.trim() || '';
+    if (loc.startsWith('http://') || loc.startsWith('https://')) {
+      return loc;
     }
-    // Generate clean Google Meet room link using appointment code or fallback to new Google Meet
-    const roomCode = appointment?.id
-      ? appointment.id.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10).toLowerCase()
-      : 'counselling-room';
-    // Format 3-4-3 google meet code style if roomCode is 10 chars
-    const formattedCode =
-      roomCode.length >= 10
-        ? `${roomCode.slice(0, 3)}-${roomCode.slice(3, 7)}-${roomCode.slice(7, 10)}`
-        : 'meet-guidance-now';
-    return `https://meet.google.com/${formattedCode}`;
+    if (loc.startsWith('meet.google.com/')) {
+      return `https://${loc}`;
+    }
+    const directLink = (appointment as any)?.meetLink || (appointment as any)?.meetingUrl || (appointment as any)?.googleMeetUrl;
+    if (directLink && typeof directLink === 'string' && (directLink.startsWith('http') || directLink.startsWith('meet.google.com'))) {
+      return directLink.startsWith('http') ? directLink : `https://${directLink}`;
+    }
+    // Real live Google Meet room creator that never fails with "No such meeting"
+    return 'https://meet.google.com/new';
   };
 
-  const googleMeetUrl = getGoogleMeetLink();
+  const [currentMeetUrl, setCurrentMeetUrl] = useState<string>(() => getGoogleMeetLink());
+  const googleMeetUrl = currentMeetUrl;
+
+  useEffect(() => {
+    setCurrentMeetUrl(getGoogleMeetLink());
+  }, [appointment?.id, appointment?.meetingLocation]);
+
+  // Reliable handler to launch Google Meet in a new tab
+  const handleOpenGoogleMeet = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const targetUrl = (currentMeetUrl || '').trim() || 'https://meet.google.com/new';
+    window.open(targetUrl, '_blank', 'noopener,noreferrer');
+  };
 
   // Initialize WebRTC Camera & Microphone
   const initUserMedia = async () => {
@@ -132,6 +149,26 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
         localVideoRef.current.play().catch((err) => {
           console.warn('Autoplay prevented on local video:', err);
         });
+      }
+
+      // Initialize live meeting recording
+      try {
+        if (typeof MediaRecorder !== 'undefined') {
+          liveRecordedChunksRef.current = [];
+          const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
+            ? 'video/webm;codecs=vp9'
+            : MediaRecorder.isTypeSupported('video/webm')
+            ? 'video/webm'
+            : 'video/mp4';
+          const mr = new MediaRecorder(stream, { mimeType: mime });
+          mr.ondataavailable = (e) => {
+            if (e.data && e.data.size > 0) liveRecordedChunksRef.current.push(e.data);
+          };
+          mr.start(1000);
+          liveMediaRecorderRef.current = mr;
+        }
+      } catch (recErr) {
+        console.warn('Live recording init warning:', recErr);
       }
 
       // Initialize Web Audio API for real-time voice meter & speaking detection
@@ -298,11 +335,36 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
   };
 
   // Copy Google Meet link to clipboard
-  const handleCopyMeetLink = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(googleMeetUrl);
+  const handleCopyMeetLink = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const targetUrl = (currentMeetUrl || '').trim() || 'https://meet.google.com/new';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(targetUrl).then(() => {
+        setCopiedLink(true);
+        setTimeout(() => setCopiedLink(false), 2500);
+      }).catch(() => {
+        fallbackCopy(targetUrl);
+      });
+    } else {
+      fallbackCopy(targetUrl);
+    }
+  };
+
+  const fallbackCopy = (text: string) => {
+    try {
+      const el = document.createElement('textarea');
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2500);
+    } catch (err) {
+      console.warn('Failed to copy', err);
     }
   };
 
@@ -364,10 +426,9 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
         {/* Top Right Controls & Google Meet Quick Launch */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           {/* Live Google Meet Launch Button */}
-          <a
-            href={googleMeetUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={handleOpenGoogleMeet}
+            type="button"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -378,16 +439,22 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
               borderRadius: '8px',
               fontSize: '0.82rem',
               fontWeight: 600,
-              textDecoration: 'none',
               boxShadow: '0 2px 6px rgba(1, 58, 43, 0.3)',
               border: '1px solid #025942',
+              cursor: 'pointer',
               transition: 'all 0.2s ease',
             }}
-            title="Open meeting room directly in Google Meet in a new browser tab"
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#024D39';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#013A2B';
+            }}
+            title="Open real meeting room directly in Google Meet in a new browser tab"
           >
             <ExternalLink size={15} />
             <span>Open in Google Meet</span>
-          </a>
+          </button>
 
           {/* Copy Meet Link Button */}
           <button
@@ -1252,7 +1319,7 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
                     <input
                       type="text"
                       readOnly
-                      value={appointment?.recordingUrl || '/assets/sample-consultation.mp4'}
+                      value={appointment?.recordingUrl || 'Recording auto-saved upon completing session'}
                       style={{
                         background: 'transparent',
                         border: 'none',
@@ -1265,7 +1332,7 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
                     <button
                       onClick={() => {
                         navigator.clipboard.writeText(
-                          appointment?.recordingUrl || `${window.location.origin}/assets/sample-consultation.mp4`
+                          appointment?.recordingUrl || window.location.href
                         );
                         setCopiedLink(true);
                         setTimeout(() => setCopiedLink(false), 2000);
@@ -1345,8 +1412,9 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
                   >
                     <input
                       type="text"
-                      readOnly
-                      value={googleMeetUrl}
+                      value={currentMeetUrl}
+                      onChange={(e) => setCurrentMeetUrl(e.target.value)}
+                      placeholder="Paste or enter Google Meet URL..."
                       style={{
                         background: 'transparent',
                         border: 'none',
@@ -1358,6 +1426,7 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
                     />
                     <button
                       onClick={handleCopyMeetLink}
+                      type="button"
                       style={{
                         background: 'none',
                         border: 'none',
@@ -1372,10 +1441,9 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
                   </div>
 
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <a
-                      href={googleMeetUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={handleOpenGoogleMeet}
+                      type="button"
                       style={{
                         flex: 1,
                         display: 'flex',
@@ -1388,17 +1456,23 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
                         borderRadius: '6px',
                         fontSize: '0.8rem',
                         fontWeight: 600,
-                        textDecoration: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.15s ease',
                       }}
                     >
                       <ExternalLink size={14} />
                       <span>Launch Meet</span>
-                    </a>
+                    </button>
 
                     <button
-                      onClick={handleCopyMeetLink}
+                      onClick={() => {
+                        setCurrentMeetUrl('https://meet.google.com/new');
+                        window.open('https://meet.google.com/new', '_blank', 'noopener,noreferrer');
+                      }}
+                      type="button"
                       style={{
-                        backgroundColor: '#334155',
+                        backgroundColor: '#2563EB',
                         color: '#FFFFFF',
                         border: 'none',
                         padding: '0.5rem 0.85rem',
@@ -1407,8 +1481,9 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
                         fontWeight: 600,
                         cursor: 'pointer',
                       }}
+                      title="Start a fresh instant Google Meet room"
                     >
-                      {copiedLink ? 'Copied!' : 'Copy'}
+                      New Room
                     </button>
                   </div>
                 </div>
@@ -1527,10 +1602,9 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
         </button>
 
         {/* Direct Google Meet Link Quick Trigger */}
-        <a
-          href={googleMeetUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={handleOpenGoogleMeet}
+          type="button"
           style={{
             height: 48,
             padding: '0 1.25rem',
@@ -1541,17 +1615,17 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
-            textDecoration: 'none',
             fontWeight: 600,
             fontSize: '0.88rem',
             cursor: 'pointer',
             boxShadow: '0 4px 10px rgba(1, 58, 43, 0.3)',
+            transition: 'background-color 0.2s ease',
           }}
           title="Open this consultation directly in Google Meet"
         >
           <ExternalLink size={18} />
           <span>Google Meet</span>
-        </a>
+        </button>
 
         {/* Watch Replay Player Quick Launcher */}
         <button
@@ -1580,11 +1654,21 @@ export const InteractiveMeetingModal: React.FC<InteractiveMeetingModalProps> = (
         </button>
 
         {/* Complete Session Outcome (Counsellor) or Leave Call (Student/Other) */}
-        {userRole === 'COUNSELLOR' ? (
+        {userRole === 'COUNSELLOR' || userRole === 'ADMIN' ? (
           <button
             onClick={() => {
+              let blob: Blob | null = null;
+              if (liveMediaRecorderRef.current && liveMediaRecorderRef.current.state !== 'inactive') {
+                try {
+                  liveMediaRecorderRef.current.stop();
+                } catch (_) {}
+              }
+              if (liveRecordedChunksRef.current.length > 0) {
+                const mime = liveMediaRecorderRef.current?.mimeType || 'video/webm';
+                blob = new Blob(liveRecordedChunksRef.current, { type: mime });
+              }
               if (onRecordOutcome) {
-                onRecordOutcome(appointment);
+                onRecordOutcome(appointment, blob);
               }
             }}
             style={{

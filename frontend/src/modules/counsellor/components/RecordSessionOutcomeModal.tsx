@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, CheckCircle2, AlertCircle } from 'lucide-react';
+import { X, CheckCircle2, AlertCircle, Mic, Square, Upload, Video, Trash2, Headphones } from 'lucide-react';
 import { AppointmentsService } from '../../appointments/services/appointments.service';
 
 interface RecordSessionOutcomeModalProps {
@@ -36,6 +36,85 @@ export const RecordSessionOutcomeModal: React.FC<RecordSessionOutcomeModalProps>
   );
   const [sendPolicyViaWhatsApp, setSendPolicyViaWhatsApp] = useState(true);
 
+  // Audio Voice Audit Recording & File Upload States
+  const [isRecordingAudio, setIsRecordingAudio] = useState(false);
+  const [recordingSeconds, setRecordingSeconds] = useState(0);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>((appointment as any)?.preRecordedAudioBlob || null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+
+  // Video recording from live meeting or file upload
+  const [videoBlob, setVideoBlob] = useState<Blob | null>((appointment as any)?.preRecordedBlob || null);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+
+  const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
+  const audioChunksRef = React.useRef<Blob[]>([]);
+  const timerRef = React.useRef<any>(null);
+  const audioElementRef = React.useRef<HTMLAudioElement | null>(null);
+
+  React.useEffect(() => {
+    if (audioBlob) {
+      const url = URL.createObjectURL(audioBlob);
+      setAudioUrl(url);
+      return () => URL.revokeObjectURL(url);
+    }
+  }, [audioBlob]);
+
+  React.useEffect(() => {
+    if (videoBlob) {
+      const url = URL.createObjectURL(videoBlob);
+      setVideoUrl(url);
+      return () => URL.revokeObjectURL(url);
+    }
+  }, [videoBlob]);
+
+  const startAudioRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunksRef.current = [];
+      const mime = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
+      const mr = new MediaRecorder(stream, { mimeType: mime });
+      mr.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) audioChunksRef.current.push(e.data);
+      };
+      mr.onstop = () => {
+        stream.getTracks().forEach((t) => t.stop());
+        if (audioChunksRef.current.length > 0) {
+          const blob = new Blob(audioChunksRef.current, { type: mime });
+          setAudioBlob(blob);
+        }
+      };
+      mr.start(250);
+      mediaRecorderRef.current = mr;
+      setIsRecordingAudio(true);
+      setRecordingSeconds(0);
+      timerRef.current = setInterval(() => {
+        setRecordingSeconds((prev) => prev + 1);
+      }, 1000);
+    } catch (err: any) {
+      setError('Could not access microphone: ' + (err.message || 'Permission denied'));
+    }
+  };
+
+  const stopAudioRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+    }
+    if (timerRef.current) clearInterval(timerRef.current);
+    setIsRecordingAudio(false);
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadedFileName(file.name);
+    if (file.type.startsWith('video/')) {
+      setVideoBlob(file);
+    } else {
+      setAudioBlob(file);
+    }
+  };
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -48,6 +127,51 @@ export const RecordSessionOutcomeModal: React.FC<RecordSessionOutcomeModalProps>
     const startTime = new Date(now.getTime() - durationMinutes * 60 * 1000);
 
     try {
+      let finalRecordingUrl: string | undefined = undefined;
+      let finalAudioUrl: string | undefined = undefined;
+
+      const blobToBase64 = (b: Blob): Promise<string> =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(b);
+        });
+
+      if (audioBlob) {
+        try {
+          const base64 = await blobToBase64(audioBlob);
+          const upRes = await AppointmentsService.uploadSessionRecording(appointment.id, {
+            dataBase64: base64,
+            mimeType: audioBlob.type || 'audio/webm',
+            filename: uploadedFileName || 'counsellor-voice-note.webm',
+            type: 'audio',
+          });
+          if (upRes.success && upRes.data?.fileUrl) {
+            finalAudioUrl = upRes.data.fileUrl;
+          }
+        } catch (upErr) {
+          console.warn('Audio upload warning:', upErr);
+        }
+      }
+
+      if (videoBlob) {
+        try {
+          const base64 = await blobToBase64(videoBlob);
+          const upRes = await AppointmentsService.uploadSessionRecording(appointment.id, {
+            dataBase64: base64,
+            mimeType: videoBlob.type || 'video/webm',
+            filename: uploadedFileName || 'counsellor-session-video.webm',
+            type: 'video',
+          });
+          if (upRes.success && upRes.data?.fileUrl) {
+            finalRecordingUrl = upRes.data.fileUrl;
+          }
+        } catch (upErr) {
+          console.warn('Video upload warning:', upErr);
+        }
+      }
+
       const res = await AppointmentsService.recordSessionOutcome(appointment.id, {
         actualStartTime: startTime.toISOString(),
         actualEndTime: now.toISOString(),
@@ -65,6 +189,8 @@ export const RecordSessionOutcomeModal: React.FC<RecordSessionOutcomeModalProps>
         studyScope,
         detailedInterestReport,
         sendPolicyViaWhatsApp,
+        recordingUrl: finalRecordingUrl,
+        audioUrl: finalAudioUrl,
       });
 
       if (res.success) {
@@ -525,6 +651,195 @@ export const RecordSessionOutcomeModal: React.FC<RecordSessionOutcomeModalProps>
                     checked={sendPolicyViaWhatsApp}
                     onChange={(e) => setSendPolicyViaWhatsApp(e.target.checked)}
                   />
+                </div>
+              )}
+            </div>
+
+            {/* Audio Voice Audit & Session Recording Section */}
+            <div
+              style={{
+                padding: '1rem',
+                backgroundColor: '#F8FAFC',
+                border: '1px solid #E2E8F0',
+                borderRadius: '8px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <div
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: 6,
+                      backgroundColor: '#EFF6FF',
+                      color: '#2563EB',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Headphones size={17} />
+                  </div>
+                  <div>
+                    <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#0F172A', display: 'block' }}>
+                      Session Audio Recording & Voice Audit Note
+                    </span>
+                    <span style={{ fontSize: '0.74rem', color: '#64748B' }}>
+                      Record a live voice summary using your microphone or upload consultation recording
+                    </span>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  {!isRecordingAudio ? (
+                    <button
+                      type="button"
+                      onClick={startAudioRecording}
+                      style={{
+                        padding: '0.4rem 0.85rem',
+                        backgroundColor: '#DC2626',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        borderRadius: '6px',
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                      }}
+                    >
+                      <Mic size={14} />
+                      <span>{audioBlob ? 'Re-record Voice Note' : 'Record Voice Note'}</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={stopAudioRecording}
+                      style={{
+                        padding: '0.4rem 0.85rem',
+                        backgroundColor: '#0F172A',
+                        color: '#FFFFFF',
+                        border: '1px solid #334155',
+                        borderRadius: '6px',
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                      }}
+                    >
+                      <Square size={14} fill="#EF4444" color="#EF4444" />
+                      <span>Stop Recording ({Math.floor(recordingSeconds / 60)}:{recordingSeconds % 60 < 10 ? '0' : ''}{recordingSeconds % 60})</span>
+                    </button>
+                  )}
+
+                  <label
+                    style={{
+                      padding: '0.4rem 0.85rem',
+                      backgroundColor: '#FFFFFF',
+                      color: '#334155',
+                      border: '1px solid #CBD5E1',
+                      borderRadius: '6px',
+                      fontSize: '0.78rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                    }}
+                  >
+                    <Upload size={14} />
+                    <span>Upload File</span>
+                    <input
+                      type="file"
+                      accept="audio/*,video/*"
+                      onChange={handleFileUpload}
+                      style={{ display: 'none' }}
+                    />
+                  </label>
+                </div>
+              </div>
+
+              {audioUrl && (
+                <div
+                  style={{
+                    backgroundColor: '#1E293B',
+                    borderRadius: 8,
+                    padding: '0.65rem 0.9rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    color: '#FFFFFF',
+                    gap: '0.75rem',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1 }}>
+                    <audio ref={audioElementRef} src={audioUrl} controls style={{ height: 32, width: '100%', maxWidth: '380px' }} />
+                    <span style={{ fontSize: '0.75rem', color: '#93C5FD' }}>
+                      {uploadedFileName || 'Recorded Voice Summary Note'}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { setAudioBlob(null); setAudioUrl(null); setUploadedFileName(null); }}
+                    style={{
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      color: '#EF4444',
+                      cursor: 'pointer',
+                      padding: '0.2rem',
+                    }}
+                    title="Remove recorded audio"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              )}
+
+              {videoUrl && (
+                <div
+                  style={{
+                    backgroundColor: '#1E293B',
+                    borderRadius: 8,
+                    padding: '0.65rem 0.9rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    color: '#FFFFFF',
+                    gap: '0.75rem',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+                    <Video size={16} color="#38BDF8" />
+                    <span style={{ fontSize: '0.78rem', color: '#F8FAFC', fontWeight: 600 }}>
+                      Live Consultation Video Recording Attached
+                    </span>
+                    <span style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
+                      ({uploadedFileName || 'Captured from session'})
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <video src={videoUrl} controls style={{ height: 40, borderRadius: 4 }} />
+                    <button
+                      type="button"
+                      onClick={() => { setVideoBlob(null); setVideoUrl(null); }}
+                      style={{
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        color: '#EF4444',
+                        cursor: 'pointer',
+                        padding: '0.2rem',
+                      }}
+                      title="Remove video recording"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

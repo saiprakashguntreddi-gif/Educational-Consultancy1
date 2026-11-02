@@ -48,6 +48,14 @@ router.get(
   ProfileController.getVerifiedRecord
 );
 
+// Student requests 3-year extension for continuing / postgraduate studies
+router.post(
+  '/me/extend-access',
+  authenticateJwt,
+  requireRoles(Role.STUDENT),
+  ProfileController.extendAccess
+);
+
 // ==========================================
 // ADMIN VERIFICATION & PROFILE REVIEW ROUTES
 // ==========================================

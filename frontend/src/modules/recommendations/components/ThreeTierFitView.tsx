@@ -318,7 +318,25 @@ export const ThreeTierFitView: React.FC<ThreeTierFitViewProps> = ({
   };
 
   return (
-    <div style={{ maxWidth: '1360px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.75rem', width: '100%' }}>
+    <div style={{ maxWidth: '1360px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.75rem', width: '100%', paddingTop: '0.25rem' }}>
+      <style>{`
+        .tier-fit-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1.15rem;
+          align-items: stretch;
+        }
+        @media (max-width: 1100px) {
+          .tier-fit-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (max-width: 600px) {
+          .tier-fit-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
       {/* 1. HERO HEADER WITH VIEW SWITCHER */}
       <div
         style={{
@@ -472,39 +490,40 @@ export const ThreeTierFitView: React.FC<ThreeTierFitViewProps> = ({
       {/* ========================================================= */}
       {activeMode === 'framework' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {/* 1. TIER EXPLANATION CARDS */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-              gap: '1rem',
-            }}
-          >
+          {/* 1. TIER EXPLANATION CARDS (4-Column Balanced Grid) */}
+          <div className="tier-fit-grid">
             {/* Card 1: Top Reach */}
             <div
               onClick={() => setSelectedTier(selectedTier === 'TOP' ? 'ALL' : 'TOP')}
               style={{
                 background: selectedTier === 'TOP' ? '#FEF3C7' : '#FFFFFF',
-                borderRadius: '14px',
-                padding: '1.15rem',
+                borderRadius: '16px',
+                padding: '1.25rem',
                 border: selectedTier === 'TOP' ? '2px solid #F59E0B' : '1px solid #E2E8F0',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
-                boxShadow: selectedTier === 'TOP' ? '0 8px 20px -4px rgba(245, 158, 11, 0.2)' : '0 1px 3px rgba(0,0,0,0.03)',
+                boxShadow: selectedTier === 'TOP' ? '0 8px 20px -4px rgba(245, 158, 11, 0.2)' : '0 2px 6px rgba(15, 23, 42, 0.04)',
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                boxSizing: 'border-box',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#7C2D12', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  🌟 Top Reach (Aspirational)
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.35rem' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#7C2D12', textTransform: 'uppercase', letterSpacing: '0.03em', lineHeight: 1.3 }}>
+                  🌟 Top Reach
                 </span>
-                <span style={{ fontSize: '0.82rem', fontWeight: 800, background: '#FDE68A', color: '#7C2D12', padding: '0.1rem 0.5rem', borderRadius: '999px' }}>
+                <span style={{ fontSize: '0.74rem', fontWeight: 800, background: '#FDE68A', color: '#7C2D12', padding: '0.2rem 0.6rem', borderRadius: '999px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                   {tierCounts.TOP} Colleges
                 </span>
               </div>
-              <p style={{ margin: '0 0 0.5rem', fontSize: '0.82rem', color: '#475569', lineHeight: 1.45 }}>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#B45309', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.55rem' }}>
+                (Aspirational)
+              </div>
+              <p style={{ margin: '0 0 0.85rem', fontSize: '0.82rem', color: '#475569', lineHeight: 1.5, flex: 1 }}>
                 Highly selective research institutions (Ivy League, Group of Eight, TU9, Russell Group, U15).
               </p>
-              <div style={{ fontSize: '0.74rem', color: '#B45309', fontWeight: 700 }}>
+              <div style={{ fontSize: '0.74rem', color: '#B45309', fontWeight: 700, marginTop: 'auto', paddingTop: '0.65rem', borderTop: '1px solid rgba(245, 158, 11, 0.2)', lineHeight: 1.4 }}>
                 High GPA (3.4+ / 75%+), strong test scores, and research background.
               </div>
             </div>
@@ -514,26 +533,33 @@ export const ThreeTierFitView: React.FC<ThreeTierFitViewProps> = ({
               onClick={() => setSelectedTier(selectedTier === 'MID' ? 'ALL' : 'MID')}
               style={{
                 background: selectedTier === 'MID' ? '#DBEAFE' : '#FFFFFF',
-                borderRadius: '14px',
-                padding: '1.15rem',
+                borderRadius: '16px',
+                padding: '1.25rem',
                 border: selectedTier === 'MID' ? '2px solid #3B82F6' : '1px solid #E2E8F0',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
-                boxShadow: selectedTier === 'MID' ? '0 8px 20px -4px rgba(59, 130, 246, 0.2)' : '0 1px 3px rgba(0,0,0,0.03)',
+                boxShadow: selectedTier === 'MID' ? '0 8px 20px -4px rgba(59, 130, 246, 0.2)' : '0 2px 6px rgba(15, 23, 42, 0.04)',
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                boxSizing: 'border-box',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#1E40AF', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  🎯 Target / Mid-Tier (Best-Fit)
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.35rem' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#1E40AF', textTransform: 'uppercase', letterSpacing: '0.03em', lineHeight: 1.3 }}>
+                  🎯 Target / Mid-Tier
                 </span>
-                <span style={{ fontSize: '0.82rem', fontWeight: 800, background: '#BFDBFE', color: '#1E40AF', padding: '0.1rem 0.5rem', borderRadius: '999px' }}>
+                <span style={{ fontSize: '0.74rem', fontWeight: 800, background: '#BFDBFE', color: '#1E40AF', padding: '0.2rem 0.6rem', borderRadius: '999px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                   {tierCounts.MID} Colleges
                 </span>
               </div>
-              <p style={{ margin: '0 0 0.5rem', fontSize: '0.82rem', color: '#475569', lineHeight: 1.45 }}>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#1D4ED8', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.55rem' }}>
+                (Best-Fit)
+              </div>
+              <p style={{ margin: '0 0 0.85rem', fontSize: '0.82rem', color: '#475569', lineHeight: 1.5, flex: 1 }}>
                 Renowned public universities, mid-tier comprehensive state schools with strong alumni networks.
               </p>
-              <div style={{ fontSize: '0.74rem', color: '#1D4ED8', fontWeight: 700 }}>
+              <div style={{ fontSize: '0.74rem', color: '#1D4ED8', fontWeight: 700, marginTop: 'auto', paddingTop: '0.65rem', borderTop: '1px solid rgba(59, 130, 246, 0.2)', lineHeight: 1.4 }}>
                 Balanced admission criteria, high ROI, practical industry internships.
               </div>
             </div>
@@ -543,26 +569,33 @@ export const ThreeTierFitView: React.FC<ThreeTierFitViewProps> = ({
               onClick={() => setSelectedTier(selectedTier === 'LOW' ? 'ALL' : 'LOW')}
               style={{
                 background: selectedTier === 'LOW' ? '#D1FAE5' : '#FFFFFF',
-                borderRadius: '14px',
-                padding: '1.15rem',
+                borderRadius: '16px',
+                padding: '1.25rem',
                 border: selectedTier === 'LOW' ? '2px solid #10B981' : '1px solid #E2E8F0',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
-                boxShadow: selectedTier === 'LOW' ? '0 8px 20px -4px rgba(16, 185, 129, 0.2)' : '0 1px 3px rgba(0,0,0,0.03)',
+                boxShadow: selectedTier === 'LOW' ? '0 8px 20px -4px rgba(16, 185, 129, 0.2)' : '0 2px 6px rgba(15, 23, 42, 0.04)',
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                boxSizing: 'border-box',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#065F46', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  🛡️ Safer / Value / Regional
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.35rem' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#065F46', textTransform: 'uppercase', letterSpacing: '0.03em', lineHeight: 1.3 }}>
+                  🛡️ Safer / Value
                 </span>
-                <span style={{ fontSize: '0.82rem', fontWeight: 800, background: '#A7F3D0', color: '#065F46', padding: '0.1rem 0.5rem', borderRadius: '999px' }}>
+                <span style={{ fontSize: '0.74rem', fontWeight: 800, background: '#A7F3D0', color: '#065F46', padding: '0.2rem 0.6rem', borderRadius: '999px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                   {tierCounts.LOW} Colleges
                 </span>
               </div>
-              <p style={{ margin: '0 0 0.5rem', fontSize: '0.82rem', color: '#475569', lineHeight: 1.45 }}>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#047857', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.55rem' }}>
+                (Regional & Safer)
+              </div>
+              <p style={{ margin: '0 0 0.85rem', fontSize: '0.82rem', color: '#475569', lineHeight: 1.5, flex: 1 }}>
                 High acceptance likelihood, lower annual tuition fees, and regional post-study work visa incentives.
               </p>
-              <div style={{ fontSize: '0.74rem', color: '#047857', fontWeight: 700 }}>
+              <div style={{ fontSize: '0.74rem', color: '#047857', fontWeight: 700, marginTop: 'auto', paddingTop: '0.65rem', borderTop: '1px solid rgba(16, 185, 129, 0.2)', lineHeight: 1.4 }}>
                 Accessible admission parameters, transparent entry, and cost-effective living.
               </div>
             </div>
@@ -572,26 +605,33 @@ export const ThreeTierFitView: React.FC<ThreeTierFitViewProps> = ({
               onClick={() => setSelectedTier(selectedTier === 'COLLEGE' ? 'ALL' : 'COLLEGE')}
               style={{
                 background: selectedTier === 'COLLEGE' ? '#E0E7FF' : '#FFFFFF',
-                borderRadius: '14px',
-                padding: '1.15rem',
+                borderRadius: '16px',
+                padding: '1.25rem',
                 border: selectedTier === 'COLLEGE' ? '2px solid #6366F1' : '1px solid #E2E8F0',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
-                boxShadow: selectedTier === 'COLLEGE' ? '0 8px 20px -4px rgba(99, 102, 241, 0.2)' : '0 1px 3px rgba(0,0,0,0.03)',
+                boxShadow: selectedTier === 'COLLEGE' ? '0 8px 20px -4px rgba(99, 102, 241, 0.2)' : '0 2px 6px rgba(15, 23, 42, 0.04)',
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                boxSizing: 'border-box',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#312E81', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  🏫 Colleges & Polytechnics
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.35rem' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#312E81', textTransform: 'uppercase', letterSpacing: '0.03em', lineHeight: 1.3 }}>
+                  🏫 Colleges & Poly
                 </span>
-                <span style={{ fontSize: '0.82rem', fontWeight: 800, background: '#C7D2FE', color: '#312E81', padding: '0.1rem 0.5rem', borderRadius: '999px' }}>
+                <span style={{ fontSize: '0.74rem', fontWeight: 800, background: '#C7D2FE', color: '#312E81', padding: '0.2rem 0.6rem', borderRadius: '999px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                   {tierCounts.COLLEGE} Colleges
                 </span>
               </div>
-              <p style={{ margin: '0 0 0.5rem', fontSize: '0.82rem', color: '#475569', lineHeight: 1.45 }}>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#4338CA', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.55rem' }}>
+                (Career & Applied)
+              </div>
+              <p style={{ margin: '0 0 0.85rem', fontSize: '0.82rem', color: '#475569', lineHeight: 1.5, flex: 1 }}>
                 Applied learning, polytechnics, postgraduate diplomas, and direct career workforce preparation.
               </p>
-              <div style={{ fontSize: '0.74rem', color: '#4338CA', fontWeight: 700 }}>
+              <div style={{ fontSize: '0.74rem', color: '#4338CA', fontWeight: 700, marginTop: 'auto', paddingTop: '0.65rem', borderTop: '1px solid rgba(99, 102, 241, 0.2)', lineHeight: 1.4 }}>
                 Hands-on practical training, co-op work terms, and high graduate employment.
               </div>
             </div>
@@ -664,7 +704,7 @@ export const ThreeTierFitView: React.FC<ThreeTierFitViewProps> = ({
             }}
           >
             {[
-              { label: '🌐 All Destinations', value: 'ALL', count: 138 },
+              { label: '🌐 All Destinations', value: 'ALL', count: institutions.length },
               ...(countries.length > 0
                 ? countries.map((c) => ({
                     label: `${c.flag || '🌐'} ${c.name}`,

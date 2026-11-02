@@ -195,6 +195,27 @@ export class AppointmentsController {
   }
 
   /**
+   * POST /api/v1/appointments/:id/upload-recording
+   * Counsellor/Admin: Upload audio note or video recording
+   */
+  public static async uploadRecording(req: Request, res: Response, next: NextFunction) {
+    try {
+      const counsellorId = getUserId(req);
+      const appointmentId = req.params.id;
+      const userRole = (req as any).user?.role;
+      const data = await AppointmentsService.uploadSessionRecording(
+        counsellorId,
+        appointmentId,
+        req.body,
+        userRole
+      );
+      return ApiResponse.success(res, data, 'Session recording uploaded successfully');
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  /**
    * GET /api/v1/appointments/counsellor/:counsellorId/available-slots
    * Retrieve dynamic unbooked slots for a counsellor on a specific date
    */

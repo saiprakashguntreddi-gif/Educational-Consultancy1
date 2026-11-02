@@ -415,9 +415,44 @@ export class CollegesService {
       });
     }
 
+    // State filter (e.g. Andhra Pradesh, Karnataka, Delhi)
+    if (query.state && query.state.trim() && query.state !== 'ALL') {
+      andConditions.push({ state: { contains: query.state.trim() } });
+    }
+
     // City filter
     if (query.city && query.city.trim() && query.city !== 'ALL') {
       andConditions.push({ city: { contains: query.city.trim() } });
+    }
+
+    // Institution Type filter (Government, Private, etc.)
+    if (query.institutionType && query.institutionType.trim() && query.institutionType !== 'ALL') {
+      andConditions.push({ institutionType: { contains: query.institutionType.trim() } });
+    }
+
+    // Study Mode filter (Full-Time Campus, Distance Education, Online Learning)
+    if (query.studyMode && query.studyMode.trim() && query.studyMode !== 'ALL') {
+      const mode = query.studyMode.trim();
+      andConditions.push({
+        OR: [
+          { overview: { contains: mode } },
+          { admissionsOverview: { contains: mode } },
+          {
+            courses: {
+              some: {
+                status: 'PUBLISHED',
+                isPublished: true,
+                isActive: true,
+                OR: [
+                  { durationText: { contains: mode } },
+                  { description: { contains: mode } },
+                  { name: { contains: mode } },
+                ],
+              },
+            },
+          },
+        ],
+      });
     }
 
     // Department filter
@@ -548,7 +583,9 @@ export class CollegesService {
         },
         select: {
           country: true,
+          state: true,
           city: true,
+          institutionType: true,
           courses: {
             where: {
               status: 'PUBLISHED',
@@ -568,7 +605,9 @@ export class CollegesService {
 
     // Extract dynamic filter values from active published catalog
     const countrySet = new Set<string>();
+    const stateSet = new Set<string>();
     const citySet = new Set<string>();
+    const institutionTypeSet = new Set<string>();
     const departmentSet = new Set<string>();
     const specializationSet = new Set<string>();
     const levelSet = new Set<string>();
@@ -576,7 +615,9 @@ export class CollegesService {
 
     allAvailableInstitutions.forEach((inst) => {
       if (inst.country) countrySet.add(inst.country);
+      if (inst.state) stateSet.add(inst.state);
       if (inst.city) citySet.add(inst.city);
+      if (inst.institutionType) institutionTypeSet.add(inst.institutionType);
       inst.courses.forEach((c) => {
         if (c.department) departmentSet.add(c.department);
         if (c.specialization) specializationSet.add(c.specialization);
@@ -606,10 +647,13 @@ export class CollegesService {
       },
       filters: {
         countries: Array.from(countrySet).sort(),
+        states: Array.from(stateSet).sort(),
         cities: Array.from(citySet).sort(),
+        institutionTypes: Array.from(institutionTypeSet).sort(),
         departments: Array.from(departmentSet).sort(),
         specializations: Array.from(specializationSet).sort(),
         levels: Array.from(levelSet).sort(),
+        studyModes: ['Full-Time Campus', 'Distance Education', 'Online Learning'],
         entranceExams: Array.from(examSet).sort(),
         feeRange: {
           min: 0,

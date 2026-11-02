@@ -5,18 +5,35 @@ import { UK_INSTITUTIONS } from '../modules/colleges/data/institutions-uk.data';
 import { AUSTRALIA_INSTITUTIONS } from '../modules/colleges/data/institutions-australia.data';
 import { GERMANY_INSTITUTIONS } from '../modules/colleges/data/institutions-germany.data';
 import { CANADA_INSTITUTIONS } from '../modules/colleges/data/institutions-canada.data';
+import { INDIA_INSTITUTIONS } from '../modules/colleges/data/institutions-india.data';
 import { DetailedInstitutionSeed } from '../modules/colleges/data/institutions-usa.data';
+
+async function withRetry<T>(fn: () => Promise<T>, retries = 3, delayMs = 1500): Promise<T> {
+  let attempt = 0;
+  while (true) {
+    try {
+      return await fn();
+    } catch (err: any) {
+      attempt++;
+      if (attempt >= retries) throw err;
+      console.warn(`   ⚠️ [Retry ${attempt}/${retries}] Database glitch, retrying in ${delayMs}ms: ${err.message}`);
+      await new Promise(r => setTimeout(r, delayMs));
+    }
+  }
+}
 
 async function seedAdmissionsGuide2026() {
   console.log('🚀 Starting Admissions Guide 2026 Database Seeder...');
   console.log('--------------------------------------------------');
+
+  const targetCountryArg = process.argv[2];
 
   // 1. Upsert Countries
   console.log(`\n📌 1. Upserting ${COUNTRIES_DATA.length} Destination Countries...`);
   const countryIdMap: Record<string, string> = {};
 
   for (const c of COUNTRIES_DATA) {
-    const upserted = await prisma.country.upsert({
+    const upserted = await withRetry(() => prisma.country.upsert({
       where: { code: c.code },
       update: {
         name: c.name,
@@ -51,7 +68,7 @@ async function seedAdmissionsGuide2026() {
         sourceUrl: c.sourceUrl,
         lastVerifiedAt: c.lastVerifiedAt,
       },
-    });
+    }));
 
     countryIdMap[c.name] = upserted.id;
     // Map alternate names
@@ -60,18 +77,28 @@ async function seedAdmissionsGuide2026() {
     if (c.code === 'AUS') countryIdMap['Australia'] = upserted.id;
     if (c.code === 'DEU') countryIdMap['Germany'] = upserted.id;
     if (c.code === 'CAN') countryIdMap['Canada'] = upserted.id;
+    if (c.code === 'IND') countryIdMap['India'] = upserted.id;
 
     console.log(`   ✓ Country [${c.code}] ${c.name} (ID: ${upserted.id})`);
   }
 
   // 2. Prepare Country Datasets
-  const datasets: { countryName: string; list: DetailedInstitutionSeed[] }[] = [
+  const allDatasets: { countryName: string; list: DetailedInstitutionSeed[] }[] = [
     { countryName: 'United States', list: USA_INSTITUTIONS },
     { countryName: 'United Kingdom', list: UK_INSTITUTIONS },
     { countryName: 'Australia', list: AUSTRALIA_INSTITUTIONS },
     { countryName: 'Germany', list: GERMANY_INSTITUTIONS },
     { countryName: 'Canada', list: CANADA_INSTITUTIONS },
+    { countryName: 'India', list: INDIA_INSTITUTIONS },
   ];
+
+  const datasets = targetCountryArg
+    ? allDatasets.filter(
+        d => d.countryName.toLowerCase() === targetCountryArg.toLowerCase() ||
+             (targetCountryArg.toLowerCase() === 'usa' && d.countryName === 'United States') ||
+             (targetCountryArg.toLowerCase() === 'uk' && d.countryName === 'United Kingdom')
+      )
+    : allDatasets;
 
   let totalInstitutions = 0;
   let totalCourses = 0;
@@ -82,8 +109,8 @@ async function seedAdmissionsGuide2026() {
     console.log(`\n📌 2. Seeding ${ds.list.length} Institutions for ${ds.countryName}...`);
 
     for (const inst of ds.list) {
-      // Upsert Institution
-      const instRecord = await prisma.institution.upsert({
+      // Upsert Institution with retry
+      const instRecord = await withRetry(() => prisma.institution.upsert({
         where: { slug: inst.slug },
         update: {
           name: inst.name,
@@ -154,92 +181,96 @@ async function seedAdmissionsGuide2026() {
           isActive: true,
           status: 'PUBLISHED',
         },
-      });
+      }));
 
       totalInstitutions++;
 
       // Seed Courses for this institution
       for (const course of inst.courses) {
-        // Find existing course by name and institutionId or create
-        const existingCourse = await prisma.course.findFirst({
-          where: {
-            institutionId: instRecord.id,
-            name: course.name,
-          },
-        });
-
-        if (existingCourse) {
-          await prisma.course.update({
-            where: { id: existingCourse.id },
-            data: {
-              department: course.department,
-              specialization: course.specialization,
-              level: course.level,
-              durationYears: course.durationYears,
-              durationText: course.durationText,
-              annualTuitionFee: course.annualTuitionFee,
-              feeCurrency: course.feeCurrency,
-              feeRange: course.feeRange,
-              entranceExamsRequired: JSON.stringify(course.entranceExamsRequired),
-              description: course.description,
-              eligibilityCriteria: course.eligibilityCriteria,
-              isPopular: course.isPopular,
-              isPublished: true,
-            },
-          });
-        } else {
-          await prisma.course.create({
-            data: {
+        await withRetry(async () => {
+          const existingCourse = await prisma.course.findFirst({
+            where: {
               institutionId: instRecord.id,
               name: course.name,
-              department: course.department,
-              specialization: course.specialization,
-              level: course.level,
-              durationYears: course.durationYears,
-              durationText: course.durationText,
-              annualTuitionFee: course.annualTuitionFee,
-              feeCurrency: course.feeCurrency,
-              feeRange: course.feeRange,
-              entranceExamsRequired: JSON.stringify(course.entranceExamsRequired),
-              description: course.description,
-              eligibilityCriteria: course.eligibilityCriteria,
-              isPopular: course.isPopular,
-              isPublished: true,
             },
           });
-        }
+
+          if (existingCourse) {
+            await prisma.course.update({
+              where: { id: existingCourse.id },
+              data: {
+                department: course.department,
+                specialization: course.specialization,
+                level: course.level,
+                durationYears: course.durationYears,
+                durationText: course.durationText,
+                annualTuitionFee: course.annualTuitionFee,
+                feeCurrency: course.feeCurrency,
+                feeRange: course.feeRange,
+                entranceExamsRequired: JSON.stringify(course.entranceExamsRequired),
+                description: course.description,
+                eligibilityCriteria: course.eligibilityCriteria,
+                isPopular: course.isPopular,
+                isPublished: true,
+              },
+            });
+          } else {
+            await prisma.course.create({
+              data: {
+                institutionId: instRecord.id,
+                name: course.name,
+                department: course.department,
+                specialization: course.specialization,
+                level: course.level,
+                durationYears: course.durationYears,
+                durationText: course.durationText,
+                annualTuitionFee: course.annualTuitionFee,
+                feeCurrency: course.feeCurrency,
+                feeRange: course.feeRange,
+                entranceExamsRequired: JSON.stringify(course.entranceExamsRequired),
+                description: course.description,
+                eligibilityCriteria: course.eligibilityCriteria,
+                isPopular: course.isPopular,
+                isPublished: true,
+              },
+            });
+          }
+        });
         totalCourses++;
       }
 
       // Seed Exam Rules for this institution
       if (inst.examRules && inst.examRules.length > 0) {
-        // Clean old rules for clean upsert
-        await prisma.institutionExamRule.deleteMany({
-          where: { institutionId: instRecord.id },
-        });
-
-        for (const rule of inst.examRules) {
-          await prisma.institutionExamRule.create({
-            data: {
-              institutionId: instRecord.id,
-              examCode: rule.examCode,
-              ruleStatus: rule.ruleStatus,
-              minScore: rule.minScore || null,
-              notes: rule.notes || null,
-              sourceUrl: inst.sourceUrl,
-              checkedAt: new Date('2026-02-01'),
-            },
+        await withRetry(async () => {
+          // Clean old rules for clean upsert
+          await prisma.institutionExamRule.deleteMany({
+            where: { institutionId: instRecord.id },
           });
-          totalExamRules++;
-        }
+
+          for (const rule of inst.examRules) {
+            await prisma.institutionExamRule.create({
+              data: {
+                institutionId: instRecord.id,
+                examCode: rule.examCode,
+                ruleStatus: rule.ruleStatus,
+                minScore: rule.minScore || null,
+                notes: rule.notes || null,
+                sourceUrl: inst.sourceUrl,
+                checkedAt: new Date('2026-02-01'),
+              },
+            });
+            totalExamRules++;
+          }
+        });
       }
+      console.log(`   ✓ [${inst.country}] ${inst.name} (${inst.city})`);
     }
   }
 
   console.log('\n==================================================');
   console.log('✅ ADMISSIONS GUIDE 2026 SEEDING COMPLETED!');
   console.log(`   Countries seeded:     ${COUNTRIES_DATA.length}`);
-  console.log(`   Institutions seeded:  ${totalInstitutions} (USA: 25, UK: 30, AUS: 27, DEU: 26, CAN: 30)`);
+  console.log(`   Institutions seeded:  ${totalInstitutions} (USA: 25, UK: 30, AUS: 27, DEU: 26, CAN: 30, IND: 33)`);
   console.log(`   Courses seeded:       ${totalCourses}`);
   console.log(`   Exam rules mapped:    ${totalExamRules}`);
   console.log('==================================================\n');

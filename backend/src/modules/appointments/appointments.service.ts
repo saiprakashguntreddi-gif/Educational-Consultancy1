@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import { prisma } from '../../shared/database/prisma.service';
 import { Role } from '../../config/roles';
 import {
@@ -359,8 +361,8 @@ export class AppointmentsService {
         studentNotes: input.studentNotes || null,
         studentProfileId: profile.id,
         counsellorId: consultant.id,
-        isRecorded: true,
-        recordingUrl: '/assets/sample-consultation.mp4',
+        isRecorded: false,
+        recordingUrl: null,
         followUpActions: 'Please review your Education Details and keep your shortlisted colleges ready prior to the meeting.',
       },
       include: {
@@ -697,6 +699,8 @@ export class AppointmentsService {
       studyScope?: 'DOMESTIC' | 'INTERNATIONAL' | 'BOTH';
       detailedInterestReport?: string;
       sendPolicyViaWhatsApp?: boolean;
+      recordingUrl?: string;
+      audioUrl?: string;
     },
     userRole?: string
   ) {
@@ -724,14 +728,31 @@ export class AppointmentsService {
     const endTime = input.actualEndTime ? new Date(input.actualEndTime) : new Date();
     const duration = input.durationMinutes || appointment.durationMinutes || 45;
 
-    // Automatic meeting recording url for admin monitoring
+    // Use genuine counsellor recording URL if provided
     const recordingUrl =
-      appointment.recordingUrl &&
+      input.recordingUrl?.trim() ||
+      (appointment.recordingUrl &&
       !appointment.recordingUrl.includes('.internal') &&
       !appointment.recordingUrl.includes('storage.superconsciousness.com') &&
-      !appointment.recordingUrl.includes('commondatastorage.googleapis.com')
+      !appointment.recordingUrl.includes('sample-consultation.mp4')
         ? appointment.recordingUrl
-        : '/assets/sample-consultation.mp4';
+        : null);
+
+    let attachments = appointment.attachments;
+    if (input.audioUrl?.trim()) {
+      let parsedAtts: any[] = [];
+      try {
+        if (attachments) parsedAtts = JSON.parse(attachments);
+      } catch (_) {}
+      parsedAtts = parsedAtts.filter((a: any) => a.type !== 'AUDIO_AUDIT');
+      parsedAtts.push({
+        type: 'AUDIO_AUDIT',
+        title: 'Counsellor Voice Audit Note',
+        fileUrl: input.audioUrl.trim(),
+        createdAt: new Date().toISOString(),
+      });
+      attachments = JSON.stringify(parsedAtts);
+    }
 
     const studentInterest = input.studentInterest || 'UNDECIDED';
     const targetStream = input.targetStream?.trim() || null;
@@ -762,8 +783,9 @@ export class AppointmentsService {
         targetCity,
         studyScope,
         detailedInterestReport,
-        isRecorded: true,
-        recordingUrl,
+        isRecorded: Boolean(recordingUrl || input.audioUrl),
+        recordingUrl: recordingUrl || null,
+        attachments,
       },
       include: {
         studentProfile: { select: { id: true, fullName: true, contactEmail: true, phone: true } },
@@ -824,6 +846,83 @@ export class AppointmentsService {
       recordingUrl: updated.recordingUrl,
       whatsappPolicyLink,
     };
+  }
+
+  /**
+   * Upload session audio or video recording from counsellor/admin
+   */
+  public static async uploadSessionRecording(
+    counsellorId: string,
+    appointmentId: string,
+    input: { dataBase64: string; mimeType?: string; filename?: string; type?: 'video' | 'audio' },
+    userRole?: string
+  ) {
+    const appointment = await prisma.appointment.findUnique({
+      where: { id: appointmentId },
+    });
+    if (!appointment) {
+      const err: any = new Error('Appointment not found.');
+      err.statusCode = 404;
+      throw err;
+    }
+    if (userRole !== Role.ADMIN && appointment.counsellorId !== counsellorId) {
+      const err: any = new Error('Unauthorized to upload recording for this appointment.');
+      err.statusCode = 403;
+      throw err;
+    }
+
+    const type = input.type === 'video' ? 'video' : 'audio';
+    const mime = input.mimeType || (type === 'video' ? 'video/webm' : 'audio/webm');
+    let ext = 'webm';
+    if (mime.includes('mp4')) ext = 'mp4';
+    else if (mime.includes('wav')) ext = 'wav';
+    else if (mime.includes('mp3') || mime.includes('mpeg')) ext = 'mp3';
+    else if (mime.includes('ogg')) ext = 'ogg';
+    else if (mime.includes('m4a')) ext = 'm4a';
+
+    const cleanBase64 = input.dataBase64.replace(/^data:[^;]+;base64,/, '');
+    const buffer = Buffer.from(cleanBase64, 'base64');
+    const filename = `${appointmentId.slice(0, 8)}_${type}_${Date.now()}.${ext}`;
+
+    const backendUploadsDir = path.resolve(process.cwd(), 'public/uploads/recordings');
+    const frontendUploadsDir = path.resolve(process.cwd(), '../frontend/public/uploads/recordings');
+
+    if (!fs.existsSync(backendUploadsDir)) fs.mkdirSync(backendUploadsDir, { recursive: true });
+    if (!fs.existsSync(frontendUploadsDir)) {
+      try { fs.mkdirSync(frontendUploadsDir, { recursive: true }); } catch (_) {}
+    }
+
+    fs.writeFileSync(path.join(backendUploadsDir, filename), buffer);
+    try {
+      fs.writeFileSync(path.join(frontendUploadsDir, filename), buffer);
+    } catch (_) {}
+
+    const fileUrl = `/uploads/recordings/${filename}`;
+
+    if (type === 'video') {
+      await prisma.appointment.update({
+        where: { id: appointmentId },
+        data: { recordingUrl: fileUrl, isRecorded: true },
+      });
+    } else {
+      let parsedAtts: any[] = [];
+      try {
+        if (appointment.attachments) parsedAtts = JSON.parse(appointment.attachments);
+      } catch (_) {}
+      parsedAtts = parsedAtts.filter((a: any) => a.type !== 'AUDIO_AUDIT');
+      parsedAtts.push({
+        type: 'AUDIO_AUDIT',
+        title: input.filename || 'Counsellor Audio Recording',
+        fileUrl,
+        createdAt: new Date().toISOString(),
+      });
+      await prisma.appointment.update({
+        where: { id: appointmentId },
+        data: { attachments: JSON.stringify(parsedAtts), isRecorded: true },
+      });
+    }
+
+    return { fileUrl, type, filename };
   }
 
   /**

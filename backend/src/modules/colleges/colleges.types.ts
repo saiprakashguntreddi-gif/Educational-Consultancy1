@@ -114,10 +114,13 @@ export interface InstitutionDetail extends InstitutionSummary {
 
 export interface DiscoveryFilterOptions {
   countries: string[];
+  states: string[];
   cities: string[];
+  institutionTypes: string[];
   departments: string[];
   specializations: string[];
   levels: string[];
+  studyModes: string[];
   entranceExams: string[];
   feeRange: {
     min: number;
@@ -169,8 +172,11 @@ export interface CollegeSearchParams {
   search?: string;
   country?: string;
   countryId?: string;
-  counsellingTier?: string;
+  state?: string;
   city?: string;
+  institutionType?: string;
+  studyMode?: string;
+  counsellingTier?: string;
   department?: string;
   course?: string;
   specialization?: string;

@@ -9,6 +9,9 @@ import {
   Search,
   ArrowUpDown,
   RotateCcw,
+  Eye,
+  X,
+  Maximize2,
 } from 'lucide-react';
 import {
   CountrySummary,
@@ -28,6 +31,25 @@ interface CountryDetailPageProps {
   savedInstitutionIds: Set<string>;
   comparedInstitutionIds: Set<string>;
 }
+
+
+const FLAG_MAP: Record<string, string> = {
+  IND: 'https://flagcdn.com/w80/in.png',
+  USA: 'https://flagcdn.com/w80/us.png',
+  GBR: 'https://flagcdn.com/w80/gb.png',
+  AUS: 'https://flagcdn.com/w80/au.png',
+  CAN: 'https://flagcdn.com/w80/ca.png',
+  DEU: 'https://flagcdn.com/w80/de.png',
+};
+
+const CURATED_BANNERS: Record<string, string> = {
+  IND: 'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1600&q=85',
+  USA: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=85',
+  GBR: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1600&q=85',
+  AUS: 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?auto=format&fit=crop&w=1200&q=85',
+  DEU: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1600&q=85',
+  CAN: 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?auto=format&fit=crop&w=1200&q=85',
+};
 
 export const CountryDetailPage: React.FC<CountryDetailPageProps> = ({
   country,
@@ -50,6 +72,7 @@ export const CountryDetailPage: React.FC<CountryDetailPageProps> = ({
   const [selectedExam, setSelectedExam] = useState<string>('ALL');
   const [sortBy, setSortBy] = useState<'name_asc' | 'name_desc' | 'fee_asc' | 'fee_desc'>('name_asc');
   const [isVisaExpanded, setIsVisaExpanded] = useState<boolean>(true);
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState<boolean>(false);
 
   // Fetch all institutions for this country (using limit: 100 to get the complete list)
   const fetchCountryColleges = useCallback(async () => {
@@ -254,19 +277,23 @@ export const CountryDetailPage: React.FC<CountryDetailPageProps> = ({
         {/* Banner with high-res photo */}
         <div
           style={{
-            height: '240px',
+            height: '350px',
+            minHeight: '340px',
             position: 'relative',
-            backgroundImage: `url(${country.bannerImageUrl})`,
+            backgroundImage: `url(${CURATED_BANNERS[country.code] || country.bannerImageUrl})`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundPosition: country.code === 'IND' ? 'center 22%' : 'center 32%',
+            cursor: 'pointer',
           }}
+          onClick={() => setIsPhotoModalOpen(true)}
+          title="Click to view full uncropped landmark photograph"
         >
           {/* Gradient scrim */}
           <div
             style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(180deg, rgba(15,23,42,0.2) 0%, rgba(15,23,42,0.85) 100%)',
+              background: 'linear-gradient(180deg, rgba(15,23,42,0.42) 0%, rgba(15,23,42,0.06) 30%, rgba(15,23,42,0.3) 65%, rgba(15,23,42,0.92) 100%)',
             }}
           />
 
@@ -288,33 +315,74 @@ export const CountryDetailPage: React.FC<CountryDetailPageProps> = ({
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.45rem',
-                background: 'rgba(255, 255, 255, 0.95)',
+                gap: '0.55rem',
+                background: 'rgba(255, 255, 255, 0.96)',
                 backdropFilter: 'blur(8px)',
-                padding: '0.35rem 0.8rem',
+                padding: '0.35rem 0.85rem',
                 borderRadius: '999px',
-                fontSize: '0.82rem',
+                fontSize: '0.84rem',
                 fontWeight: 800,
                 color: '#0F172A',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
               }}
             >
-              <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>{country.flag}</span>
+              <img
+                src={FLAG_MAP[country.code] || `https://flagcdn.com/w80/${country.code.slice(0, 2).toLowerCase()}.png`}
+                alt={`${country.name} flag`}
+                style={{
+                  width: '20px',
+                  height: '14px',
+                  objectFit: 'cover',
+                  borderRadius: '2px',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                  display: 'inline-block',
+                }}
+              />
               <span>2026 Admissions Guide • {country.name}</span>
             </div>
 
-            <div
-              style={{
-                background: '#5B4FE9',
-                color: '#FFFFFF',
-                padding: '0.35rem 0.85rem',
-                borderRadius: '999px',
-                fontSize: '0.82rem',
-                fontWeight: 800,
-                boxShadow: '0 2px 8px rgba(91,79,233,0.4)',
-              }}
-            >
-              {institutions.length || country.institutionsCount} Institutions in Guide
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsPhotoModalOpen(true);
+                }}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  background: 'rgba(15, 23, 42, 0.75)',
+                  backdropFilter: 'blur(8px)',
+                  border: '1px solid rgba(255, 255, 255, 0.28)',
+                  color: '#FFFFFF',
+                  padding: '0.35rem 0.85rem',
+                  borderRadius: '999px',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                  transition: 'all 0.15s ease',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(91, 79, 233, 0.9)')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(15, 23, 42, 0.75)')}
+                title="View full uncropped landmark photograph"
+              >
+                <Eye size={13} />
+                <span>View Full Photo</span>
+              </button>
+              <div
+                style={{
+                  background: '#5B4FE9',
+                  color: '#FFFFFF',
+                  padding: '0.35rem 0.85rem',
+                  borderRadius: '999px',
+                  fontSize: '0.82rem',
+                  fontWeight: 800,
+                  boxShadow: '0 2px 8px rgba(91,79,233,0.4)',
+                }}
+              >
+                {institutions.length || country.institutionsCount} Institutions in Guide
+              </div>
             </div>
           </div>
 
@@ -330,11 +398,12 @@ export const CountryDetailPage: React.FC<CountryDetailPageProps> = ({
           >
             <h1
               style={{
-                fontSize: '2.25rem',
+                fontSize: '2.4rem',
                 fontWeight: 900,
+                color: '#FFFFFF',
                 letterSpacing: '-0.03em',
                 margin: '0 0 0.35rem',
-                textShadow: '0 2px 6px rgba(0,0,0,0.5)',
+                textShadow: '0 2px 10px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.95)',
               }}
             >
               Study in {country.name}
@@ -939,6 +1008,136 @@ export const CountryDetailPage: React.FC<CountryDetailPageProps> = ({
           </div>
         )}
       </div>
+      {/* FULL LANDMARK PHOTO LIGHTBOX MODAL */}
+      {isPhotoModalOpen && (
+        <div
+          onClick={() => setIsPhotoModalOpen(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.94)',
+            backdropFilter: 'blur(10px)',
+            zIndex: 99999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1.5rem',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'relative',
+              maxWidth: '1100px',
+              width: '100%',
+              background: '#0F172A',
+              borderRadius: '20px',
+              overflow: 'hidden',
+              boxShadow: '0 25px 60px -15px rgba(0,0,0,0.8)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            {/* Modal Header */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '1rem 1.5rem',
+                borderBottom: '1px solid rgba(255,255,255,0.1)',
+                background: 'rgba(30, 41, 59, 0.85)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <span style={{ fontSize: '1.2rem' }}>{country.flag}</span>
+                <span style={{ color: '#FFFFFF', fontWeight: 800, fontSize: '1rem' }}>
+                  {country.name} • Higher Education Landmark
+                </span>
+              </div>
+              <button
+                onClick={() => setIsPhotoModalOpen(false)}
+                style={{
+                  background: 'rgba(255,255,255,0.12)',
+                  border: 'none',
+                  color: '#FFFFFF',
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'background 0.15s ease',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.25)')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.12)')}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Complete Uncropped Image Container */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: '#020617',
+                maxHeight: '72vh',
+                overflow: 'hidden',
+              }}
+            >
+              <img
+                src={CURATED_BANNERS[country.code] || country.bannerImageUrl}
+                alt={`${country.name} Landmark`}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '72vh',
+                  objectFit: 'contain',
+                  display: 'block',
+                }}
+              />
+            </div>
+
+            {/* Modal Caption */}
+            <div
+              style={{
+                padding: '0.9rem 1.5rem',
+                background: 'rgba(30, 41, 59, 0.95)',
+                borderTop: '1px solid rgba(255,255,255,0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '0.5rem',
+              }}
+            >
+              <span style={{ color: '#E2E8F0', fontSize: '0.84rem', fontWeight: 500 }}>
+                {country.tagline || `${country.name} Higher Education & Admissions 2026`}
+              </span>
+              <a
+                href={CURATED_BANNERS[country.code] || country.bannerImageUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: '#818CF8',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <span>Open Original Ultra-HD Landmark Photo</span>
+                <ExternalLink size={13} />
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

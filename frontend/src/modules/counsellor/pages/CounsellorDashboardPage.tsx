@@ -1345,9 +1345,12 @@ export const CounsellorDashboardPage: React.FC<CounsellorDashboardPageProps> = (
           appointment={activeMeetingAppointment}
           userRole="COUNSELLOR"
           onClose={() => setActiveMeetingAppointment(null)}
-          onRecordOutcome={(app) => {
+          onRecordOutcome={(app, recordedBlob) => {
             setActiveMeetingAppointment(null);
-            setRecordOutcomeAppointment(app);
+            setRecordOutcomeAppointment({
+              ...app,
+              preRecordedBlob: recordedBlob || null,
+            });
           }}
         />
       )}

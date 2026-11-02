@@ -2907,9 +2907,12 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
           appointment={activeMeetingAppointment}
           userRole="ADMIN"
           onClose={() => setActiveMeetingAppointment(null)}
-          onRecordOutcome={(app) => {
+          onRecordOutcome={(app, recordedBlob) => {
             setActiveMeetingAppointment(null);
-            setRecordOutcomeAppointment(app);
+            setRecordOutcomeAppointment({
+              ...app,
+              preRecordedBlob: recordedBlob || null,
+            });
           }}
         />
       )}

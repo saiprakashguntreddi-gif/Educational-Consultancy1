@@ -225,9 +225,104 @@ export class ProfileService {
   }
 
   /**
+   * Extend student access for continuing / postgraduate studies (+3 Years)
+   */
+  public static async extendAccess(userId: string): Promise<StudentProfileRecord> {
+    const profile = await prisma.studentProfile.findUnique({
+      where: { userId },
+    });
+    if (!profile) {
+      throw new Error('Student profile not found');
+    }
+
+    const now = new Date();
+    const updated = await prisma.studentProfile.update({
+      where: { id: profile.id },
+      data: {
+        enrolledAt: now,
+        isEnrolled: true,
+      },
+    });
+
+    await prisma.auditLog.create({
+      data: {
+        userId,
+        action: 'ACCESS_LIFECYCLE_EXTENDED',
+        details: JSON.stringify({
+          studentProfileId: profile.id,
+          extendedAt: now.toISOString(),
+          additionalYears: 3,
+          note: 'Postgraduate continuation extension activated',
+        }),
+      },
+    });
+
+    return this.mapToRecord(updated);
+  }
+
+  /**
    * Helper to format Prisma model into domain StudentProfileRecord
    */
   private static mapToRecord(raw: any): StudentProfileRecord {
+    const isEnrolled = Boolean(raw.isEnrolled);
+    const enrolledDate = raw.enrolledAt ? new Date(raw.enrolledAt) : (isEnrolled ? new Date(raw.createdAt) : null);
+    const now = new Date();
+
+    let accessLifecycle: any = undefined;
+    if (isEnrolled && enrolledDate) {
+      const validityYears = 5;
+      const expiresAt = new Date(enrolledDate.getTime() + validityYears * 365.25 * 24 * 60 * 60 * 1000);
+      const diffMs = expiresAt.getTime() - now.getTime();
+      const daysRemaining = Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+      const yearsRemaining = +(daysRemaining / 365.25).toFixed(1);
+
+      const elapsedMs = now.getTime() - enrolledDate.getTime();
+      const elapsedYears = elapsedMs / (1000 * 60 * 60 * 24 * 365.25);
+
+      let phase = 'ACTIVE_GUIDANCE';
+      let phaseTitle = 'Active Guidance Phase (Years 1–3)';
+      let phaseDescription = 'Full 1-on-1 certified counsellor consultation, live mock tests, 3-tier fit algorithms, and admissions planning unlocked.';
+      let canExtend = false;
+
+      if (elapsedYears >= 5) {
+        phase = 'EXTENSION_ELIGIBLE';
+        phaseTitle = 'Postgraduate Extension Window (Year 5+)';
+        phaseDescription = 'Standard 5-year academic lifecycle completed. 1-click extension available for Master’s, Doctoral, or Fellowship planning.';
+        canExtend = true;
+      } else if (elapsedYears >= 3) {
+        phase = 'ALUMNI_SELF_SERVICE';
+        phaseTitle = 'Alumni & Self-Service Phase (Years 4–5)';
+        phaseDescription = 'Continuous access to college catalogs, fee comparisons, saved shortlists, notes, and academic dossier exports.';
+        canExtend = true;
+      }
+
+      accessLifecycle = {
+        isEnrolled: true,
+        enrolledAt: enrolledDate,
+        validityYears,
+        expiresAt,
+        daysRemaining,
+        yearsRemaining,
+        phase,
+        phaseTitle,
+        phaseDescription,
+        canExtend,
+      };
+    } else {
+      accessLifecycle = {
+        isEnrolled: false,
+        enrolledAt: null,
+        validityYears: 5,
+        expiresAt: null,
+        daysRemaining: null,
+        yearsRemaining: 5,
+        phase: 'ACTIVE_GUIDANCE',
+        phaseTitle: 'Pre-Enrolment Onboarding',
+        phaseDescription: 'Complete profile intake and 1-on-1 counsellor consultation to activate your 5-Year Academic Lifecycle access window.',
+        canExtend: false,
+      };
+    }
+
     return {
       id: raw.id,
       userId: raw.userId,
@@ -252,6 +347,7 @@ export class ProfileService {
       verificationNotes: raw.verificationNotes,
       isEnrolled: Boolean(raw.isEnrolled),
       enrolledAt: raw.enrolledAt ? new Date(raw.enrolledAt) : null,
+      accessLifecycle,
       assignedCounsellorId: raw.assignedCounsellorId || null,
       assignedCounsellor: raw.assignedCounsellor || null,
       createdAt: raw.createdAt,

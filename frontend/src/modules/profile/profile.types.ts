@@ -21,6 +21,19 @@ export interface StudentProfileIntakeInput {
   passingOutYear: number;
 }
 
+export interface AccessLifecycle {
+  isEnrolled: boolean;
+  enrolledAt: string | null;
+  validityYears: number;
+  expiresAt: string | null;
+  daysRemaining: number | null;
+  yearsRemaining: number | null;
+  phase: 'ACTIVE_GUIDANCE' | 'ALUMNI_SELF_SERVICE' | 'EXTENSION_ELIGIBLE';
+  phaseTitle: string;
+  phaseDescription: string;
+  canExtend: boolean;
+}
+
 export interface StudentProfileRecord extends StudentProfileIntakeInput {
   id: string;
   userId: string;
@@ -30,6 +43,7 @@ export interface StudentProfileRecord extends StudentProfileIntakeInput {
   verificationNotes: string | null;
   isEnrolled?: boolean;
   enrolledAt?: string | null;
+  accessLifecycle?: AccessLifecycle;
   createdAt: string;
   updatedAt: string;
 }

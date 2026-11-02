@@ -18,6 +18,15 @@ import {
 import { ScholarshipDto, EligibilityCriterionCheck } from '../scholarships.types';
 import '../scholarships.css';
 
+const COUNTRY_TAB_FLAGS: Record<string, string> = {
+  India: 'https://flagcdn.com/w40/in.png',
+  'United States': 'https://flagcdn.com/w40/us.png',
+  'United Kingdom': 'https://flagcdn.com/w40/gb.png',
+  Australia: 'https://flagcdn.com/w40/au.png',
+  Canada: 'https://flagcdn.com/w40/ca.png',
+  Germany: 'https://flagcdn.com/w40/de.png',
+};
+
 interface ScholarshipDetailModalProps {
   scholarship: ScholarshipDto | null;
   onClose: () => void;
@@ -136,8 +145,16 @@ export const ScholarshipDetailModal: React.FC<ScholarshipDetailModalProps> = ({
               )}
 
               {scholarship.destinationCountry && (
-                <span className="sch-tag destination">
-                  <MapPin size={11} />
+                <span className="sch-tag destination" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                  {COUNTRY_TAB_FLAGS[scholarship.destinationCountry] ? (
+                    <img
+                      src={COUNTRY_TAB_FLAGS[scholarship.destinationCountry]}
+                      alt=""
+                      style={{ width: '15px', height: '10px', objectFit: 'cover', borderRadius: '2px', display: 'inline-block' }}
+                    />
+                  ) : (
+                    <MapPin size={11} />
+                  )}
                   <span>Destination: {scholarship.destinationCountry}</span>
                 </span>
               )}

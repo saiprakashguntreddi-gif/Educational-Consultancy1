@@ -69,4 +69,11 @@ export class ProfileService {
       notes,
     });
   }
+
+  /**
+   * Extend student access for continuing / postgraduate studies (+3 Years)
+   */
+  public static async extendAccess(): Promise<ApiResponse<StudentProfileRecord>> {
+    return apiClient.post<StudentProfileRecord>(API_ENDPOINTS.PROFILE.ME + '/extend-access', {});
+  }
 }

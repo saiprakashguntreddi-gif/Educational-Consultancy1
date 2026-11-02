@@ -160,9 +160,21 @@ export class ScholarshipsService {
 
     if (eligibleBoards.length > 0) {
       if (studentBoard) {
-        const isMatch = eligibleBoards.some(
-          (b) => b.trim().toLowerCase() === studentBoard.trim().toLowerCase()
-        );
+        const isMatch = eligibleBoards.some((b) => {
+          const bl = b.trim().toLowerCase();
+          const sl = studentBoard.trim().toLowerCase();
+          return (
+            bl === sl ||
+            bl === 'all' ||
+            bl === 'any' ||
+            bl.includes('recognized') ||
+            (sl.includes('state') && bl.includes('state')) ||
+            (sl.includes('bieap') && (bl.includes('ap') || bl.includes('andhra') || bl.includes('state'))) ||
+            (sl.includes('cbse') && bl.includes('cbse')) ||
+            (sl.includes('icse') && bl.includes('icse')) ||
+            (sl.includes('ap') && (bl.includes('ap') || bl.includes('andhra')))
+          );
+        });
         if (isMatch) {
           checks.push({
             criterion: 'board',
@@ -175,9 +187,9 @@ export class ScholarshipsService {
         } else {
           checks.push({
             criterion: 'board',
-            status: 'NOT_MET',
+            status: 'NEEDS_REVIEW',
             label: 'Approved Education Board',
-            detail: `Not eligible: Open only to candidates from approved boards (${eligibleBoards.join(', ')}). Your board is ${studentBoard}.`,
+            detail: `Potentially eligible: Verified for approved boards (${eligibleBoards.join(', ')}). Your board is ${studentBoard}; verification may be required during application.`,
             requiredValue: eligibleBoards.join(', '),
             studentValue: studentBoard,
           });
@@ -229,9 +241,9 @@ export class ScholarshipsService {
         } else {
           checks.push({
             criterion: 'destination',
-            status: 'NOT_MET',
+            status: 'NEEDS_REVIEW',
             label: 'Destination Country',
-            detail: `Not eligible: Applicable for study programs in ${scholarship.destinationCountry}. Your preference list does not include this destination.`,
+            detail: `Potentially eligible: Award applies for study in ${scholarship.destinationCountry}. Available if you apply to institutions in ${scholarship.destinationCountry}.`,
             requiredValue: scholarship.destinationCountry,
             studentValue: preferredCountries.join(', ') || primaryCountry,
           });
@@ -277,9 +289,9 @@ export class ScholarshipsService {
         } else {
           checks.push({
             criterion: 'department',
-            status: 'NOT_MET',
+            status: 'NEEDS_REVIEW',
             label: 'Academic Field / Department',
-            detail: `Not eligible: Restricted to candidates pursuing ${scholarship.department}. Your preference is ${preferredDepartment}.`,
+            detail: `Potentially eligible: Award applies to ${scholarship.department}. Eligible if applying for programs in this discipline.`,
             requiredValue: scholarship.department,
             studentValue: preferredDepartment,
           });
@@ -310,7 +322,9 @@ export class ScholarshipsService {
       scholarship.requiredCitizenship &&
       scholarship.requiredCitizenship.trim().toLowerCase() !== 'all' &&
       scholarship.requiredCitizenship.trim().toLowerCase() !== 'international' &&
-      scholarship.requiredCitizenship.trim().toLowerCase() !== 'any'
+      scholarship.requiredCitizenship.trim().toLowerCase() !== 'any' &&
+      !scholarship.requiredCitizenship.trim().toLowerCase().includes('international') &&
+      !scholarship.requiredCitizenship.trim().toLowerCase().includes('global')
     ) {
       if (studentCitizenship) {
         const sc = studentCitizenship.trim().toLowerCase();
@@ -352,6 +366,15 @@ export class ScholarshipsService {
           studentValue: null,
         });
       }
+    } else {
+      checks.push({
+        criterion: 'citizenship',
+        status: 'MET',
+        label: 'Citizenship Requirement',
+        detail: 'Open to domestic and international candidates without citizenship restrictions.',
+        requiredValue: 'All / International',
+        studentValue: studentCitizenship || 'Any',
+      });
     }
 
     // 6. Gender Check
@@ -588,32 +611,40 @@ export class ScholarshipsService {
     );
 
     // Query active & published scholarships
-    const where: any = {
-      isActive: true,
-      isPublished: true,
-    };
+    const andConditions: any[] = [
+      { isActive: true },
+      { isPublished: true },
+    ];
 
     if (filters?.search && filters.search.trim()) {
       const term = filters.search.trim();
-      where.OR = [
-        { name: { contains: term } },
-        { provider: { contains: term } },
-        { awardDetails: { contains: term } },
-        { eligibilityDescription: { contains: term } },
-      ];
+      andConditions.push({
+        OR: [
+          { name: { contains: term } },
+          { provider: { contains: term } },
+          { awardDetails: { contains: term } },
+          { eligibilityDescription: { contains: term } },
+        ],
+      });
     }
 
     if (filters?.country && filters.country.trim() && filters.country !== 'ALL') {
-      where.OR = [
-        ...(where.OR || []),
-        { country: { contains: filters.country.trim() } },
-        { destinationCountry: { contains: filters.country.trim() } },
-      ];
+      const c = filters.country.trim();
+      andConditions.push({
+        OR: [
+          { country: { contains: c } },
+          { destinationCountry: { contains: c } },
+        ],
+      });
     }
 
     if (filters?.department && filters.department.trim() && filters.department !== 'ALL') {
-      where.department = { contains: filters.department.trim() };
+      andConditions.push({
+        department: { contains: filters.department.trim() },
+      });
     }
+
+    const where: any = { AND: andConditions };
 
     const allScholarships = await prisma.scholarship.findMany({
       where,

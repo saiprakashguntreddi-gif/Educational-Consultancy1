@@ -270,6 +270,8 @@ const AppContent: React.FC = () => {
   };
 
   const isDedicatedAppLayout =
+    user?.role === 'ADMIN' ||
+    user?.role === 'COUNSELLOR' ||
     (user?.role === 'STUDENT' &&
       (currentView === 'profile-intake' ||
         currentView === 'preferences' ||
@@ -289,12 +291,15 @@ const AppContent: React.FC = () => {
     currentView === 'admin-dashboard' ||
     currentView === 'counsellor-dashboard' ||
     currentView === 'manage-students' ||
-    currentView === 'counsellor-queue';
+    currentView === 'counsellor-queue' ||
+    currentView === 'college-management' ||
+    currentView === 'college-tier-management' ||
+    currentView === 'scholarship-management';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%', maxWidth: '100%', overflowX: isDedicatedAppLayout ? 'clip' : 'hidden' }}>
       {!isDedicatedAppLayout && <Navbar currentView={currentView} onNavigate={handleNavigate} />}
-      <main style={{ flex: 1, width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>{renderView()}</main>
+      <main style={{ flex: 1, width: '100%', maxWidth: '100%', overflowX: isDedicatedAppLayout ? 'clip' : 'hidden' }}>{renderView()}</main>
       {!isDedicatedAppLayout && <Footer onNavigate={handleNavigate} />}
     </div>
   );

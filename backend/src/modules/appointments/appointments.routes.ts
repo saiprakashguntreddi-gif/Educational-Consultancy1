@@ -8,6 +8,7 @@ import {
   toggleShortlistSchema,
   updateAppointmentStatusSchema,
   recordSessionOutcomeSchema,
+  uploadRecordingSchema,
   sendReminderSchema,
   manageCounsellorSlotsSchema,
   enrollStudentSchema,
@@ -84,6 +85,14 @@ appointmentsRouter.post(
   authenticateJwt,
   validateRequest(recordSessionOutcomeSchema),
   AppointmentsController.recordSessionOutcome
+);
+
+// Counsellor & Admin: Upload live session recording or audio audit note
+appointmentsRouter.post(
+  '/:id/upload-recording',
+  authenticateJwt,
+  validateRequest(uploadRecordingSchema),
+  AppointmentsController.uploadRecording
 );
 
 // Counsellor & Student: Dynamic Available Slots for Counsellor on a Date

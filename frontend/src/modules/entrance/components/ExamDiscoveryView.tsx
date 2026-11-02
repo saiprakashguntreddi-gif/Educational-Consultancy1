@@ -16,6 +16,17 @@ const CATEGORY_OPTIONS = [
   { label: 'Design & Architecture', value: 'DESIGN_ARCHITECTURE' },
 ];
 
+// Supported destinations across the platform (India domestic + 5 core destination countries)
+export const SUPPORTED_DESTINATIONS = [
+  { label: 'All Study Destinations', value: 'ALL' },
+  { label: 'India', value: 'India' },
+  { label: 'United States', value: 'United States' },
+  { label: 'United Kingdom', value: 'United Kingdom' },
+  { label: 'Australia', value: 'Australia' },
+  { label: 'Germany', value: 'Germany' },
+  { label: 'Canada', value: 'Canada' },
+];
+
 interface ExamDiscoveryViewProps {
   exams: EntranceExamRecord[];
   onSelectExam: (exam: EntranceExamRecord) => void;
@@ -58,15 +69,6 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
   }, [initialCategories]);
 
   const safeExams = Array.isArray(exams) ? exams : [];
-
-  // Extract unique destinations across all exams
-  const availableDestinations = useMemo(() => {
-    const set = new Set<string>();
-    safeExams.forEach((exam) => {
-      exam?.destinations?.forEach((dest) => set.add(dest));
-    });
-    return Array.from(set).sort();
-  }, [safeExams]);
 
   return (
     <div id="exam-discovery-container">
@@ -133,8 +135,8 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   transition: 'border-color 0.2s, box-shadow 0.2s',
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#FF9800';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(255, 152, 0, 0.15)';
+                  e.currentTarget.style.borderColor = '#000000';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(0, 0, 0, 0.1)';
                 }}
                 onBlur={(e) => {
                   e.currentTarget.style.borderColor = '#CBD5E1';
@@ -164,18 +166,17 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   transition: 'border-color 0.2s, box-shadow 0.2s',
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#FF9800';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(255, 152, 0, 0.15)';
+                  e.currentTarget.style.borderColor = '#000000';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(0, 0, 0, 0.1)';
                 }}
                 onBlur={(e) => {
                   e.currentTarget.style.borderColor = '#CBD5E1';
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                <option value="ALL">All Study Destinations</option>
-                {availableDestinations.map((dest) => (
-                  <option key={dest} value={dest}>
-                    {dest}
+                {SUPPORTED_DESTINATIONS.map((dest) => (
+                  <option key={dest.value} value={dest.value}>
+                    {dest.label}
                   </option>
                 ))}
               </select>
@@ -259,6 +260,8 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
         onAddToPlan={onAddToPlan}
         onTakeMockTest={onTakeMockTest}
         activeCategoryFilter={selectedCategory}
+        selectedDestination={selectedDestination}
+        searchQuery={searchQuery}
         onCategoryFilterChange={(catId) => {
           const match = CATEGORY_OPTIONS.find((c) => c.value.toLowerCase() === catId.toLowerCase());
           if (match) setSelectedCategory(match.value);

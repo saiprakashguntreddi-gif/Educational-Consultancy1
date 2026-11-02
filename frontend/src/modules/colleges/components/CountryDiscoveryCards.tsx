@@ -18,6 +18,25 @@ interface CountryDiscoveryCardsProps {
   onSelectCountry: (countryName: string) => void;
 }
 
+
+const FLAG_MAP: Record<string, string> = {
+  IND: 'https://flagcdn.com/w80/in.png',
+  USA: 'https://flagcdn.com/w80/us.png',
+  GBR: 'https://flagcdn.com/w80/gb.png',
+  AUS: 'https://flagcdn.com/w80/au.png',
+  CAN: 'https://flagcdn.com/w80/ca.png',
+  DEU: 'https://flagcdn.com/w80/de.png',
+};
+
+const CURATED_BANNERS: Record<string, string> = {
+  IND: 'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1600&q=85',
+  USA: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=85',
+  GBR: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1600&q=85',
+  AUS: 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?auto=format&fit=crop&w=1200&q=85',
+  DEU: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1600&q=85',
+  CAN: 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?auto=format&fit=crop&w=1200&q=85',
+};
+
 export const CountryDiscoveryCards: React.FC<CountryDiscoveryCardsProps> = ({
   countries,
   selectedCountry,
@@ -73,7 +92,7 @@ export const CountryDiscoveryCards: React.FC<CountryDiscoveryCardsProps> = ({
             Global Higher Education Hubs
           </h2>
           <p style={{ margin: '0.2rem 0 0', color: '#64748B', fontSize: '0.88rem' }}>
-            Explore verified tuition estimates, living expenses, and post-study work visa policies across 138 institutions.
+            Explore verified tuition estimates, living expenses, and post-study work visa policies across {countries.reduce((acc, c) => acc + (c.institutionsCount || 0), 0) || 171} institutions.
           </p>
         </div>
 
@@ -154,44 +173,58 @@ export const CountryDiscoveryCards: React.FC<CountryDiscoveryCardsProps> = ({
               {/* Destination Hero Image */}
               <div
                 style={{
-                  height: '130px',
+                  height: '165px',
                   position: 'relative',
-                  backgroundImage: `url(${country.bannerImageUrl})`,
+                  backgroundImage: `url(${CURATED_BANNERS[country.code] || country.bannerImageUrl})`,
                   backgroundSize: 'cover',
-                  backgroundPosition: 'center',
+                  backgroundPosition: country.code === 'IND' ? 'center 22%' : 'center',
+                  backgroundColor: '#1E293B',
                 }}
               >
-                {/* Gradient scrim */}
+                {/* Enhanced multi-stage gradient scrim for crystal clear contrast */}
                 <div
                   style={{
                     position: 'absolute',
                     inset: 0,
                     background:
-                      'linear-gradient(180deg, rgba(15,23,42,0.1) 0%, rgba(15,23,42,0.75) 100%)',
+                      'linear-gradient(180deg, rgba(15,23,42,0.38) 0%, rgba(15,23,42,0.08) 32%, rgba(15,23,42,0.65) 68%, rgba(15,23,42,0.96) 100%)',
+                    zIndex: 1,
                   }}
                 />
 
-                {/* Country Flag & Code Badge */}
+                {/* Country Real National Flag & Code Badge */}
                 <div
                   style={{
                     position: 'absolute',
                     top: '0.75rem',
                     left: '0.75rem',
+                    zIndex: 2,
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.4rem',
-                    background: 'rgba(255, 255, 255, 0.92)',
+                    gap: '0.45rem',
+                    background: 'rgba(255, 255, 255, 0.96)',
                     backdropFilter: 'blur(8px)',
-                    padding: '0.25rem 0.6rem',
+                    padding: '0.28rem 0.65rem',
                     borderRadius: '999px',
                     fontSize: '0.78rem',
-                    fontWeight: 700,
+                    fontWeight: 800,
                     color: '#0F172A',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.18)',
                   }}
                 >
-                  <span style={{ fontSize: '1.05rem', lineHeight: 1 }}>{country.flag}</span>
-                  <span>{country.code}</span>
+                  <img
+                    src={FLAG_MAP[country.code] || `https://flagcdn.com/w80/${country.code.slice(0, 2).toLowerCase()}.png`}
+                    alt={`${country.name} flag`}
+                    style={{
+                      width: '18px',
+                      height: '13px',
+                      objectFit: 'cover',
+                      borderRadius: '2px',
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                      display: 'inline-block',
+                    }}
+                  />
+                  <span style={{ letterSpacing: '0.04em' }}>{country.code}</span>
                 </div>
 
                 {/* Institution Count Badge */}
@@ -200,46 +233,55 @@ export const CountryDiscoveryCards: React.FC<CountryDiscoveryCardsProps> = ({
                     position: 'absolute',
                     top: '0.75rem',
                     right: '0.75rem',
+                    zIndex: 2,
                     background: isSelected ? '#5B4FE9' : 'rgba(15, 23, 42, 0.85)',
                     color: '#FFFFFF',
-                    padding: '0.25rem 0.65rem',
+                    padding: '0.28rem 0.65rem',
                     borderRadius: '999px',
                     fontSize: '0.74rem',
                     fontWeight: 700,
-                    backdropFilter: 'blur(4px)',
+                    backdropFilter: 'blur(6px)',
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
                   }}
                 >
                   {country.institutionsCount} Institutions
                 </div>
 
-                {/* Country Name & Tagline at bottom of banner */}
+                {/* Ultra Clear Country Name & Tagline at bottom of banner */}
                 <div
                   style={{
                     position: 'absolute',
-                    bottom: '0.75rem',
-                    left: '0.85rem',
-                    right: '0.85rem',
+                    bottom: '0.85rem',
+                    left: '0.95rem',
+                    right: '0.95rem',
+                    zIndex: 2,
                     color: '#FFFFFF',
+                    pointerEvents: 'none',
                   }}
                 >
                   <h3
                     style={{
                       margin: 0,
-                      fontSize: '1.25rem',
-                      fontWeight: 800,
+                      fontSize: '1.45rem',
+                      fontWeight: 900,
+                      color: '#FFFFFF',
                       letterSpacing: '-0.02em',
-                      textShadow: '0 1px 3px rgba(0,0,0,0.4)',
+                      textShadow: '0 2px 10px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.95)',
+                      lineHeight: 1.2,
                     }}
                   >
                     {country.name}
                   </h3>
                   <div
                     style={{
-                      fontSize: '0.75rem',
-                      color: 'rgba(255, 255, 255, 0.9)',
+                      marginTop: '0.22rem',
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      color: '#F1F5F9',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
+                      textShadow: '0 1px 4px rgba(0,0,0,0.85)',
                     }}
                   >
                     {country.tagline}

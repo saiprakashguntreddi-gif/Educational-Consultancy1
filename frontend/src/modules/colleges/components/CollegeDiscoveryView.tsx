@@ -37,6 +37,15 @@ interface CollegeDiscoveryViewProps {
   onBackToDashboard?: () => void;
 }
 
+const COUNTRY_TAB_FLAGS: Record<string, string> = {
+  India: 'https://flagcdn.com/w40/in.png',
+  'United States': 'https://flagcdn.com/w40/us.png',
+  'United Kingdom': 'https://flagcdn.com/w40/gb.png',
+  Australia: 'https://flagcdn.com/w40/au.png',
+  Canada: 'https://flagcdn.com/w40/ca.png',
+  Germany: 'https://flagcdn.com/w40/de.png',
+};
+
 export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
   onBackToDashboard: _onBackToDashboard,
 }) => {
@@ -409,6 +418,7 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
       (c) =>
         c.name.toLowerCase() === q ||
         c.code.toLowerCase() === q ||
+        (q.includes('india') && (c.code === 'IND' || c.name.toLowerCase() === 'india')) ||
         (q.includes('australia') && c.code === 'AUS') ||
         (q.includes('canada') && c.code === 'CAN') ||
         (q.includes('germany') && c.code === 'DEU') ||
@@ -760,14 +770,27 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
               paddingBottom: '0.25rem',
             }}
           >
-            {[
-              { label: '🌍 All Destinations', value: 'ALL', count: 138 },
-              { label: '🇺🇸 United States', value: 'United States', count: 25 },
-              { label: '🇬🇧 United Kingdom', value: 'United Kingdom', count: 30 },
-              { label: '🇦🇺 Australia', value: 'Australia', count: 27 },
-              { label: '🇩🇪 Germany', value: 'Germany', count: 26 },
-              { label: '🇨🇦 Canada', value: 'Canada', count: 30 },
-            ].map((tab) => {
+            {(() => {
+              const totalCount = countries.reduce((acc, c) => acc + (c.institutionsCount || 0), 0) || 171;
+              const tabs = [
+                { label: '🌍 All Destinations', value: 'ALL', count: totalCount },
+                ...(countries && countries.length > 0
+                  ? countries.map((c) => ({
+                      label: `${c.flag} ${c.name}`,
+                      value: c.name,
+                      count: c.institutionsCount || 0,
+                    }))
+                  : [
+                      { label: '🇮🇳 India', value: 'India', count: 33 },
+                      { label: '🇺🇸 United States', value: 'United States', count: 25 },
+                      { label: '🇬🇧 United Kingdom', value: 'United Kingdom', count: 30 },
+                      { label: '🇦🇺 Australia', value: 'Australia', count: 27 },
+                      { label: '🇩🇪 Germany', value: 'Germany', count: 26 },
+                      { label: '🇨🇦 Canada', value: 'Canada', count: 30 },
+                    ]),
+              ];
+
+              return tabs.map((tab) => {
               const isSelected = (currentFilters.country || 'ALL') === tab.value;
               return (
                 <button
@@ -796,7 +819,18 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
                     transition: 'all 0.15s ease',
                   }}
                 >
-                  <span>{tab.label}</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                    {COUNTRY_TAB_FLAGS[tab.value] ? (
+                      <img
+                        src={COUNTRY_TAB_FLAGS[tab.value]}
+                        alt=""
+                        style={{ width: '16px', height: '11px', objectFit: 'cover', borderRadius: '2px', display: 'inline-block' }}
+                      />
+                    ) : tab.value === 'ALL' ? (
+                      <span>🌍</span>
+                    ) : null}
+                    <span>{tab.name || tab.label.replace(/^[^\s]+\s*/, '')}</span>
+                  </span>
                   <span
                     style={{
                       fontSize: '0.72rem',
@@ -810,7 +844,8 @@ export const CollegeDiscoveryView: React.FC<CollegeDiscoveryViewProps> = ({
                   </span>
                 </button>
               );
-            })}
+            });
+          })()}
           </div>
 
           {/* Prominent Search Bar */}

@@ -18,7 +18,13 @@ import {
   Headphones,
   Play,
   Pause,
+  Mic,
+  Square,
+  Upload,
+  VideoOff,
+  Trash2,
 } from 'lucide-react';
+import { AppointmentsService } from '../../appointments/services/appointments.service';
 import { StatusBadge } from './saas/StatusBadge';
 
 interface SessionAuditDetailsModalProps {
@@ -27,6 +33,11 @@ interface SessionAuditDetailsModalProps {
 }
 
 export const SessionAuditDetailsModal: React.FC<SessionAuditDetailsModalProps> = ({ session, onClose }) => {
+  const [activeSession, setActiveSession] = useState(session);
+  useEffect(() => {
+    setActiveSession(session);
+  }, [session]);
+
   const [isPlayingRecording, setIsPlayingRecording] = useState(false);
   const [playerLayout, setPlayerLayout] = useState<'split' | 'stacked'>('split');
   const videoRef = React.useRef<HTMLVideoElement>(null);
@@ -45,24 +56,108 @@ export const SessionAuditDetailsModal: React.FC<SessionAuditDetailsModalProps> =
   const [audioSpeed, setAudioSpeed] = useState(1);
   const [showAudioAuditPlayer, setShowAudioAuditPlayer] = useState(true);
 
-  const rawUrl = session?.recordingUrl;
-  const isBrokenUrl =
-    !rawUrl ||
-    rawUrl.includes('.internal') ||
-    rawUrl.includes('storage.superconsciousness.com') ||
-    rawUrl.includes('records.superconsciousness') ||
-    rawUrl.includes('commondatastorage.googleapis.com') ||
-    rawUrl.includes('gtv-videos-bucket');
+  // In-modal Audio Recording & File Upload States
+  const [isRecordingInModal, setIsRecordingInModal] = useState(false);
+  const [modalRecSeconds, setModalRecSeconds] = useState(0);
+  const modalRecorderRef = React.useRef<MediaRecorder | null>(null);
+  const modalChunksRef = React.useRef<Blob[]>([]);
+  const modalTimerRef = React.useRef<any>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadSuccessMsg, setUploadSuccessMsg] = useState<string | null>(null);
 
-  const streamUrl = isBrokenUrl ? '/assets/sample-consultation.mp4' : rawUrl;
+  const rawUrl = activeSession?.recordingUrl;
+  const isVideoReal = Boolean(
+    rawUrl &&
+    typeof rawUrl === 'string' &&
+    !rawUrl.includes('.internal') &&
+    !rawUrl.includes('storage.superconsciousness.com') &&
+    !rawUrl.includes('records.superconsciousness') &&
+    !rawUrl.includes('commondatastorage.googleapis.com') &&
+    !rawUrl.includes('sample-consultation.mp4')
+  );
+  const streamUrl = isVideoReal ? rawUrl : null;
 
-  const rawAudioUrl = session?.audioUrl || (session as any)?.audioRecordingUrl;
-  const audioUrl =
-    !rawAudioUrl ||
-    rawAudioUrl.includes('.internal') ||
-    rawAudioUrl.includes('storage.superconsciousness.com')
-      ? '/assets/sample-consultation-audio.wav'
-      : rawAudioUrl;
+  const rawAudioUrl = activeSession?.audioUrl || (activeSession as any)?.audioRecordingUrl;
+  const isAudioReal = Boolean(
+    rawAudioUrl &&
+    typeof rawAudioUrl === 'string' &&
+    !rawAudioUrl.includes('.internal') &&
+    !rawAudioUrl.includes('storage.superconsciousness.com') &&
+    !rawAudioUrl.includes('sample-consultation-audio.wav')
+  );
+  const audioUrl = isAudioReal ? rawAudioUrl : null;
+
+  const startModalAudioRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      modalChunksRef.current = [];
+      const mime = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
+      const mr = new MediaRecorder(stream, { mimeType: mime });
+      mr.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) modalChunksRef.current.push(e.data);
+      };
+      mr.onstop = async () => {
+        stream.getTracks().forEach((t) => t.stop());
+        if (modalChunksRef.current.length > 0) {
+          const blob = new Blob(modalChunksRef.current, { type: mime });
+          await handleUploadBlob(blob, 'audio', 'counsellor-voice-note.webm');
+        }
+      };
+      mr.start(250);
+      modalRecorderRef.current = mr;
+      setIsRecordingInModal(true);
+      setModalRecSeconds(0);
+      modalTimerRef.current = setInterval(() => setModalRecSeconds((p) => p + 1), 1000);
+    } catch (err: any) {
+      alert('Microphone error: ' + (err.message || 'Permission denied'));
+    }
+  };
+
+  const stopModalAudioRecording = () => {
+    if (modalRecorderRef.current && modalRecorderRef.current.state !== 'inactive') {
+      modalRecorderRef.current.stop();
+    }
+    if (modalTimerRef.current) clearInterval(modalTimerRef.current);
+    setIsRecordingInModal(false);
+  };
+
+  const handleUploadBlob = async (blob: Blob, type: 'video' | 'audio', filename: string) => {
+    setIsUploading(true);
+    try {
+      const reader = new FileReader();
+      const base64Promise = new Promise<string>((resolve) => {
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
+      const base64 = await base64Promise;
+      const res = await AppointmentsService.uploadSessionRecording(activeSession.id, {
+        dataBase64: base64,
+        mimeType: blob.type || (type === 'video' ? 'video/webm' : 'audio/webm'),
+        filename,
+        type,
+      });
+      if (res.success && res.data?.fileUrl) {
+        if (type === 'video') {
+          setActiveSession((prev: any) => ({ ...prev, recordingUrl: res.data.fileUrl, isRecorded: true }));
+        } else {
+          setActiveSession((prev: any) => ({ ...prev, audioUrl: res.data.fileUrl, isRecorded: true }));
+        }
+        setUploadSuccessMsg(`${type === 'video' ? 'Video' : 'Audio'} recording saved successfully!`);
+        setTimeout(() => setUploadSuccessMsg(null), 3500);
+      }
+    } catch (err: any) {
+      alert('Failed to upload recording: ' + (err.message || 'Upload error'));
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleModalFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const type = file.type.startsWith('video/') ? 'video' : 'audio';
+    handleUploadBlob(file, type, file.name);
+  };
 
   // Autoplay with audio when stream opens
   useEffect(() => {
@@ -160,116 +255,300 @@ export const SessionAuditDetailsModal: React.FC<SessionAuditDetailsModalProps> =
   };
 
   // Helper renderers for recording stream player
-  const renderVideoPlayerBlock = (height: string) => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-      {isMuted && (
+  const renderVideoPlayerBlock = (height: string) => {
+    // If a genuine video recording exists, play it
+    if (streamUrl) {
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          {isMuted && (
+            <div
+              onClick={toggleSound}
+              style={{
+                backgroundColor: '#1E3A8A',
+                border: '1px solid #3B82F6',
+                borderRadius: 8,
+                padding: '0.55rem 0.85rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#93C5FD', fontSize: '0.78rem', fontWeight: 600 }}>
+                <Volume2 size={15} color="#60A5FA" />
+                <span>Audio muted by browser. <strong>Click to turn ON sound!</strong></span>
+              </div>
+              <span style={{ backgroundColor: '#2563EB', color: '#FFFFFF', padding: '0.18rem 0.55rem', borderRadius: 4, fontSize: '0.7rem', fontWeight: 700 }}>
+                🔊 Unmute
+              </span>
+            </div>
+          )}
+
+          <div
+            style={{
+              position: 'relative',
+              width: '100%',
+              height: height,
+              backgroundColor: '#000000',
+              borderRadius: 12,
+              overflow: 'hidden',
+              boxShadow: '0 8px 30px rgba(0, 0, 0, 0.5)',
+              border: '1px solid #334155',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <video
+              ref={videoRef}
+              src={streamUrl}
+              controls
+              autoPlay
+              muted={isMuted}
+              playsInline
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                backgroundColor: '#000000',
+              }}
+              onTimeUpdate={() => {
+                if (videoRef.current) {
+                  setVideoCurrentTime(videoRef.current.currentTime);
+                }
+              }}
+              onLoadedMetadata={() => {
+                if (videoRef.current) {
+                  setVideoDuration(videoRef.current.duration || 30.5);
+                }
+              }}
+              onPlay={() => setIsVideoPlaying(true)}
+              onPause={() => setIsVideoPlaying(false)}
+            >
+              <source src={streamUrl} type="video/mp4" />
+              Your browser does not support HTML5 video streaming.
+            </video>
+
+            <div
+              style={{
+                position: 'absolute',
+                top: 10,
+                left: 10,
+                backgroundColor: 'rgba(15, 23, 42, 0.85)',
+                backdropFilter: 'blur(4px)',
+                color: '#F8FAFC',
+                padding: '0.2rem 0.55rem',
+                borderRadius: 6,
+                fontSize: '0.68rem',
+                fontWeight: 700,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                pointerEvents: 'none',
+                zIndex: 2,
+              }}
+            >
+              <span
+                style={{
+                  width: 7,
+                  height: 7,
+                  borderRadius: '50%',
+                  backgroundColor: isVideoPlaying ? '#10B981' : '#F59E0B',
+                  display: 'inline-block',
+                }}
+              />
+              <span>
+                {isVideoPlaying ? 'Audit Stream Playing' : 'Paused'} • {Math.floor(videoCurrentTime)}s / {Math.floor(videoDuration || 30)}s
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // If no video, but audio recording exists: show audio studio player
+    if (audioUrl) {
+      return (
         <div
-          onClick={toggleSound}
           style={{
-            backgroundColor: '#1E3A8A',
-            border: '1px solid #3B82F6',
-            borderRadius: 8,
-            padding: '0.55rem 0.85rem',
+            height: height,
+            backgroundColor: '#0F172A',
+            borderRadius: 12,
+            padding: '1.25rem',
             display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)',
+            border: '1px solid #334155',
+            boxShadow: '0 8px 30px rgba(0, 0, 0, 0.4)',
+            textAlign: 'center',
+            gap: '0.85rem',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#93C5FD', fontSize: '0.78rem', fontWeight: 600 }}>
-            <Volume2 size={15} color="#60A5FA" />
-            <span>Audio muted by browser. <strong>Click to turn ON sound!</strong></span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#60A5FA' }}>
+            <Headphones size={28} />
+            <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#F8FAFC' }}>
+              Official Audio Consultation Stream
+            </h4>
           </div>
-          <span style={{ backgroundColor: '#2563EB', color: '#FFFFFF', padding: '0.18rem 0.55rem', borderRadius: 4, fontSize: '0.7rem', fontWeight: 700 }}>
-            🔊 Unmute
-          </span>
-        </div>
-      )}
+          <p style={{ margin: 0, fontSize: '0.78rem', color: '#94A3B8', maxWidth: '380px' }}>
+            Counsellor Spoken Voice Audit • Session #{activeSession.id.slice(0, 8)}
+          </p>
 
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', width: '100%', maxWidth: '380px' }}>
+            <button
+              type="button"
+              onClick={toggleAudioPlay}
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: '50%',
+                backgroundColor: '#2563EB',
+                color: '#FFFFFF',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 4px 12px rgba(37, 99, 235, 0.4)',
+                flexShrink: 0,
+              }}
+            >
+              {isAudioPlaying ? <Pause size={20} /> : <Play size={20} style={{ marginLeft: 2 }} />}
+            </button>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+              <input
+                type="range"
+                min={0}
+                max={audioDuration || 24.4}
+                step={0.1}
+                value={audioCurrentTime}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  if (audioRef.current) audioRef.current.currentTime = val;
+                  setAudioCurrentTime(val);
+                }}
+                style={{ width: '100%', accentColor: '#3B82F6', cursor: 'pointer', height: 4 }}
+              />
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#94A3B8', fontFamily: 'monospace' }}>
+                <span>{formatAudioTime(audioCurrentTime)}</span>
+                <span>{formatAudioTime(audioDuration || 24.4)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // If neither video nor audio exists: show real status card with instant record / upload
+    return (
       <div
         style={{
-          position: 'relative',
-          width: '100%',
-          height: height,
-          backgroundColor: '#000000',
+          minHeight: height,
+          backgroundColor: '#0F172A',
           borderRadius: 12,
-          overflow: 'hidden',
-          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.5)',
-          border: '1px solid #334155',
+          padding: '1.25rem',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          flexShrink: 0,
+          textAlign: 'center',
+          border: '1px dashed #475569',
+          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.4)',
+          color: '#FFFFFF',
         }}
       >
-        <video
-          ref={videoRef}
-          src={streamUrl}
-          controls
-          autoPlay
-          muted={isMuted}
-          playsInline
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-            backgroundColor: '#000000',
-          }}
-          onTimeUpdate={() => {
-            if (videoRef.current) {
-              setVideoCurrentTime(videoRef.current.currentTime);
-            }
-          }}
-          onLoadedMetadata={() => {
-            if (videoRef.current) {
-              setVideoDuration(videoRef.current.duration || 30.5);
-            }
-          }}
-          onPlay={() => setIsVideoPlaying(true)}
-          onPause={() => setIsVideoPlaying(false)}
-        >
-          <source src={streamUrl} type="video/mp4" />
-          <source src="/assets/sample-consultation.mp4" type="video/mp4" />
-          Your browser does not support HTML5 video streaming.
-        </video>
+        <VideoOff size={36} color="#64748B" style={{ marginBottom: '0.5rem' }} />
+        <h4 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 700, color: '#F8FAFC' }}>
+          No Video Recording Attached For This Session
+        </h4>
+        <p style={{ margin: '0.4rem 0 0.85rem', fontSize: '0.78rem', color: '#94A3B8', maxWidth: '400px', lineHeight: 1.45 }}>
+          This consultation was held via Google Meet or in-person without an automatic video stream. You can record a voice audit note or upload a recording below.
+        </p>
 
-        <div
-          style={{
-            position: 'absolute',
-            top: 10,
-            left: 10,
-            backgroundColor: 'rgba(15, 23, 42, 0.85)',
-            backdropFilter: 'blur(4px)',
-            color: '#F8FAFC',
-            padding: '0.2rem 0.55rem',
-            borderRadius: 6,
-            fontSize: '0.68rem',
-            fontWeight: 700,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.35rem',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            pointerEvents: 'none',
-            zIndex: 2,
-          }}
-        >
-          <span
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+          {!isRecordingInModal ? (
+            <button
+              type="button"
+              onClick={startModalAudioRecording}
+              disabled={isUploading}
+              style={{
+                backgroundColor: '#DC2626',
+                color: '#FFFFFF',
+                border: 'none',
+                padding: '0.45rem 0.95rem',
+                borderRadius: 6,
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+              }}
+            >
+              <Mic size={14} /> Record Voice Summary
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={stopModalAudioRecording}
+              style={{
+                backgroundColor: '#1E293B',
+                color: '#FFFFFF',
+                border: '1px solid #EF4444',
+                padding: '0.45rem 0.95rem',
+                borderRadius: 6,
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+              }}
+            >
+              <Square size={13} fill="#EF4444" color="#EF4444" />
+              <span>Stop & Save ({Math.floor(modalRecSeconds / 60)}:{modalRecSeconds % 60 < 10 ? '0' : ''}{modalRecSeconds % 60})</span>
+            </button>
+          )}
+
+          <label
             style={{
-              width: 7,
-              height: 7,
-              borderRadius: '50%',
-              backgroundColor: isVideoPlaying ? '#10B981' : '#F59E0B',
-              display: 'inline-block',
+              backgroundColor: '#2563EB',
+              color: '#FFFFFF',
+              border: 'none',
+              padding: '0.45rem 0.95rem',
+              borderRadius: 6,
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              cursor: isUploading ? 'not-allowed' : 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
             }}
-          />
-          <span>
-            {isVideoPlaying ? 'Audit Stream Playing' : 'Paused'} • {Math.floor(videoCurrentTime)}s / {Math.floor(videoDuration || 30)}s
-          </span>
+          >
+            <Upload size={14} />
+            <span>{isUploading ? 'Uploading...' : 'Upload Recording File'}</span>
+            <input
+              type="file"
+              accept="video/*,audio/*"
+              disabled={isUploading}
+              onChange={handleModalFileSelect}
+              style={{ display: 'none' }}
+            />
+          </label>
         </div>
+
+        {uploadSuccessMsg && (
+          <span style={{ fontSize: '0.75rem', color: '#10B981', marginTop: '0.6rem', fontWeight: 600 }}>
+            ✓ {uploadSuccessMsg}
+          </span>
+        )}
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderControlsBarBlock = () => (
     <div
@@ -336,32 +615,29 @@ export const SessionAuditDetailsModal: React.FC<SessionAuditDetailsModalProps> =
     <div
       style={{
         backgroundColor: '#1E293B',
-        borderRadius: 10,
-        padding: '0.75rem 0.95rem',
+        borderRadius: 8,
+        padding: '0.65rem 0.85rem',
         border: '1px solid #334155',
+        fontSize: '0.76rem',
+        color: '#E2E8F0',
+        lineHeight: 1.45,
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.7rem', fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
-        <MessageSquare size={13} color="#60A5FA" /> Synchronized Live Dialogue Transcript
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.35rem', color: '#60A5FA', fontWeight: 700, fontSize: '0.68rem', textTransform: 'uppercase' }}>
+        <MessageSquare size={13} /> Verified Counsellor Dialogue & Session Notes
       </div>
-      <div style={{ fontSize: '0.82rem', color: '#F1F5F9', lineHeight: 1.45, minHeight: '44px' }}>
-        {videoCurrentTime < 8 ? (
-          <span>
-            <strong style={{ color: '#60A5FA' }}>Counsellor:</strong> "Welcome to your counselling session! Let's examine your academic profile and verify eligibility for admission."
-          </span>
-        ) : videoCurrentTime < 16 ? (
-          <span>
-            <strong style={{ color: '#60A5FA' }}>Counsellor:</strong> "Based on your preference for <strong>{session.targetStream || 'Engineering / Computer Science'}</strong>, we have verified top university pathways."
-          </span>
-        ) : videoCurrentTime < 24 ? (
-          <span>
-            <strong style={{ color: '#34D399' }}>Student:</strong> "I am looking for colleges in <strong>{session.targetCity || 'Munich / European Universities'}</strong> with good admission prospects."
-          </span>
-        ) : (
-          <span>
-            <strong style={{ color: '#60A5FA' }}>Counsellor:</strong> "Student interest confirmed as <strong>{session.studentInterest || 'INTERESTED'}</strong>. Official enrolment agreement and compliance policies sent via WhatsApp!"
-          </span>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+        <div>
+          <strong style={{ color: '#60A5FA' }}>Counsellor Summary:</strong> "{`${activeSession.sessionOutcome || activeSession.counsellorNotes || 'Comprehensive evaluation completed. Target university eligibility and roadmap verified.'}`}"
+        </div>
+        {activeSession.recommendations && (
+          <div>
+            <strong style={{ color: '#34D399' }}>Key Recommendations:</strong> "{`${activeSession.recommendations}`}"
+          </div>
         )}
+        <div style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
+          <strong>Academic Focus:</strong> {activeSession.targetStream || 'General Higher Education'} • <strong>Target Institutions:</strong> {activeSession.targetColleges || activeSession.targetCity || 'Global Universities'}
+        </div>
       </div>
     </div>
   );
@@ -377,7 +653,7 @@ export const SessionAuditDetailsModal: React.FC<SessionAuditDetailsModalProps> =
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', fontWeight: 700, color: '#F8FAFC' }}>
-          <Sparkles size={14} color="#60A5FA" /> Interactive Video Chapters:
+          <Sparkles size={14} color="#60A5FA" /> Verified Session Discussion Chapters:
         </div>
         <span style={{ fontSize: '0.68rem', color: '#94A3B8' }}>Click Chapter to Jump</span>
       </div>
@@ -401,7 +677,7 @@ export const SessionAuditDetailsModal: React.FC<SessionAuditDetailsModalProps> =
           <div style={{ fontWeight: 700, color: videoCurrentTime < 8 ? '#FFFFFF' : '#60A5FA' }}>
             00:00 - Intake Review
           </div>
-          <div style={{ fontSize: '0.66rem', color: '#CBD5E1' }}>GPA, GRE & Background</div>
+          <div style={{ fontSize: '0.66rem', color: '#CBD5E1' }}>{`${activeSession.studentProfile?.fullName || activeSession.studentName || 'Student Profile'}`}</div>
         </button>
 
         <button
@@ -422,7 +698,7 @@ export const SessionAuditDetailsModal: React.FC<SessionAuditDetailsModalProps> =
           <div style={{ fontWeight: 700, color: videoCurrentTime >= 8 && videoCurrentTime < 16 ? '#FFFFFF' : '#60A5FA' }}>
             00:08 - Stream Analysis
           </div>
-          <div style={{ fontSize: '0.66rem', color: '#CBD5E1' }}>{session.targetStream || 'Engineering / CS'}</div>
+          <div style={{ fontSize: '0.66rem', color: '#CBD5E1' }}>{`${activeSession.targetStream || 'Academic Pathway'}`}</div>
         </button>
 
         <button
@@ -443,7 +719,7 @@ export const SessionAuditDetailsModal: React.FC<SessionAuditDetailsModalProps> =
           <div style={{ fontWeight: 700, color: videoCurrentTime >= 16 && videoCurrentTime < 24 ? '#FFFFFF' : '#60A5FA' }}>
             00:16 - Target Colleges
           </div>
-          <div style={{ fontSize: '0.66rem', color: '#CBD5E1' }}>{session.targetCity || 'Munich / European'}</div>
+          <div style={{ fontSize: '0.66rem', color: '#CBD5E1' }}>{`${activeSession.targetColleges || activeSession.targetCity || 'Target Institutions'}`}</div>
         </button>
 
         <button
@@ -464,7 +740,7 @@ export const SessionAuditDetailsModal: React.FC<SessionAuditDetailsModalProps> =
           <div style={{ fontWeight: 700, color: videoCurrentTime >= 24 ? '#FFFFFF' : '#60A5FA' }}>
             00:24 - Enrolment Sign-off
           </div>
-          <div style={{ fontSize: '0.66rem', color: '#CBD5E1' }}>WhatsApp Policies Sent</div>
+          <div style={{ fontSize: '0.66rem', color: '#CBD5E1' }}>{`${activeSession.studentInterest === 'INTERESTED' ? 'Enrolment Confirmed' : 'Advisory Roadmap'}`}</div>
         </button>
       </div>
     </div>
@@ -878,7 +1154,8 @@ export const SessionAuditDetailsModal: React.FC<SessionAuditDetailsModalProps> =
                   <span>{showAudioAuditPlayer ? 'Collapse Player' : 'Listen to Audio Audit'}</span>
                 </button>
 
-                <a
+                {audioUrl && (
+                  <a
                   href={audioUrl}
                   download={`audio-audit-${session.id.slice(0, 8)}.wav`}
                   style={{
@@ -898,13 +1175,14 @@ export const SessionAuditDetailsModal: React.FC<SessionAuditDetailsModalProps> =
                 >
                   <Download size={12} /> Download .wav
                 </a>
+                )}
               </div>
             </div>
 
             {/* Hidden native HTML5 audio element */}
             <audio
               ref={audioRef}
-              src={audioUrl}
+              src={audioUrl || undefined}
               preload="metadata"
               onTimeUpdate={() => {
                 if (audioRef.current) {
@@ -938,143 +1216,218 @@ export const SessionAuditDetailsModal: React.FC<SessionAuditDetailsModalProps> =
                   boxShadow: '0 4px 12px rgba(15, 23, 42, 0.12)',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                    {/* Play / Pause Button */}
-                    <button
-                      type="button"
-                      onClick={toggleAudioPlay}
-                      style={{
-                        width: 36,
-                        height: 36,
-                        borderRadius: '50%',
-                        backgroundColor: '#2563EB',
-                        color: '#FFFFFF',
-                        border: 'none',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        boxShadow: '0 2px 8px rgba(37, 99, 235, 0.4)',
-                        transition: 'transform 0.1s ease',
-                      }}
-                      title={isAudioPlaying ? 'Pause Audio' : 'Play Audio'}
-                    >
-                      {isAudioPlaying ? <Pause size={17} /> : <Play size={17} style={{ marginLeft: 2 }} />}
-                    </button>
-
-                    {/* Equalizer animation */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '3px', height: '22px' }}>
-                      {[12, 22, 16, 26, 14, 20, 24, 18, 10, 22, 15, 25].map((h, i) => (
-                        <div
-                          key={i}
+                {audioUrl ? (
+                  <>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                        {/* Play / Pause Button */}
+                        <button
+                          type="button"
+                          onClick={toggleAudioPlay}
                           style={{
-                            width: 3,
-                            height: isAudioPlaying
-                              ? `${Math.max(5, (h * ((Math.floor(audioCurrentTime * 4) + i * 2) % 10)) / 10 + 5)}px`
-                              : `${Math.max(4, h / 3)}px`,
-                            backgroundColor: isAudioPlaying ? '#60A5FA' : '#475569',
-                            borderRadius: 2,
-                            transition: 'height 0.15s ease',
+                            width: 36,
+                            height: 36,
+                            borderRadius: '50%',
+                            backgroundColor: '#2563EB',
+                            color: '#FFFFFF',
+                            border: 'none',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: '0 2px 8px rgba(37, 99, 235, 0.4)',
+                            transition: 'transform 0.1s ease',
                           }}
-                        />
-                      ))}
+                          title={isAudioPlaying ? 'Pause Audio' : 'Play Audio'}
+                        >
+                          {isAudioPlaying ? <Pause size={17} /> : <Play size={17} style={{ marginLeft: 2 }} />}
+                        </button>
+
+                        {/* Equalizer animation */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '3px', height: '22px' }}>
+                          {[12, 22, 16, 26, 14, 20, 24, 18, 10, 22, 15, 25].map((h, i) => (
+                            <div
+                              key={i}
+                              style={{
+                                width: 3,
+                                height: isAudioPlaying
+                                  ? `${Math.max(5, (h * ((Math.floor(audioCurrentTime * 4) + i * 2) % 10)) / 10 + 5)}px`
+                                  : `${Math.max(4, h / 3)}px`,
+                                backgroundColor: isAudioPlaying ? '#60A5FA' : '#475569',
+                                borderRadius: 2,
+                                transition: 'height 0.15s ease',
+                              }}
+                            />
+                          ))}
+                        </div>
+
+                        {/* Time counter */}
+                        <span style={{ fontSize: '0.76rem', color: '#CBD5E1', fontFamily: 'monospace', fontWeight: 600 }}>
+                          {formatAudioTime(audioCurrentTime)} / {formatAudioTime(audioDuration || 24.4)}
+                        </span>
+                      </div>
+
+                      {/* Right controls: Speed & Mute */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                        <button
+                          type="button"
+                          onClick={toggleAudioMute}
+                          style={{
+                            backgroundColor: '#1E293B',
+                            color: isAudioMuted ? '#EF4444' : '#94A3B8',
+                            border: '1px solid #334155',
+                            borderRadius: 4,
+                            padding: '0.2rem 0.45rem',
+                            fontSize: '0.7rem',
+                            cursor: 'pointer',
+                          }}
+                          title={isAudioMuted ? 'Unmute' : 'Mute'}
+                        >
+                          {isAudioMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
+                        </button>
+
+                        <div style={{ display: 'flex', gap: '2px' }}>
+                          {[1, 1.25, 1.5].map((spd) => (
+                            <button
+                              key={spd}
+                              type="button"
+                              onClick={() => changeAudioSpeed(spd)}
+                              style={{
+                                backgroundColor: audioSpeed === spd ? '#2563EB' : '#1E293B',
+                                color: '#FFFFFF',
+                                border: audioSpeed === spd ? '1px solid #60A5FA' : '1px solid #334155',
+                                borderRadius: 4,
+                                padding: '0.18rem 0.45rem',
+                                fontSize: '0.7rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                              }}
+                            >
+                              {spd}x
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Time counter */}
-                    <span style={{ fontSize: '0.76rem', color: '#CBD5E1', fontFamily: 'monospace', fontWeight: 600 }}>
-                      {formatAudioTime(audioCurrentTime)} / {formatAudioTime(audioDuration || 24.4)}
-                    </span>
-                  </div>
-
-                  {/* Right controls: Speed & Mute */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                    <button
-                      type="button"
-                      onClick={toggleAudioMute}
-                      style={{
-                        backgroundColor: '#1E293B',
-                        color: isAudioMuted ? '#EF4444' : '#94A3B8',
-                        border: '1px solid #334155',
-                        borderRadius: 4,
-                        padding: '0.2rem 0.45rem',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.25rem',
-                        fontSize: '0.72rem',
+                    {/* Progress Slider */}
+                    <input
+                      type="range"
+                      min={0}
+                      max={audioDuration || 24.4}
+                      step={0.1}
+                      value={audioCurrentTime}
+                      onChange={(e) => {
+                        const val = Number(e.target.value);
+                        if (audioRef.current) {
+                          audioRef.current.currentTime = val;
+                        }
+                        setAudioCurrentTime(val);
                       }}
-                      title={isAudioMuted ? 'Unmute Audio' : 'Mute Audio'}
-                    >
-                      {isAudioMuted ? <VolumeX size={13} color="#EF4444" /> : <Volume2 size={13} />}
-                      <span>{isAudioMuted ? 'Muted' : 'Sound'}</span>
-                    </button>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                      {[1, 1.25, 1.5].map((spd) => (
+                      style={{
+                        width: '100%',
+                        accentColor: '#3B82F6',
+                        cursor: 'pointer',
+                        height: 4,
+                        margin: 0,
+                      }}
+                    />
+                  </>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.4rem 0', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
+                      No audio recording attached to this session yet.
+                    </span>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      {!isRecordingInModal ? (
                         <button
-                          key={spd}
                           type="button"
-                          onClick={() => changeAudioSpeed(spd)}
+                          onClick={startModalAudioRecording}
+                          disabled={isUploading}
                           style={{
-                            backgroundColor: audioSpeed === spd ? '#2563EB' : '#1E293B',
+                            backgroundColor: '#DC2626',
                             color: '#FFFFFF',
-                            border: audioSpeed === spd ? '1px solid #60A5FA' : '1px solid #334155',
+                            border: 'none',
+                            padding: '0.35rem 0.75rem',
                             borderRadius: 4,
-                            padding: '0.18rem 0.45rem',
-                            fontSize: '0.7rem',
+                            fontSize: '0.74rem',
                             fontWeight: 600,
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                          }}
+                        >
+                          <Mic size={13} /> Record Voice Note
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={stopModalAudioRecording}
+                          style={{
+                            backgroundColor: '#1E293B',
+                            color: '#EF4444',
+                            border: '1px solid #EF4444',
+                            padding: '0.35rem 0.75rem',
+                            borderRadius: 4,
+                            fontSize: '0.74rem',
+                            fontWeight: 700,
                             cursor: 'pointer',
                           }}
                         >
-                          {spd}x
+                          <Square size={12} fill="#EF4444" /> Stop ({Math.floor(modalRecSeconds / 60)}:{modalRecSeconds % 60 < 10 ? '0' : ''}{modalRecSeconds % 60})
                         </button>
-                      ))}
+                      )}
+
+                      <label
+                        style={{
+                          backgroundColor: '#334155',
+                          color: '#FFFFFF',
+                          padding: '0.35rem 0.75rem',
+                          borderRadius: 4,
+                          fontSize: '0.74rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                        }}
+                      >
+                        <Upload size={13} /> Upload Audio
+                        <input
+                          type="file"
+                          accept="audio/*"
+                          onChange={handleModalFileSelect}
+                          style={{ display: 'none' }}
+                        />
+                      </label>
                     </div>
                   </div>
-                </div>
-
-                {/* Progress Slider */}
-                <input
-                  type="range"
-                  min={0}
-                  max={audioDuration || 24.4}
-                  step={0.1}
-                  value={audioCurrentTime}
-                  onChange={(e) => {
-                    const val = Number(e.target.value);
-                    if (audioRef.current) {
-                      audioRef.current.currentTime = val;
-                    }
-                    setAudioCurrentTime(val);
-                  }}
-                  style={{
-                    width: '100%',
-                    accentColor: '#3B82F6',
-                    cursor: 'pointer',
-                    height: 4,
-                    margin: 0,
-                  }}
-                />
+                )}
 
                 {/* Spoken Dialogue Transcript Box */}
                 <div
                   style={{
                     backgroundColor: '#1E293B',
                     borderRadius: 6,
-                    padding: '0.5rem 0.75rem',
-                    fontSize: '0.75rem',
+                    padding: '0.65rem 0.85rem',
+                    fontSize: '0.76rem',
                     color: '#CBD5E1',
                     lineHeight: 1.45,
                     borderLeft: '3px solid #3B82F6',
                   }}
                 >
-                  <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#60A5FA', textTransform: 'uppercase', marginBottom: '0.2rem' }}>
-                    Audited Audio Transcript (Spoken):
+                  <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#60A5FA', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+                    Audited Spoken Summary / Counsellor Advisory Note:
                   </div>
                   <span>
-                    "Hello and welcome. This is the official audited audio stream for the Global Consultancy counselling session. The student academic profile, GRE and GPA scores, course stream recommendations, and European university eligibility have been reviewed and approved by compliance governance."
+                    "{`${activeSession.sessionOutcome || activeSession.counsellorNotes || 'Comprehensive profile intake conducted. Verified student preferences and entry eligibility criteria.'}`}"
                   </span>
+                  {activeSession.recommendations && (
+                    <div style={{ marginTop: '0.35rem', color: '#93C5FD' }}>
+                      <strong>Key Recommendations:</strong> "{`${activeSession.recommendations}`}"
+                    </div>
+                  )}
                 </div>
               </div>
             )}
