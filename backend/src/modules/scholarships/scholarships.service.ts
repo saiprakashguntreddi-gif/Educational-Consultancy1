@@ -620,10 +620,10 @@ export class ScholarshipsService {
       const term = filters.search.trim();
       andConditions.push({
         OR: [
-          { name: { contains: term } },
-          { provider: { contains: term } },
-          { awardDetails: { contains: term } },
-          { eligibilityDescription: { contains: term } },
+          { name: { contains: term, mode: 'insensitive' } },
+          { provider: { contains: term, mode: 'insensitive' } },
+          { awardDetails: { contains: term, mode: 'insensitive' } },
+          { eligibilityDescription: { contains: term, mode: 'insensitive' } },
         ],
       });
     }
@@ -880,10 +880,10 @@ export class ScholarshipsService {
     if (params?.search && params.search.trim()) {
       const term = params.search.trim();
       where.OR = [
-        { name: { contains: term } },
-        { provider: { contains: term } },
-        { country: { contains: term } },
-        { destinationCountry: { contains: term } },
+        { name: { contains: term, mode: 'insensitive' } },
+        { provider: { contains: term, mode: 'insensitive' } },
+        { country: { contains: term, mode: 'insensitive' } },
+        { destinationCountry: { contains: term, mode: 'insensitive' } },
       ];
     }
 

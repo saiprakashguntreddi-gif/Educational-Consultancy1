@@ -366,10 +366,10 @@ export class CollegesService {
       const term = query.search.trim();
       andConditions.push({
         OR: [
-          { name: { contains: term } },
-          { city: { contains: term } },
-          { country: { contains: term } },
-          { overview: { contains: term } },
+          { name: { contains: term, mode: 'insensitive' } },
+          { city: { contains: term, mode: 'insensitive' } },
+          { country: { contains: term, mode: 'insensitive' } },
+          { overview: { contains: term, mode: 'insensitive' } },
           {
             courses: {
               some: {
@@ -377,9 +377,9 @@ export class CollegesService {
                 isPublished: true,
                 isActive: true,
                 OR: [
-                  { name: { contains: term } },
-                  { department: { contains: term } },
-                  { specialization: { contains: term } },
+                  { name: { contains: term, mode: 'insensitive' } },
+                  { department: { contains: term, mode: 'insensitive' } },
+                  { specialization: { contains: term, mode: 'insensitive' } },
                 ],
               },
             },

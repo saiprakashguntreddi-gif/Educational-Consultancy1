@@ -1153,9 +1153,9 @@ export class RecommendationsService {
     if (params.search) {
       const q = params.search.trim();
       where.OR = [
-        { name: { contains: q } },
-        { country: { contains: q } },
-        { city: { contains: q } },
+        { name: { contains: q, mode: 'insensitive' } },
+        { country: { contains: q, mode: 'insensitive' } },
+        { city: { contains: q, mode: 'insensitive' } },
       ];
     }
 

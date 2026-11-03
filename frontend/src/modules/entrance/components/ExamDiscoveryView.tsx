@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { EntranceExamRecord, ExamCategoryGroup } from '../entrance.types';
 import { EntranceService } from '../services/entrance.service';
 import { ExamCategoriesDropdown } from './ExamCategoriesDropdown';
@@ -7,13 +7,13 @@ import { ExamCategoriesDropdown } from './ExamCategoriesDropdown';
 // Filter options: Exactly the 7 main categories + All Exams
 const CATEGORY_OPTIONS = [
   { label: 'All Exams', value: 'ALL' },
-  { label: 'Undergraduate', value: 'UNDERGRADUATE' },
-  { label: 'Engineering & Tech', value: 'ENGINEERING_TECHNOLOGY' },
-  { label: 'Postgraduate', value: 'POSTGRADUATE' },
-  { label: 'MBA & Management', value: 'MBA_MANAGEMENT' },
-  { label: 'Study Abroad', value: 'STUDY_ABROAD' },
-  { label: 'Language Proficiency', value: 'LANGUAGE_PROFICIENCY' },
-  { label: 'Design & Architecture', value: 'DESIGN_ARCHITECTURE' },
+  { label: 'Undergraduate', value: 'undergraduate' },
+  { label: 'Engineering & Tech', value: 'engineering_technology' },
+  { label: 'Postgraduate', value: 'postgraduate' },
+  { label: 'MBA & Management', value: 'mba_management' },
+  { label: 'Study Abroad', value: 'study_abroad' },
+  { label: 'Language Proficiency', value: 'language_proficiency' },
+  { label: 'Design & Architecture', value: 'design_architecture' },
 ];
 
 // Supported destinations across the platform (India domestic + 5 core destination countries)
@@ -125,7 +125,7 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   width: '100%',
                   boxSizing: 'border-box',
                   height: '42px',
-                  padding: '0 1rem 0 2.3rem',
+                  padding: searchQuery ? '0 2.5rem 0 2.3rem' : '0 1rem 0 2.3rem',
                   borderRadius: '8px',
                   border: '1px solid #CBD5E1',
                   fontSize: '0.88rem',
@@ -143,6 +143,29 @@ export const ExamDiscoveryView: React.FC<ExamDiscoveryViewProps> = ({
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  style={{
+                    position: 'absolute',
+                    right: '0.75rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: '#94A3B8',
+                    cursor: 'pointer',
+                    padding: '0.2rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  title="Clear search"
+                >
+                  <X size={15} />
+                </button>
+              )}
             </div>
 
             {/* Destination Dropdown */}

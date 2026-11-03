@@ -443,83 +443,119 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
     });
   }, [initialCategories, examByCodeMap]);
 
+  // Comprehensive exam matching against text query
+  const matchesExamQuery = (exam: EntranceExamRecord, query: string): boolean => {
+    if (!query) return true;
+    const q = query.toLowerCase().trim();
+    const code = (exam.code || '').toLowerCase();
+    const codeClean = code.replace(/_/g, ' ');
+    const name = (exam.name || '').toLowerCase();
+    const displayName = (EXAM_DISPLAY_NAMES[exam.code?.toUpperCase()] || '').toLowerCase();
+    const desc = (exam.description || '').toLowerCase();
+    const format = (exam.format || '').toLowerCase();
+    const streams = Array.isArray(exam.relevantStreams)
+      ? exam.relevantStreams.join(' ').toLowerCase()
+      : '';
+    const destinations = Array.isArray(exam.destinations)
+      ? exam.destinations.join(' ').toLowerCase()
+      : '';
+
+    return (
+      code.includes(q) ||
+      codeClean.includes(q) ||
+      name.includes(q) ||
+      displayName.includes(q) ||
+      desc.includes(q) ||
+      format.includes(q) ||
+      streams.includes(q) ||
+      destinations.includes(q)
+    );
+  };
+
   // Filter categories and subcategories based on user search query and destination
   const effectiveQuery = (searchQuery || filterQuery).toLowerCase().trim();
   const isDestFiltered = Boolean(selectedDestination && selectedDestination !== 'ALL');
 
   const filteredCategoryList = useMemo(() => {
-    if (!effectiveQuery && !isDestFiltered) {
-      return resolvedCategories;
-    }
-
     return resolvedCategories
       .map((cat) => {
-        const catMatches = effectiveQuery
-          ? cat.name.toLowerCase().includes(effectiveQuery) || cat.description.toLowerCase().includes(effectiveQuery)
-          : false;
+        // If activeCategoryFilter is set and not ALL, verify category matches (unless user is actively searching)
+        const isChipMatched =
+          !activeCategoryFilter ||
+          activeCategoryFilter === 'ALL' ||
+          cat.id.toLowerCase() === activeCategoryFilter.toLowerCase() ||
+          (activeCategoryFilter === 'UNDERGRADUATE' && cat.id === 'undergraduate') ||
+          (activeCategoryFilter === 'ENGINEERING_TECHNOLOGY' && cat.id === 'engineering_technology') ||
+          (activeCategoryFilter === 'POSTGRADUATE' && cat.id === 'postgraduate') ||
+          (activeCategoryFilter === 'MBA_MANAGEMENT' && cat.id === 'mba_management') ||
+          (activeCategoryFilter === 'STUDY_ABROAD' && cat.id === 'study_abroad') ||
+          (activeCategoryFilter === 'LANGUAGE_PROFICIENCY' && cat.id === 'language_proficiency') ||
+          (activeCategoryFilter === 'DESIGN_ARCHITECTURE' && cat.id === 'design_architecture');
 
         const matchingExams = cat.exams.filter((exam) => {
           if (isDestFiltered && !matchesExamDestination(exam, selectedDestination)) {
             return false;
           }
-          if (effectiveQuery) {
-            const matchesSearch =
-              exam.name.toLowerCase().includes(effectiveQuery) ||
-              exam.code.toLowerCase().includes(effectiveQuery) ||
-              exam.description.toLowerCase().includes(effectiveQuery) ||
-              (exam.destinations && exam.destinations.some((d) => (d || '').toLowerCase().includes(effectiveQuery)));
-            return Boolean(matchesSearch);
+          if (effectiveQuery && !matchesExamQuery(exam, effectiveQuery)) {
+            return false;
           }
           return true;
         });
 
-        const examsToShow = isDestFiltered
-          ? matchingExams
-          : (catMatches ? cat.exams : matchingExams);
+        // If user is searching across all exams, show any category that has matches
+        if (effectiveQuery) {
+          if (matchingExams.length > 0) {
+            return {
+              ...cat,
+              exams: matchingExams,
+              hasMatches: true,
+            };
+          }
+          return null;
+        }
 
-        if (examsToShow.length > 0) {
+        // If category chip is selected and no text search
+        if (!isChipMatched) {
+          return null;
+        }
+
+        if (matchingExams.length > 0) {
           return {
             ...cat,
-            exams: examsToShow,
+            exams: matchingExams,
             hasMatches: Boolean(effectiveQuery || isDestFiltered),
           };
         }
         return null;
       })
       .filter(Boolean) as (typeof resolvedCategories[0] & { hasMatches?: boolean })[];
-  }, [resolvedCategories, effectiveQuery, selectedDestination, isDestFiltered]);
+  }, [resolvedCategories, effectiveQuery, selectedDestination, isDestFiltered, activeCategoryFilter]);
 
-  // Auto-expand categories only if user is actively searching with text
+  // Auto-expand categories when user is searching or selects a category
   useEffect(() => {
     if (effectiveQuery) {
+      // Auto-expand all matching categories so results are immediately visible!
       const allMatchingIds = filteredCategoryList.map((c) => c.id);
       setExpandedIds(new Set(allMatchingIds));
-    }
-  }, [effectiveQuery, filteredCategoryList]);
-
-  // If activeCategoryFilter changes from parent, isolate and auto-expand that category, and smoothly scroll to it
-  useEffect(() => {
-    if (activeCategoryFilter && activeCategoryFilter !== 'ALL') {
+    } else if (activeCategoryFilter && activeCategoryFilter !== 'ALL') {
       const match = resolvedCategories.find(
-        (c) => c.id.toLowerCase() === activeCategoryFilter.toLowerCase()
+        (c) =>
+          c.id.toLowerCase() === activeCategoryFilter.toLowerCase() ||
+          (activeCategoryFilter === 'UNDERGRADUATE' && c.id === 'undergraduate') ||
+          (activeCategoryFilter === 'ENGINEERING_TECHNOLOGY' && c.id === 'engineering_technology') ||
+          (activeCategoryFilter === 'POSTGRADUATE' && c.id === 'postgraduate') ||
+          (activeCategoryFilter === 'MBA_MANAGEMENT' && c.id === 'mba_management') ||
+          (activeCategoryFilter === 'STUDY_ABROAD' && c.id === 'study_abroad') ||
+          (activeCategoryFilter === 'LANGUAGE_PROFICIENCY' && c.id === 'language_proficiency') ||
+          (activeCategoryFilter === 'DESIGN_ARCHITECTURE' && c.id === 'design_architecture')
       );
       if (match) {
-        // Expand ONLY the selected category to focus user attention
         setExpandedIds(new Set([match.id]));
-
-        // Smoothly scroll down directly to this category so it appears right in view
-        setTimeout(() => {
-          const el = document.getElementById(`category-wrapper-${match.id}`);
-          if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-        }, 120);
       }
-    } else if (activeCategoryFilter === 'ALL') {
-      // Default to collapsed form
+    } else {
       setExpandedIds(new Set());
     }
-  }, [activeCategoryFilter, resolvedCategories]);
+  }, [effectiveQuery, activeCategoryFilter, filteredCategoryList, resolvedCategories]);
 
   // Toggle single category
   const toggleCategory = (categoryId: string) => {
@@ -1206,21 +1242,21 @@ export const ExamCategoriesDropdown: React.FC<ExamCategoriesDropdownProps> = ({
                                     gap: '0.3rem',
                                     padding: '0.35rem 0.75rem',
                                     borderRadius: '6px',
-                                    backgroundColor: 'rgba(255, 152, 0, 0.1)',
-                                    border: '1px solid rgba(255, 152, 0, 0.4)',
-                                    color: '#F57C00',
+                                    backgroundColor: '#FFFFFF',
+                                    border: '1px solid #000000',
+                                    color: '#000000',
                                     fontSize: '0.76rem',
                                     fontWeight: 700,
                                     cursor: 'pointer',
                                     transition: 'all 0.15s ease',
                                   }}
                                   onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'rgba(255, 152, 0, 0.2)';
-                                    e.currentTarget.style.borderColor = '#FF9800';
+                                    e.currentTarget.style.backgroundColor = '#000000';
+                                    e.currentTarget.style.color = '#FFFFFF';
                                   }}
                                   onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'rgba(255, 152, 0, 0.1)';
-                                    e.currentTarget.style.borderColor = 'rgba(255, 152, 0, 0.4)';
+                                    e.currentTarget.style.backgroundColor = '#FFFFFF';
+                                    e.currentTarget.style.color = '#000000';
                                   }}
                                   title="Take diagnostic timed practice test"
                                 >

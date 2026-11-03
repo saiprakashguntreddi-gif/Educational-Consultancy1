@@ -317,9 +317,9 @@ export class CounsellorService {
     if (params.search && params.search.trim().length > 0) {
       const q = params.search.trim();
       where.OR = [
-        { fullName: { contains: q } },
-        { contactEmail: { contains: q } },
-        { user: { email: { contains: q } } },
+        { fullName: { contains: q, mode: 'insensitive' } },
+        { contactEmail: { contains: q, mode: 'insensitive' } },
+        { user: { email: { contains: q, mode: 'insensitive' } } },
       ];
     }
 
